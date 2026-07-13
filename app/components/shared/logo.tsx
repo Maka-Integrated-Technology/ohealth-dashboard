@@ -45,7 +45,7 @@ export default function Logo({
   size = "default",
   disabled = false,
   iconOnly = false,
-  label = "AppTemplate",
+  label = "OHealth",
 }: Props) {
   const containerClass = cn("flex w-fit items-center", containerClassName);
 

@@ -9,7 +9,9 @@ import { useIsMobile } from "~/hooks/use-mobile";
 
 const NAV_LINKS = [
   { label: "Home", path: "/" },
-  { label: "Browse", path: "/browse" },
+  { label: "Medical", path: "/mp-dashboard" },
+  { label: "Pharmacy", path: "/ph-dashboard" },
+  { label: "Laboratory", path: "/lb-dashboard" },
 ];
 
 export default function MainNavbar() {

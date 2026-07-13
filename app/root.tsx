@@ -22,10 +22,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="color-scheme" content="dark light" />
-        <title>App Template</title>
+        <title>OHealth Dashboard</title>
         <meta
           name="description"
-          content="A Vite + React Router starter template."
+          content="OHealth Dashboard — medical professional, pharmacy, and laboratory portals."
         />
         <Meta />
         <Links />

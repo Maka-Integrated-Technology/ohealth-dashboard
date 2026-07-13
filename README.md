@@ -1,8 +1,8 @@
-# Vite React Router Template
+# OHealth Dashboard
 
-A production-ready starter for React single-page applications. Routing,
-data-fetching, theming, and a full UI component library are wired up and ready
-to go — swap in your own API and start building.
+A React single-page application providing dedicated portals for medical
+professionals, pharmacies, and laboratories. Routing, data-fetching, theming,
+and a full UI component library are wired up and ready for the OHealth API.
 
 ## Stack
 

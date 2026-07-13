@@ -31,8 +31,12 @@ file system. Files named `page.tsx` become route components; files named
 app/routes/
   layout.tsx          ← root layout (navbar + offline banner)
   page.tsx            ← /
-  browse/
-    page.tsx          ← /browse
+  mp-dashboard/
+    page.tsx          ← /mp-dashboard
+  ph-dashboard/
+    page.tsx          ← /ph-dashboard
+  lb-dashboard/
+    page.tsx          ← /lb-dashboard
 ```
 
 ## Root file responsibilities (`app/root.tsx`)

@@ -1,7 +1,7 @@
 # Folder Structure
 
 ```
-vite-react-router-template/
+ohealth-dashboard/
 ├── app/
 │   ├── components/
 │   │   ├── providers/          # React context providers
@@ -57,9 +57,13 @@ vite-react-router-template/
 │   │       └── toast.ts        # notifySuccess / notifyError / notifyInfo
 │   ├── routes/                 # File-based route tree (rr-next-routes)
 │   │   ├── layout.tsx          # Root layout — navbar + offline banner
-│   │   ├── page.tsx            # / — landing / feature overview
-│   │   └── browse/
-│   │       └── page.tsx        # /browse — example list with search
+│   │   ├── page.tsx            # / — OHealth landing / portal overview
+│   │   ├── mp-dashboard/
+│   │   │   └── page.tsx        # /mp-dashboard — Medical Professional
+│   │   ├── ph-dashboard/
+│   │   │   └── page.tsx        # /ph-dashboard — Pharmacy
+│   │   └── lb-dashboard/
+│   │       └── page.tsx        # /lb-dashboard — Laboratory
 │   ├── styles/
 │   │   └── global.css          # Tailwind v4 imports + CSS design tokens
 │   ├── types/

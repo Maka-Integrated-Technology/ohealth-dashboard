@@ -1,6 +1,7 @@
 # Setup & Local Development
 
-This guide covers running the template locally and building it for production.
+This guide covers running OHealth Dashboard locally and building it for
+production.
 
 ## Prerequisites
 
@@ -21,7 +22,7 @@ Copy the example file and fill in the values for your environment:
 cp .env.example .env.local
 ```
 
-The template reads the following variable (client-side, prefixed with `VITE_`):
+The app reads the following variable (client-side, prefixed with `VITE_`):
 
 | Variable            | Required | Description                                                       |
 | ------------------- | -------- | ----------------------------------------------------------------- |
@@ -104,13 +105,13 @@ that installs dependencies, builds the app, and serves it with `npm run start`.
 Build the image:
 
 ```bash
-docker build -t vite-react-router-template .
+docker build -t ohealth-dashboard .
 ```
 
 Run the container:
 
 ```bash
-docker run -p 3000:3000 vite-react-router-template
+docker run -p 3000:3000 ohealth-dashboard
 ```
 
 `serve` listens on port `3000` by default — map host `3000` to container `3000`.
