@@ -1,9 +1,4 @@
-import {
-  CalendarClock,
-  Users,
-  FileText,
-  MessageSquare,
-} from "lucide-react";
+import { CalendarClock, Users, FileText, MessageSquare } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 const STATS = [
