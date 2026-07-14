@@ -1,0 +1,22 @@
+# Production / staging compose file.
+#
+# Used by the Deploy workflow (.github/workflows/deploy.yml) on the server:
+#   docker compose -p ohealth-fe-<env> --env-file .env.prod \
+#     -f docker-compose.prod.yml up -d --build
+#
+# The referenced env file (e.g. .env.prod) lives on the server, is NOT committed,
+# and provides VITE_API_BASE_URL, VITE_ROUTE, and PORT for the target environment.
+services:
+  app:
+    build:
+      context: .
+      # VITE_* are build-time args because Vite inlines them into the bundle.
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+        VITE_ROUTE: ${VITE_ROUTE:-mp-dashboard}
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
