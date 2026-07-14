@@ -7,5 +7,6 @@ Follow the project documentation:
 - [Architecture](docs/architecture.md)
 - [Folder Structure](docs/folder-structure.md)
 - [Setup & Local Development](docs/setup.md)
+- [Deployment](docs/deployment.md)
 
 Do not duplicate project rules here. Update the docs files instead.

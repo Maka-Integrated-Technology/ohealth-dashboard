@@ -4,7 +4,13 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
+    "build:mp": "VITE_ROUTE=mp react-router build",
+    "build:ph": "VITE_ROUTE=ph react-router build",
+    "build:lb": "VITE_ROUTE=lb react-router build",
     "dev": "react-router dev -p 5100",
+    "dev:mp": "VITE_ROUTE=mp react-router dev -p 5100",
+    "dev:ph": "VITE_ROUTE=ph react-router dev -p 5101",
+    "dev:lb": "VITE_ROUTE=lb react-router dev -p 5102",
     "start": "npx serve build/client -s",
     "typecheck": "react-router typegen && tsc",
     "lint": "eslint .",
