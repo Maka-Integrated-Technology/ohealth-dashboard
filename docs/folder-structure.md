@@ -87,7 +87,7 @@ ohealth-dashboard/
 ├── AGENTS.md                   # Workflow conventions for AI coding agents
 ├── components.json             # shadcn CLI config
 ├── docker-compose.yml          # Local dev / generic app compose
-├── docker-compose.prod.yml     # Staging + production compose (built per VITE_ROUTE)
+├── docker-compose.prod.yml     # Staging + production compose (mp/ph/lb services)
 ├── Dockerfile
 ├── package.json
 ├── react-router.config.ts      # ssr: false

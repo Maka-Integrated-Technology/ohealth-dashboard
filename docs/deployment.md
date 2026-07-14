@@ -1,7 +1,9 @@
 # Deployment
 
-The app is deployed to an AWS server over SSH. Each environment builds and runs
-a single dashboard surface (selected by `VITE_ROUTE`) as a Docker container.
+The app is deployed to an AWS EC2 instance over SSH. Each environment runs **all
+three dashboard surfaces** as separate Docker containers on one host, each built
+with its own `VITE_ROUTE` and published on its own port. Put a reverse proxy in
+front to map each container to a subdomain (e.g. `mp.`/`ph.`/`lb.<domain>`).
 
 ## Environments and branches
 
@@ -30,9 +32,15 @@ docker compose -p ohealth-fe-<env> --env-file .env.prod -f docker-compose.prod.y
 docker image prune -f
 ```
 
-`--build` rebuilds the image on every deploy (so new `VITE_*` values are
-inlined), `-d` runs detached, and `docker image prune -f` removes the now-dangling
-previous image.
+One `up` builds and (re)starts all three services
+(`mp-dashboard`, `ph-dashboard`, `lb-dashboard`) defined in
+`docker-compose.prod.yml`. `--build` rebuilds each image on every deploy (so new
+`VITE_*` values are inlined — each surface is a separate image because its
+`VITE_ROUTE` build arg differs), `-d` runs detached, and `docker image prune -f`
+removes the now-dangling previous images.
+
+By default the containers publish to host ports **3000** (mp), **3001** (ph), and
+**3002** (lb); override with `MP_PORT` / `PH_PORT` / `LB_PORT` in `.env.prod`.
 
 ## Required GitHub secrets
 
@@ -54,33 +62,41 @@ Set these in **Settings → Secrets and variables → Actions**:
    ```
 
 2. Create the `.env.prod` file (it is **not** committed — `.env.*` is
-   git-ignored). This drives the build args in `docker-compose.prod.yml`:
+   git-ignored). It supplies the shared API URL and, optionally, the host ports:
 
    ```dotenv
    # /var/www/ohealth/fe/staging/.env.prod
    VITE_API_BASE_URL=https://staging-api.ohealth.example.com
-   VITE_ROUTE=mp-dashboard      # mp-dashboard | ph-dashboard | lb-dashboard
-   PORT=3000                    # host port to expose
+
+   # Host ports (optional — these are the defaults)
+   MP_PORT=3000
+   PH_PORT=3001
+   LB_PORT=3002
    ```
 
-   Give production its own `.env.prod` with production values (and a different
-   `PORT` if several surfaces share one host).
+   `VITE_ROUTE` is **not** set here — each service in `docker-compose.prod.yml`
+   hardcodes its own. Give production its own `.env.prod` with production values.
 
 3. Ensure Docker + Docker Compose are installed and the SSH user can run them.
+
+4. (Recommended) Put a reverse proxy (nginx / Caddy / an AWS ALB) in front and
+   route each subdomain to the matching container port — e.g.
+   `mp.<domain>` → `:3000`, `ph.<domain>` → `:3001`, `lb.<domain>` → `:3002`.
 
 After that, deploys are automatic on push.
 
 ## How the build gets its config
 
 `VITE_API_BASE_URL` and `VITE_ROUTE` are **build-time** values — Vite inlines
-them into the client bundle. `docker-compose.prod.yml` reads them from the
-`--env-file` and passes them to the image as build args, which the `Dockerfile`
-promotes to `ENV` before `npm run build`. Changing an env value therefore
-requires a rebuild (the workflow always passes `--build`).
+them into the client bundle. In `docker-compose.prod.yml`, `VITE_API_BASE_URL`
+comes from the `--env-file` and `VITE_ROUTE` is fixed per service; both are
+passed as build args, which the `Dockerfile` promotes to `ENV` before
+`npm run build`. Changing an env value therefore requires a rebuild (the workflow
+always passes `--build`). All three surfaces point at the same `VITE_API_BASE_URL`.
 
-## Running more than one surface
+## Scaling to a subset of surfaces
 
-Each build serves one dashboard. To run several surfaces on one server, give
-each its own directory, `.env.prod` (distinct `VITE_ROUTE` and `PORT`), and
-Compose project name (`-p`), and put a reverse proxy in front to route by
-host/path.
+To deploy only some dashboards, pass the service names explicitly, e.g.
+`docker compose … up -d --build mp-dashboard ph-dashboard`. To split surfaces
+across separate hosts, give each host its own directory, `.env.prod`, and
+Compose project name (`-p`).

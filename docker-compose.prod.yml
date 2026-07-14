@@ -1,22 +1,52 @@
 # Production / staging compose file.
 #
+# Runs all three dashboard surfaces as separate containers on one host, each
+# built with its own VITE_ROUTE and published on its own port. Front them with a
+# reverse proxy to map each to a subdomain (e.g. mp./ph./lb.<domain>).
+#
 # Used by the Deploy workflow (.github/workflows/deploy.yml) on the server:
 #   docker compose -p ohealth-fe-<env> --env-file .env.prod \
 #     -f docker-compose.prod.yml up -d --build
 #
 # The referenced env file (e.g. .env.prod) lives on the server, is NOT committed,
-# and provides VITE_API_BASE_URL, VITE_ROUTE, and PORT for the target environment.
+# and provides VITE_API_BASE_URL and (optionally) the host ports below.
 services:
-  app:
+  mp-dashboard:
     build:
       context: .
       # VITE_* are build-time args because Vite inlines them into the bundle.
       args:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL}
-        VITE_ROUTE: ${VITE_ROUTE:-mp-dashboard}
+        VITE_ROUTE: mp-dashboard
     restart: unless-stopped
     ports:
-      - "${PORT:-3000}:3000"
+      - "${MP_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+
+  ph-dashboard:
+    build:
+      context: .
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+        VITE_ROUTE: ph-dashboard
+    restart: unless-stopped
+    ports:
+      - "${PH_PORT:-3001}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+
+  lb-dashboard:
+    build:
+      context: .
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+        VITE_ROUTE: lb-dashboard
+    restart: unless-stopped
+    ports:
+      - "${LB_PORT:-3002}:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000

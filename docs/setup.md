@@ -195,5 +195,6 @@ docker compose up app-prod
 Available at **http://localhost:3000**.
 
 A separate `docker-compose.prod.yml` is used by the deploy workflow on the
-server (it wires `VITE_API_BASE_URL` / `VITE_ROUTE` build args from an env file).
-See [deployment.md](./deployment.md).
+server. It defines one service per dashboard (`mp-dashboard`, `ph-dashboard`,
+`lb-dashboard`), each built with its own `VITE_ROUTE` and published on its own
+port. See [deployment.md](./deployment.md).
