@@ -10,6 +10,7 @@ ohealth-dashboard/
 │   │   ├── shared/             # App-wide reusable components
 │   │   │   ├── navbar/
 │   │   │   │   └── index.tsx
+│   │   │   ├── app-shell.tsx   # Navbar + offline banner + <Outlet> chrome
 │   │   │   ├── logo.tsx
 │   │   │   ├── navbar-theme-toggle.tsx
 │   │   │   └── offline-banner.tsx
@@ -55,15 +56,16 @@ ohealth-dashboard/
 │   │       ├── helpers.ts      # cn, truncate, capitalize, slugify, …
 │   │       ├── query-keys.ts   # Centralised TanStack Query key factory
 │   │       └── toast.ts        # notifySuccess / notifyError / notifyInfo
-│   ├── routes/                 # File-based route tree (rr-next-routes)
-│   │   ├── layout.tsx          # Root layout — navbar + offline banner
-│   │   ├── page.tsx            # / — OHealth landing / portal overview
-│   │   ├── mp-dashboard/
-│   │   │   └── page.tsx        # /mp-dashboard — Medical Professional
-│   │   ├── ph-dashboard/
-│   │   │   └── page.tsx        # /ph-dashboard — Pharmacy
-│   │   └── lb-dashboard/
-│   │       └── page.tsx        # /lb-dashboard — Laboratory
+│   ├── routes/                 # One folder per dashboard surface (rr-next-routes)
+│   │   ├── mp-dashboard/       # VITE_ROUTE=mp-dashboard (default)
+│   │   │   ├── layout.tsx      #   <AppShell portal="Medical Professional" />
+│   │   │   └── page.tsx        #   / — Medical Professional dashboard
+│   │   ├── ph-dashboard/       # VITE_ROUTE=ph-dashboard
+│   │   │   ├── layout.tsx      #   <AppShell portal="Pharmacy" />
+│   │   │   └── page.tsx        #   / — Pharmacy dashboard
+│   │   └── lb-dashboard/       # VITE_ROUTE=lb-dashboard
+│   │       ├── layout.tsx      #   <AppShell portal="Laboratory" />
+│   │       └── page.tsx        #   / — Laboratory dashboard
 │   ├── styles/
 │   │   └── global.css          # Tailwind v4 imports + CSS design tokens
 │   ├── types/
@@ -73,14 +75,19 @@ ohealth-dashboard/
 ├── docs/
 │   ├── architecture.md
 │   ├── code-style.md
+│   ├── deployment.md           # Staging / production deploy (SSH + Docker)
 │   ├── folder-structure.md     # (this file)
 │   ├── setup.md
 │   └── workflow.md
+├── .github/workflows/
+│   ├── ci.yml                  # Format / lint / typecheck / build on PRs
+│   └── deploy.yml              # Deploy staging (staging) + production (prod)
 ├── .dockerignore
 ├── .env.example
 ├── AGENTS.md                   # Workflow conventions for AI coding agents
 ├── components.json             # shadcn CLI config
-├── docker-compose.yml
+├── docker-compose.yml          # Local dev / generic app compose
+├── docker-compose.prod.yml     # Staging + production compose (built per VITE_ROUTE)
 ├── Dockerfile
 ├── package.json
 ├── react-router.config.ts      # ssr: false
@@ -89,6 +96,9 @@ ohealth-dashboard/
 ├── tsconfig.json
 └── vite.config.ts
 ```
+
+> `.claude/` and `docs/specs/` are intentionally git-ignored (local tooling and
+> working design docs); env files other than `.env.example` are ignored too.
 
 ## Directory conventions
 
@@ -100,9 +110,10 @@ not add product-specific logic here.
 ### `app/components/shared/`
 
 Composite components built from `ui/` primitives that are reused across
-multiple routes — `Navbar`, `Logo`, `OfflineBanner`, theme toggle. These are
-still generic (not domain-specific) but may reference app state (theme, mobile
-breakpoint).
+surfaces — `Navbar`, `Logo`, `OfflineBanner`, theme toggle, and `AppShell`
+(the navbar + offline banner + `<Outlet>` chrome each surface's `layout.tsx`
+renders). These are still generic (not domain-specific) but may reference app
+state (theme, mobile breakpoint).
 
 ### `app/components/providers/`
 
@@ -116,8 +127,15 @@ A page imports from `hooks.ts` only; it never calls `axios` directly.
 
 ### `app/routes/`
 
-File-based routes scanned by `rr-next-routes`. The file system is the routing
-config. `page.tsx` = route component; `layout.tsx` = wrapping layout.
+One folder per **dashboard surface** (`mp-dashboard`, `ph-dashboard`,
+`lb-dashboard`). Exactly one is active per build, selected by the `VITE_ROUTE`
+env var in `app/routes.ts` — that folder is scanned by `rr-next-routes`, so its
+`page.tsx` is served at `/` and its `layout.tsx` wraps it. See
+[architecture.md](./architecture.md#routing--one-build-per-dashboard) for the
+selection logic and how to add a surface.
+
+`page.tsx` = route component; `layout.tsx` = wrapping layout (renders
+`<AppShell portal="…" />`).
 
 For complex pages, create a `_sections/` subfolder alongside the page file to
 hold sub-components that are rendered only by that page. The `_sections/`

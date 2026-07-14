@@ -12,32 +12,83 @@ server-side rendering and no server entry point.
 under `build/client` — a single `index.html` plus hashed JS/CSS chunks. All
 routing happens in the browser.
 
-## Routing
+## Routing — one build per dashboard
 
-Routes are registered in `app/routes.ts` using `rr-next-routes`:
+This app ships **three independent dashboard surfaces**, one per user role, and
+builds exactly one of them at a time. Which surface is active is selected at
+config time by the `VITE_ROUTE` environment variable.
+
+| Surface              | `VITE_ROUTE` (alias)  | Route folder               |
+| -------------------- | --------------------- | -------------------------- |
+| Medical Professional | `mp-dashboard` (`mp`) | `app/routes/mp-dashboard/` |
+| Pharmacy             | `ph-dashboard` (`ph`) | `app/routes/ph-dashboard/` |
+| Laboratory           | `lb-dashboard` (`lb`) | `app/routes/lb-dashboard/` |
+
+`VITE_ROUTE` defaults to `mp-dashboard` when unset.
+
+### How selection works (`app/routes.ts`)
+
+`app/routes.ts` reads `VITE_ROUTE`, normalises aliases, validates it against the
+whitelist of known surfaces, checks that the folder exists, and points
+`rr-next-routes` at just that folder:
 
 ```ts
+const route = resolveAppRoute(); // e.g. "mp-dashboard"
+
 export default nextRoutes({
   ...appRouterStyle,
-  folderName: "./routes",
+  folderName: `./routes/${route}`,
 }) satisfies RouteConfig;
 ```
 
-`rr-next-routes` scans `app/routes/` and builds the route config from the
-file system. Files named `page.tsx` become route components; files named
-`layout.tsx` become nested layouts.
+| Piece               | Purpose                                                                 |
+| ------------------- | ----------------------------------------------------------------------- |
+| `DEFAULT_ROUTE`     | Surface used when `VITE_ROUTE` is unset (`mp-dashboard`).               |
+| `ROUTE_ALIASES`     | Short aliases → canonical folders (`mp`→`mp-dashboard`, etc.).          |
+| `APP_ROUTES`        | Whitelist of valid surface folder names.                                |
+| `resolveAppRoute()` | Trims input, applies aliases, validates, checks the folder, returns it. |
+
+Because only one folder is scanned, that folder's `page.tsx` is served at `/`
+and its `layout.tsx` wraps it. An unknown or misspelled `VITE_ROUTE` throws at
+startup.
+
+### Folder layout
+
+Each surface is a self-contained route tree with its own layout and page:
 
 ```
 app/routes/
-  layout.tsx          ← root layout (navbar + offline banner)
-  page.tsx            ← /
   mp-dashboard/
-    page.tsx          ← /mp-dashboard
+    layout.tsx        ← chrome for the Medical Professional surface
+    page.tsx          ← / (when VITE_ROUTE=mp-dashboard)
   ph-dashboard/
-    page.tsx          ← /ph-dashboard
+    layout.tsx
+    page.tsx          ← / (when VITE_ROUTE=ph-dashboard)
   lb-dashboard/
-    page.tsx          ← /lb-dashboard
+    layout.tsx
+    page.tsx          ← / (when VITE_ROUTE=lb-dashboard)
 ```
+
+Files named `page.tsx` become route components; files named `layout.tsx` become
+nested layouts (`rr-next-routes`, app-router style).
+
+### Shared chrome (`app/components/shared/app-shell.tsx`)
+
+Every surface's `layout.tsx` is a one-liner that renders the shared `AppShell`
+with its own portal label:
+
+```tsx
+// app/routes/mp-dashboard/layout.tsx
+import AppShell from "~/components/shared/app-shell";
+
+export default function MpDashboardLayout() {
+  return <AppShell portal="Medical Professional" />;
+}
+```
+
+`AppShell` renders the navbar (logo + portal label + theme toggle), the offline
+banner, and the `<Outlet>`. There are no cross-surface navigation links, since
+only one surface exists in a given build.
 
 ## Root file responsibilities (`app/root.tsx`)
 
@@ -47,6 +98,9 @@ app/routes/
 - The `<Layout>` wrapper that mounts `ThemeProvider`
 - The `<App>` component that composes the provider stack and renders `<Outlet>`
 - The `<ErrorBoundary>` shown when an unhandled route error is thrown
+
+The per-surface `layout.tsx` (via `AppShell`) sits below `root.tsx` and owns the
+visible page chrome (navbar, offline banner).
 
 ## Provider stack
 
@@ -134,7 +188,7 @@ palette are declared under `.light` / `.dark` selectors in
 `app/styles/global.css`. All Radix components and shadcn primitives consume
 those tokens via `hsl(var(--...))` / `oklch(...)` values.
 
-`defaultTheme` is set to `"dark"` and `enableSystem` is `false`, so there is no
+`defaultTheme` is set to `"light"` and `enableSystem` is `false`, so there is no
 OS-level preference fallback unless you change that.
 
 ## UI components
@@ -143,115 +197,35 @@ OS-level preference fallback unless you change that.
 generic; do not add product-specific logic to them. Product-level composites
 (e.g. `Logo`, `Navbar`) live in `app/components/shared/`.
 
-## Advanced Multi-Route Setup
+## Selecting a dashboard at dev / build time
 
-> Use this only when the project has multiple independent app surfaces or build
-> targets. For single-surface apps the default setup in `app/routes.ts` is
-> sufficient.
-
-When a project needs two or more entirely separate route trees — for example an
-`admin` surface and a `client` surface — you can select the active route folder
-at dev and build time using the `VITE_ROUTE` environment variable.
-
-### Implementation
-
-Replace the contents of `app/routes.ts` with:
-
-```ts
-import type { RouteConfig } from "@react-router/dev/routes";
-import { existsSync } from "node:fs";
-import { resolve } from "node:path";
-import { nextRoutes, appRouterStyle } from "rr-next-routes/react-router";
-
-const DEFAULT_ROUTE = "admin";
-const ROUTE_ALIASES: Record<string, string> = {
-  a: "admin",
-};
-const APP_ROUTES = ["admin", "client"] as const;
-
-type AppRoute = (typeof APP_ROUTES)[number];
-
-function resolveAppRoute(rawRoute = process.env.VITE_ROUTE): AppRoute {
-  const requestedRoute = rawRoute?.trim() || DEFAULT_ROUTE;
-  const route = ROUTE_ALIASES[requestedRoute] ?? requestedRoute;
-
-  if (!APP_ROUTES.includes(route as AppRoute)) {
-    const expectedRoutes = APP_ROUTES.join(", ");
-    throw new Error(
-      `Invalid VITE_ROUTE="${requestedRoute}". Expected one of: ${expectedRoutes}.`
-    );
-  }
-
-  const routeDir = resolve(process.cwd(), "app/routes", route);
-
-  if (!existsSync(routeDir)) {
-    throw new Error(
-      `VITE_ROUTE="${route}" points to missing route directory: ${routeDir}`
-    );
-  }
-
-  return route as AppRoute;
-}
-
-const route = resolveAppRoute();
-
-export default nextRoutes({
-  ...appRouterStyle,
-  folderName: `./routes/${route}`,
-}) satisfies RouteConfig;
-```
-
-Adjust `DEFAULT_ROUTE`, `ROUTE_ALIASES`, and `APP_ROUTES` for the actual folders
-in your project.
-
-### What each part does
-
-| Part                | Purpose                                                                                                                                   |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `DEFAULT_ROUTE`     | Route folder used when `VITE_ROUTE` is not set.                                                                                           |
-| `ROUTE_ALIASES`     | Short aliases mapped to canonical folder names (e.g. `a` → `admin`).                                                                      |
-| `APP_ROUTES`        | Whitelist of valid route folder names.                                                                                                    |
-| `AppRoute`          | TypeScript union derived from `APP_ROUTES` for type-safe returns.                                                                         |
-| `resolveAppRoute()` | Trims the input, applies aliases, validates against the whitelist, checks that the directory exists, and returns the resolved route name. |
-| `nextRoutes()`      | Generates the route tree from the selected folder.                                                                                        |
-
-### Example commands
+The active surface is chosen with `VITE_ROUTE` (see
+[Routing — one build per dashboard](#routing--one-build-per-dashboard) above).
 
 ```bash
-VITE_ROUTE=admin npm run dev
-VITE_ROUTE=client npm run dev
-VITE_ROUTE=admin npm run build
-VITE_ROUTE=client npm run build
+# Dev
+npm run dev                 # default → mp-dashboard
+VITE_ROUTE=ph npm run dev   # Pharmacy surface
+VITE_ROUTE=lb npm run dev   # Laboratory surface
+
+# Build
+VITE_ROUTE=mp npm run build
+VITE_ROUTE=ph npm run build
+VITE_ROUTE=lb npm run build
 ```
 
-### Folder structure
+### Adding a new surface
 
-```
-app/routes/
-  admin/
-    layout.tsx
-    page.tsx
-    settings/
-      page.tsx
-  client/
-    layout.tsx
-    page.tsx
-    browse/
-      page.tsx
-```
+1. Create `app/routes/<name>-dashboard/` with a `page.tsx` and a `layout.tsx`
+   (the layout renders `<AppShell portal="…" />`).
+2. Add the folder name to `APP_ROUTES` in `app/routes.ts`, and optionally a
+   short alias in `ROUTE_ALIASES`.
 
-Keep `APP_ROUTES` in sync with the actual directories under `app/routes/`. A
-missing or misspelled folder name causes `resolveAppRoute` to throw at startup.
+A `VITE_ROUTE` value that is not in `APP_ROUTES`, or whose folder is missing,
+throws at startup — so the whitelist and the folders must stay in sync.
 
-### CI for multi-route builds
+### Deployment
 
-Projects using this setup should extend the CI workflow with one build step per
-route. See `docs/setup.md` for the CI command reference. A typical extension:
-
-```yaml
-- name: Build (admin)
-  run: VITE_ROUTE=admin npm run build
-
-- name: Build (client)
-  run: VITE_ROUTE=client npm run build
-```
+Each environment builds a single surface, chosen by the `VITE_ROUTE` value in
+its server-side env file. See [deployment.md](./deployment.md) for the full
+staging / production flow.

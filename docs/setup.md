@@ -22,11 +22,15 @@ Copy the example file and fill in the values for your environment:
 cp .env.example .env.local
 ```
 
-The app reads the following variable (client-side, prefixed with `VITE_`):
+The app reads the following variables (client-side, prefixed with `VITE_`):
 
-| Variable            | Required | Description                                                       |
-| ------------------- | -------- | ----------------------------------------------------------------- |
-| `VITE_API_BASE_URL` | Yes      | Base URL for all API requests. Read by `app/lib/config/axios.ts`. |
+| Variable            | Required | Description                                                                                                                                 |
+| ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VITE_API_BASE_URL` | Yes      | Base URL for all API requests. Read by `app/lib/config/axios.ts`.                                                                           |
+| `VITE_ROUTE`        | No       | Which dashboard surface to build/serve: `mp-dashboard` (`mp`), `ph-dashboard` (`ph`), or `lb-dashboard` (`lb`). Defaults to `mp-dashboard`. |
+
+> Both are **build-time** variables — Vite inlines them into the bundle. See
+> [Selecting a dashboard](#selecting-a-dashboard) and the Docker note below.
 
 ## Development server
 
@@ -41,6 +45,26 @@ http://localhost:5100
 ```
 
 (The `dev` script passes `-p 5100` to `react-router dev`.)
+
+## Selecting a dashboard
+
+The app ships three dashboard surfaces and builds one at a time. `VITE_ROUTE`
+picks which; it defaults to `mp-dashboard`. Either set it in `.env.local`, pass
+it inline, or use the per-dashboard scripts (which also assign distinct ports so
+dashboards can run side by side):
+
+```bash
+npm run dev:mp   # Medical Professional → http://localhost:5100 (default)
+npm run dev:ph   # Pharmacy             → http://localhost:5101
+npm run dev:lb   # Laboratory           → http://localhost:5102
+
+# equivalent to, e.g.:
+VITE_ROUTE=ph npm run dev
+```
+
+`build:mp` / `build:ph` / `build:lb` do the same for `npm run build`. See
+[architecture.md](./architecture.md#routing--one-build-per-dashboard) for how
+the selection works and how to add a new surface.
 
 ## Type checking
 
@@ -105,7 +129,10 @@ that installs dependencies, builds the app, and serves it with `npm run start`.
 Build the image:
 
 ```bash
-docker build -t ohealth-dashboard .
+docker build \
+  --build-arg VITE_API_BASE_URL=https://api.example.com \
+  --build-arg VITE_ROUTE=mp-dashboard \
+  -t ohealth-dashboard .
 ```
 
 Run the container:
@@ -113,6 +140,9 @@ Run the container:
 ```bash
 docker run -p 3000:3000 ohealth-dashboard
 ```
+
+The `Dockerfile` accepts `VITE_API_BASE_URL` and `VITE_ROUTE` as build args
+(`VITE_ROUTE` defaults to `mp-dashboard`).
 
 `serve` listens on port `3000` by default — map host `3000` to container `3000`.
 
@@ -132,10 +162,15 @@ npm run typecheck      # React Router typegen + tsc strict
 npm run build          # production bundle (build/client)
 ```
 
-All four must pass before a PR can be merged.
+All four must pass before a PR can be merged. The build step builds the default
+surface (`mp-dashboard`); to also verify the others, add build steps with
+`VITE_ROUTE=ph` / `VITE_ROUTE=lb`.
 
-For projects using the [advanced multi-route setup](./architecture.md#advanced-multi-route-setup),
-extend the workflow with a build step per route surface.
+## Deployment
+
+`.github/workflows/deploy.yml` deploys over SSH on pushes to `staging` and
+`prod`. See [deployment.md](./deployment.md) for the full flow, required
+secrets, and server layout.
 
 ## Docker Compose
 
@@ -158,3 +193,7 @@ docker compose up app-prod
 ```
 
 Available at **http://localhost:3000**.
+
+A separate `docker-compose.prod.yml` is used by the deploy workflow on the
+server (it wires `VITE_API_BASE_URL` / `VITE_ROUTE` build args from an env file).
+See [deployment.md](./deployment.md).
