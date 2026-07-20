@@ -1,7 +1,9 @@
-import * as React from "react";
-import { Label as LabelPrimitive } from "radix-ui";
+"use client"
 
-import { cn } from "~/lib/utils/helpers";
+import * as React from "react"
+import { Label as LabelPrimitive } from "radix-ui"
+
+import { cn } from "~/lib/utils/helpers"
 
 function Label({
   className,
@@ -11,14 +13,12 @@ function Label({
     <LabelPrimitive.Root
       data-slot="label"
       className={cn(
-        "text-foreground flex items-center gap-2 text-sm leading-none font-normal select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+        "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
         className
       )}
       {...props}
     />
-  );
+  )
 }
 
-export type LabelProps = React.ComponentProps<typeof LabelPrimitive.Root>;
-
-export { Label };
+export { Label }
