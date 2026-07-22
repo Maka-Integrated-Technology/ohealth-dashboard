@@ -1,17 +1,24 @@
-import { Outlet } from "react-router";
-import { Sidebar } from "~/features/dashboard/components/sidebar";
-import { Header } from "~/features/dashboard/components/header";
+import {
+  LayoutDashboard,
+  Users,
+  CalendarCheck,
+  Briefcase,
+  Calendar,
+  Settings,
+} from "lucide-react";
+import AppShell from "~/components/shared/app-shell";
+
+const MP_SIDEBAR_ITEMS = [
+  { label: "Dashboard", href: "/", icon: LayoutDashboard },
+  { label: "Patients", href: "/patients", icon: Users },
+  { label: "Appointments", href: "/appointments", icon: CalendarCheck },
+  { label: "Earnings", href: "/earnings", icon: Briefcase },
+  { label: "Availability", href: "/availability", icon: Calendar },
+  { label: "Settings", href: "/settings", icon: Settings },
+];
 
 export default function MpDashboardLayout() {
   return (
-    <div className="flex min-h-screen w-full bg-gray-50">
-      <Sidebar />
-      <div className="ml-64 flex flex-1 flex-col">
-        <Header />
-        <main className="flex-1 overflow-y-auto p-6">
-          <Outlet />
-        </main>
-      </div>
-    </div>
+    <AppShell portal="Medical Professional" sidebarItems={MP_SIDEBAR_ITEMS} />
   );
 }
