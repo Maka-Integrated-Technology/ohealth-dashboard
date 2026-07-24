@@ -1,56 +1,93 @@
-import { AlertCircle, Calendar } from "lucide-react";
-import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { CalendarX2, CalendarClock, CalendarPlus } from "lucide-react";
+import { cn } from "~/lib/utils/helpers";
 
+// TODO: replace with real activity-log data once that endpoint exists.
+// Not part of DASH-001, tracked separately.
 const ACTIVITY_ITEMS = [
   {
-    text: "Chidi Nwosu cancelled their 2:30 PM appointment today.",
+    id: 0,
+    prefix: "",
+    name: "Chidi Nwosu",
+    rest: " cancelled their 2:30 PM appointment today.",
     time: "12 minutes ago",
-    lineColor: "bg-red-400",
-    icon: AlertCircle,
-    iconColor: "text-red-500",
+    icon: CalendarX2,
+    accent: "alert" as const, // red strip + tinted row bg
   },
   {
-    text: "Oluwaseun Taiwo has requested to move Thursday's 2:00 PM appointment to Friday, 9 May at 10:00 AM. Review and confirm.",
+    id: 1,
+    prefix: "",
+    name: "Oluwaseun Taiwo",
+    rest: " has requested to move Thursday's 2:00 PM appointment to Friday, 9 May at 10:00 AM. Review and confirm.",
     time: "52 minutes ago",
-    lineColor: "bg-orange-400",
-    icon: Calendar,
-    iconColor: "text-orange-500",
+    icon: CalendarClock,
+    accent: "warning" as const, // orange strip + tinted row bg
   },
   {
-    text: "New booking from Ngozi Adeyemi — Friday, 9 May at 11:30 AM. In-Person consultation. Payment confirmed.",
+    id: 2,
+    prefix: "New booking from ",
+    name: "Ngozi Adeyemi",
+    rest: " — Friday, 9 May at 11:30 AM. In-Person consultation. Payment confirmed.",
     time: "Today • 9:12 AM",
-    lineColor: "bg-blue-400",
-    icon: Calendar,
-    iconColor: "text-blue-500",
+    icon: CalendarPlus,
+    accent: "info" as const, // no strip, white bg
   },
 ];
+
+const ACCENT_STYLES = {
+  alert: {
+    row: "border-l-4 border-red-400 bg-gray-50",
+    iconWrap: "bg-red-50 text-red-500",
+  },
+  warning: {
+    row: "border-l-4 border-orange-400 bg-gray-50",
+    iconWrap: "bg-orange-50 text-orange-500",
+  },
+  info: {
+    row: "border-l-4 border-transparent bg-white",
+    iconWrap: "bg-blue-50 text-blue-500",
+  },
+};
 
 export function ActivityFeed() {
   return (
     <div className="rounded-2xl border border-gray-100 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
-      <CardHeader className="flex flex-row items-center justify-between pb-3">
-        <CardTitle className="text-base font-medium">ACTIVITY</CardTitle>
+      <div className="flex items-center justify-between border-b border-gray-100 p-4">
+        <span className="text-base font-medium">ACTIVITY</span>
         <a
           href="#"
           className="text-sm font-medium text-blue-600 hover:underline"
         >
           See all
         </a>
-      </CardHeader>
-      <CardContent className="space-y-4 p-4">
-        {ACTIVITY_ITEMS.map((item, idx) => (
-          <div key={idx} className="flex gap-3">
-            <div className="flex shrink-0 flex-col items-center gap-1 pt-0.5">
-              <div className={`h-8 w-1 rounded-full ${item.lineColor}`} />
-              <item.icon className={`size-3.5 ${item.iconColor}`} />
+      </div>
+      <div className="flex flex-col gap-2 p-3">
+        {ACTIVITY_ITEMS.map((item) => {
+          const styles = ACCENT_STYLES[item.accent];
+          return (
+            <div
+              key={item.id}
+              className={cn("flex gap-3 rounded-xl py-3 pr-3 pl-3", styles.row)}
+            >
+              <div
+                className={cn(
+                  "flex size-9 shrink-0 items-center justify-center rounded-full",
+                  styles.iconWrap
+                )}
+              >
+                <item.icon className="size-4" strokeWidth={2} />
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm leading-snug text-gray-900">
+                  {item.prefix}
+                  <span className="font-semibold">{item.name}</span>
+                  {item.rest}
+                </p>
+                <p className="text-muted-foreground text-xs">{item.time}</p>
+              </div>
             </div>
-            <div className="space-y-1">
-              <p className="text-sm leading-snug text-gray-900">{item.text}</p>
-              <p className="text-muted-foreground text-xs">{item.time}</p>
-            </div>
-          </div>
-        ))}
-      </CardContent>
+          );
+        })}
+      </div>
     </div>
   );
 }

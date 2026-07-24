@@ -1,5 +1,4 @@
 import { Check, X } from "lucide-react";
-import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 
 const APPOINTMENT_REQUESTS = [
@@ -28,57 +27,62 @@ const APPOINTMENT_REQUESTS = [
 
 export function AppointmentRequests() {
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
-      <CardHeader className="flex flex-row items-center justify-between pb-3">
-        <CardTitle className="text-base font-medium">
-          APPOINTMENT REQUEST{" "}
-          <span className="text-muted-foreground font-normal">
+    <div className="rounded-[20px] border border-gray-100 bg-white p-6 shadow-sm">
+      {/* Card Header */}
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-xs font-semibold tracking-wider text-gray-500 uppercase">
+          APPOINTMENT REQUEST
+          <span className="ml-2 font-normal tracking-normal text-gray-400 normal-case">
             • 23 Appointments
           </span>
-        </CardTitle>
+        </h2>
         <a
           href="#"
           className="text-sm font-medium text-blue-600 hover:underline"
         >
           See all
         </a>
-      </CardHeader>
-      <CardContent className="space-y-4 p-4">
+      </div>
+
+      {/* Requests List */}
+      <div className="flex flex-col gap-6">
         {APPOINTMENT_REQUESTS.map((req) => (
           <div key={req.initials} className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Avatar className="size-10 shrink-0 border-none">
+              <Avatar className="size-11 border-none">
                 <AvatarFallback
-                  className={`text-sm font-bold text-white ${req.avatarBg}`}
+                  className={`text-sm font-semibold text-white ${req.avatarBg}`}
                 >
                   {req.initials}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-sm font-medium">{req.name}</p>
-                <p className="text-muted-foreground text-xs">{req.type}</p>
-                <p className="text-muted-foreground text-xs">{req.date}</p>
+                <p className="text-sm font-semibold text-gray-900">
+                  {req.name}
+                </p>
+                <p className="mt-0.5 text-xs text-gray-500">{req.type}</p>
+                <p className="mt-0.5 text-xs text-gray-500">{req.date}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <button
                 type="button"
                 aria-label={`Accept ${req.name}'s request`}
-                className="flex size-8 items-center justify-center rounded-full border border-blue-600 bg-white text-blue-600 transition-colors hover:bg-blue-50"
+                className="flex size-8 items-center justify-center rounded-full border border-blue-600 text-blue-600 transition-colors hover:bg-blue-50"
               >
                 <Check size={16} strokeWidth={2.5} />
               </button>
               <button
                 type="button"
                 aria-label={`Reject ${req.name}'s request`}
-                className="flex size-8 items-center justify-center rounded-full border border-red-500 bg-white text-red-500 transition-colors hover:bg-red-50"
+                className="flex size-8 items-center justify-center rounded-full border border-red-500 text-red-500 transition-colors hover:bg-red-50"
               >
                 <X size={16} strokeWidth={2.5} />
               </button>
             </div>
           </div>
         ))}
-      </CardContent>
+      </div>
     </div>
   );
 }

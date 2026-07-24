@@ -18,7 +18,7 @@ export function NextAppointment() {
 
   return (
     <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
-      <CardHeader className="px-0 pt-0 pb-4">
+      <CardHeader className="x-0 pt-0 pb-4 text-center">
         <CardTitle className="text-xs font-semibold tracking-wider text-blue-600 uppercase">
           NEXT APPOINTMENT
         </CardTitle>
@@ -34,26 +34,28 @@ export function NextAppointment() {
           <p className="text-muted-foreground text-sm">{apt.type}</p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 border-y border-gray-100 py-2 text-sm">
+        <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <p className="text-muted-foreground text-xs font-medium">Age</p>
-            <p className="font-medium">{apt.age}</p>
+            <p className="text-xs font-medium">Age</p>
+            <p className="text-muted-foreground font-medium">{apt.age}</p>
           </div>
           <div>
-            <p className="text-muted-foreground text-xs font-medium">Sex</p>
-            <p className="font-medium">{apt.sex}</p>
+            <p className="text-xs font-medium">Sex</p>
+            <p className="text-muted-foreground font-medium">{apt.sex}</p>
           </div>
           <div>
-            <p className="text-muted-foreground text-xs font-medium">
-              Last Appointment
+            <p className="text-xs font-medium">Last Appointment</p>
+            <p className="text-muted-foreground font-medium">
+              {apt.lastAppointment}
             </p>
-            <p className="font-medium">{apt.lastAppointment}</p>
           </div>
           <div>
-            <p className="text-muted-foreground text-xs font-medium">
+            <p className="text-xs font-medium">
               Date Registered
             </p>
-            <p className="font-medium">{apt.dateRegistered}</p>
+            <p className="text-muted-foreground font-medium ">
+              {apt.dateRegistered}
+            </p>
           </div>
         </div>
 
@@ -64,7 +66,7 @@ export function NextAppointment() {
           Join Consultation
         </button>
 
-        <div className="text-muted-foreground mt-4 flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-2.5 text-sm">
+        <div className="flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-2.5 text-sm">
           <Mail size={16} />
           <span>{apt.email}</span>
         </div>

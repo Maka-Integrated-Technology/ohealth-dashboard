@@ -1,6 +1,8 @@
 import { Users, CalendarDays, Clock } from "lucide-react";
 import { cn } from "~/lib/utils/helpers";
 
+// TODO(DASH-001.5): replace with real data from `features/appointments` /
+// `features/patients` hooks once those endpoints are wired up.
 const STATS = [
   {
     icon: Users,
@@ -8,8 +10,7 @@ const STATS = [
     value: "121",
     hint: (
       <>
-        <span className="text-blue-600">↑ 3%</span>{" "}
-        <span className="text-muted-foreground">in the last 30 days</span>
+        <span className="text-blue-600">↑ 3% in the last 30 days</span>{" "}
       </>
     ),
     iconWrapperClass: "bg-blue-50 text-blue-600",
@@ -20,9 +21,9 @@ const STATS = [
     value: "5",
     hint: (
       <>
-        <span className="text-emerald-600">2 completed</span>
+        <span className="text-muted-foreground">2 completed</span>
         <span className="text-muted-foreground"> • </span>
-        <span className="text-orange-500">3 remaining</span>
+        <span className="text-emerald-600">3 remaining</span>
       </>
     ),
     iconWrapperClass: "bg-emerald-50 text-emerald-600",
@@ -41,11 +42,10 @@ const STATS = [
 export function StatsCards() {
   return (
     <div className="grid gap-6 sm:grid-cols-3">
-      {STATS.map((stat) => (
+      {STATS.map(stat => (
         <div
           key={stat.label}
-          className="rounded-2xl border border-gray-100 bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
-        >
+          className="rounded-2xl border border-gray-100 bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
           <div className="flex items-center justify-between pb-2">
             <p className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
               {stat.label}
@@ -54,7 +54,7 @@ export function StatsCards() {
               <stat.icon className="size-4" strokeWidth={1.5} />
             </div>
           </div>
-          <p className="text-2xl font-bold">{stat.value}</p>
+          <p className="text-3xl font-medium">{stat.value}</p>
           <div className="mt-1 text-xs">{stat.hint}</div>
         </div>
       ))}
