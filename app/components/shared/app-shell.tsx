@@ -8,7 +8,7 @@ import { cn } from "~/lib/utils/helpers";
 export default function AppShell({
   portal,
   sidebarItems,
-  rightSlot, // Accept rightSlot here
+  rightSlot,
 }: {
   portal: string;
   sidebarItems?: SidebarItem[];
@@ -26,7 +26,8 @@ export default function AppShell({
           leftSlot={
             hasSidebar ? <SidebarMobileTrigger items={sidebarItems!} /> : null
           }
-          rightSlot={rightSlot} // Pass it down to navbar
+          rightSlot={rightSlot} 
+          hasSidebar={hasSidebar}
         />
         <OfflineBanner />
         <main className="flex flex-1 flex-col">

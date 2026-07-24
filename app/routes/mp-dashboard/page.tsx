@@ -1,14 +1,14 @@
+import { ActivityFeed } from "./_sections/activity-feed";
+import { AppointmentRequests } from "./_sections/appointment-requests";
 import { Header } from "./_sections/header";
+import { NextAppointment } from "./_sections/next-appointment";
 import { StatsCards } from "./_sections/stats-cards";
 import { TodaysAppointments } from "./_sections/todays-appointments";
-import { AppointmentRequests } from "./_sections/appointment-requests";
-import { NextAppointment } from "./_sections/next-appointment";
-import { ActivityFeed } from "./_sections/activity-feed";
 
 export default function MpDashboardPage() {
   return (
-    <div className="min-h-screen bg-slate-50 p-6 lg:p-8">
-      <div className="max-w-350 mx-auto w-full">
+    <div className="bg-background min-h-screen p-6 lg:p-8">
+      <div className="mx-auto w-full max-w-350">
         <Header />
 
         <div className="mt-8 flex flex-col gap-6 lg:flex-row">

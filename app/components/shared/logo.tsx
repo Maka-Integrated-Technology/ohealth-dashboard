@@ -1,12 +1,19 @@
 import { Link } from "react-router";
 
-export default function Logo() {
+interface LogoProps {
+  size?: "sm" | "md" | "lg";
+}
+
+export default function Logo({ size = "md" }: LogoProps) {
+  const linkClass = size === "sm" ? "flex items-center gap-2" : "flex items-center gap-2.5";
+  const textClass = size === "sm" ? "text-base font-bold tracking-tight text-slate-900" : "text-xl font-bold tracking-tight text-slate-900";
+  const svgSize = size === "sm" ? 24 : 32;
+
   return (
-    <Link to="/" className="flex items-center gap-2.5">
-      {/* SVG Heart + Plus Icon matching Figma */}
+    <Link to="/" className={linkClass}>
       <svg
-        width="32"
-        height="32"
+        width={svgSize}
+        height={svgSize}
         viewBox="0 0 32 32"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +30,7 @@ export default function Logo() {
           strokeLinecap="round"
         />
       </svg>
-      <span className="text-xl font-bold tracking-tight text-slate-900">
+      <span className={textClass}>
         OHealth<span className="text-blue-600">+</span>
       </span>
     </Link>

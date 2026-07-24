@@ -1,15 +1,14 @@
 import {
-  LayoutGrid, // Replaced LayoutDashboard
+  LayoutGrid,
   Users,
-  Calendar, // Replaced CalendarCheck
-  Wallet, // Replaced Briefcase (matches Figma better)
-  CalendarClock, // Replaced second Calendar
+  Calendar,
+  Wallet,
+  CalendarClock,
   Settings,
   Bell,
-  ChevronDown,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import AppShell from "~/components/shared/app-shell";
+import { UserMenu } from "~/components/shared/user-menu";
 
 const MP_SIDEBAR_ITEMS = [
   { label: "Dashboard", href: "/", icon: LayoutGrid },
@@ -23,28 +22,12 @@ const MP_SIDEBAR_ITEMS = [
 export default function MpDashboardLayout() {
   const rightSlotUI = (
     <div className="flex items-center gap-4">
-      <button className="relative rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100">
+      <button className="text-muted-foreground hover:bg-accent relative rounded-full p-2 transition-colors">
         <Bell className="size-5" />
-        <span className="absolute top-2 right-2 size-2 rounded-full border-2 border-white bg-red-500"></span>
+        <span className="border-background absolute top-2 right-2 size-2 rounded-full border-2 bg-red-500"></span>
       </button>
 
-      <div className="flex cursor-pointer items-center gap-3 rounded-lg p-1.5 transition-colors hover:bg-gray-100/50">
-        <Avatar className="size-9">
-          <AvatarImage src="" />
-          <AvatarFallback className="bg-blue-600 font-medium text-white">
-            JM
-          </AvatarFallback>
-        </Avatar>
-        <div className="hidden flex-col sm:flex">
-          <span className="text-sm leading-none font-semibold text-gray-900">
-            Dr. Jane Marshal
-          </span>
-          <span className="mt-1 text-xs leading-none text-gray-500">
-            Medical Doctor
-          </span>
-        </div>
-        <ChevronDown className="ml-1 size-4 text-gray-400" />
-      </div>
+      <UserMenu name="Dr. Jane Marshal" role="Medical Doctor" initials="JM" />
     </div>
   );
 

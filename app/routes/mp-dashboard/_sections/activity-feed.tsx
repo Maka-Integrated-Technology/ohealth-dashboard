@@ -2,7 +2,6 @@ import { CalendarX2, CalendarClock, CalendarPlus } from "lucide-react";
 import { cn } from "~/lib/utils/helpers";
 
 // TODO: replace with real activity-log data once that endpoint exists.
-// Not part of DASH-001, tracked separately.
 const ACTIVITY_ITEMS = [
   {
     id: 0,
@@ -11,7 +10,7 @@ const ACTIVITY_ITEMS = [
     rest: " cancelled their 2:30 PM appointment today.",
     time: "12 minutes ago",
     icon: CalendarX2,
-    accent: "alert" as const, // red strip + tinted row bg
+    accent: "alert" as const, 
   },
   {
     id: 1,
@@ -20,7 +19,7 @@ const ACTIVITY_ITEMS = [
     rest: " has requested to move Thursday's 2:00 PM appointment to Friday, 9 May at 10:00 AM. Review and confirm.",
     time: "52 minutes ago",
     icon: CalendarClock,
-    accent: "warning" as const, // orange strip + tinted row bg
+    accent: "warning" as const,
   },
   {
     id: 2,
@@ -29,29 +28,29 @@ const ACTIVITY_ITEMS = [
     rest: " — Friday, 9 May at 11:30 AM. In-Person consultation. Payment confirmed.",
     time: "Today • 9:12 AM",
     icon: CalendarPlus,
-    accent: "info" as const, // no strip, white bg
+    accent: "info" as const,
   },
 ];
 
 const ACCENT_STYLES = {
   alert: {
-    row: "border-l-4 border-red-400 bg-gray-50",
+    row: "border-l-4 border-red-400 bg-muted",
     iconWrap: "bg-red-50 text-red-500",
   },
   warning: {
-    row: "border-l-4 border-orange-400 bg-gray-50",
+    row: "border-l-4 border-orange-400 bg-muted",
     iconWrap: "bg-orange-50 text-orange-500",
   },
   info: {
-    row: "border-l-4 border-transparent bg-white",
+    row: "border-l-4 border-transparent bg-card",
     iconWrap: "bg-blue-50 text-blue-500",
   },
 };
 
 export function ActivityFeed() {
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
-      <div className="flex items-center justify-between border-b border-gray-100 p-4">
+    <div className="border-border bg-card rounded-2xl border shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+      <div className="border-border flex items-center justify-between border-b p-4">
         <span className="text-base font-medium">ACTIVITY</span>
         <a
           href="#"
@@ -77,7 +76,7 @@ export function ActivityFeed() {
                 <item.icon className="size-4" strokeWidth={2} />
               </div>
               <div className="space-y-1">
-                <p className="text-sm leading-snug text-gray-900">
+                <p className="text-foreground text-sm leading-snug">
                   {item.prefix}
                   <span className="font-semibold">{item.name}</span>
                   {item.rest}

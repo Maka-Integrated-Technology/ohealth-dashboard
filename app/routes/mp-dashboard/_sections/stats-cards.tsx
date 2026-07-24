@@ -1,8 +1,7 @@
 import { Users, CalendarDays, Clock } from "lucide-react";
 import { cn } from "~/lib/utils/helpers";
 
-// TODO(DASH-001.5): replace with real data from `features/appointments` /
-// `features/patients` hooks once those endpoints are wired up.
+// TODO(DASH-001.5): replace with real data from `features/appointments`
 const STATS = [
   {
     icon: Users,
@@ -42,10 +41,11 @@ const STATS = [
 export function StatsCards() {
   return (
     <div className="grid gap-6 sm:grid-cols-3">
-      {STATS.map(stat => (
+      {STATS.map((stat) => (
         <div
           key={stat.label}
-          className="rounded-2xl border border-gray-100 bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+          className="border-border bg-card rounded-2xl border p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
+        >
           <div className="flex items-center justify-between pb-2">
             <p className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
               {stat.label}

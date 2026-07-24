@@ -42,8 +42,8 @@ function SidebarNav({
             className={cn(
               "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
               active
-                ? "bg-blue-50 text-blue-600"
-                : "text-muted-foreground hover:text-foreground hover:bg-gray-50"
+                ? "bg-primary/10 text-primary"
+                : "text-muted-foreground hover:text-foreground hover:bg-accent"
             )}
           >
             <item.icon className="size-5" strokeWidth={1.75} />
@@ -55,12 +55,11 @@ function SidebarNav({
   );
 }
 
-/** Fixed, always-visible sidebar for `lg` screens and up. */
 export default function Sidebar({ items }: Props) {
   const { pathname } = useLocation();
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-gray-100 bg-white px-4 py-6 lg:flex">
+    <aside className="bg-card border-border fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r px-4 py-6 lg:flex">
       <div className="mb-8 px-2">
         <Logo size="sm" />
       </div>
@@ -69,11 +68,6 @@ export default function Sidebar({ items }: Props) {
   );
 }
 
-/**
- * Hamburger button + slide-in drawer, for screens below `lg` where the fixed
- * `Sidebar` is hidden. Meant to be rendered inside `MainNavbar`'s left slot
- * so it shares the navbar's row instead of being separately positioned.
- */
 export function SidebarMobileTrigger({ items }: Props) {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
