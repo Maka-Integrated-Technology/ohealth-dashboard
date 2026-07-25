@@ -1,0 +1,92 @@
+import { CalendarX2, CalendarClock, CalendarPlus } from "lucide-react";
+import { cn } from "~/lib/utils/helpers";
+
+// TODO: replace with real activity-log data once that endpoint exists.
+const ACTIVITY_ITEMS = [
+  {
+    id: 0,
+    prefix: "",
+    name: "Chidi Nwosu",
+    rest: " cancelled their 2:30 PM appointment today.",
+    time: "12 minutes ago",
+    icon: CalendarX2,
+    accent: "alert" as const,
+  },
+  {
+    id: 1,
+    prefix: "",
+    name: "Oluwaseun Taiwo",
+    rest: " has requested to move Thursday's 2:00 PM appointment to Friday, 9 May at 10:00 AM. Review and confirm.",
+    time: "52 minutes ago",
+    icon: CalendarClock,
+    accent: "warning" as const,
+  },
+  {
+    id: 2,
+    prefix: "New booking from ",
+    name: "Ngozi Adeyemi",
+    rest: " — Friday, 9 May at 11:30 AM. In-Person consultation. Payment confirmed.",
+    time: "Today • 9:12 AM",
+    icon: CalendarPlus,
+    accent: "info" as const,
+  },
+];
+
+const ACCENT_STYLES = {
+  alert: {
+    row: "border-l-4 border-red-400 bg-muted",
+    iconWrap: "bg-red-50 text-red-500",
+  },
+  warning: {
+    row: "border-l-4 border-orange-400 bg-muted",
+    iconWrap: "bg-orange-50 text-orange-500",
+  },
+  info: {
+    row: "border-l-4 border-transparent bg-card",
+    iconWrap: "bg-blue-50 text-blue-500",
+  },
+};
+
+export function ActivityFeed() {
+  return (
+    <div className="border-border bg-card rounded-2xl border shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+      <div className="border-border flex items-center justify-between border-b p-4">
+        <span className="text-base font-medium">ACTIVITY</span>
+        <a
+          href="#"
+          className="text-sm font-medium text-blue-600 hover:underline"
+        >
+          See all
+        </a>
+      </div>
+      <div className="flex flex-col gap-2 p-3">
+        {ACTIVITY_ITEMS.map((item) => {
+          const styles = ACCENT_STYLES[item.accent];
+          return (
+            <div
+              key={item.id}
+              className={cn("flex gap-3 rounded-xl py-3 pr-3 pl-3", styles.row)}
+            >
+              <div
+                className={cn(
+                  "flex size-9 shrink-0 items-center justify-center rounded-full",
+                  styles.iconWrap
+                )}
+              >
+                <item.icon className="size-4" strokeWidth={2} />
+              </div>
+              <div className="space-y-1">
+                <p className="text-foreground text-sm leading-snug">
+                  {item.prefix}
+                  <span className="font-semibold">{item.name}</span>
+                  {item.rest}
+                </p>
+                <p className="text-muted-foreground text-xs">{item.time}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

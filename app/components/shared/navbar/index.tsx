@@ -1,37 +1,56 @@
+import type { ReactNode } from "react";
 import Logo from "../logo";
 import { NavbarThemeToggle } from "../navbar-theme-toggle";
-import { Separator } from "~/components/ui/separator";
+import { cn } from "~/lib/utils/helpers";
 
 interface Props {
-  /** Human-readable name of the active portal, e.g. "Medical Professional". */
   portal?: string;
+  showLogo?: boolean;
+  leftSlot?: ReactNode;
+  rightSlot?: ReactNode;
+  hasSidebar?: boolean;
 }
 
-export default function MainNavbar({ portal }: Props) {
+export default function MainNavbar({
+  portal,
+  showLogo = true,
+  leftSlot,
+  rightSlot,
+  hasSidebar = false,
+}: Props) {
   return (
     <>
-      <nav className="bg-background/80 border-border fixed top-0 right-0 left-0 z-40 border-b backdrop-blur-md">
-        <div className="max-w-content mx-auto flex h-[65px] items-center gap-3 px-4 sm:px-6">
-          {/* Logo */}
-          <Logo size="sm" />
+      <nav
+        className={cn(
+          "bg-background/80 border-border fixed top-0 right-0 left-0 z-30 border-b backdrop-blur-md",
+          hasSidebar && "lg:left-64"
+        )}
+      >
+        <div className="max-w-content mx-auto flex h-16.25 items-center gap-3 px-4 sm:px-6">
+          {leftSlot}
+          {showLogo && <Logo />}
 
-          {/* Active portal label */}
           {portal && (
-            <div className="flex items-center gap-3">
-              <Separator orientation="vertical" className="!h-5" aria-hidden />
-              <span className="text-muted-foreground text-sm font-medium">
+            <div className="flex items-center gap-3 lg:ml-2">
+              <span className="text-foreground text-lg font-semibold tracking-tight">
                 {portal}
               </span>
             </div>
           )}
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-4">
             <NavbarThemeToggle />
+            {rightSlot && (
+              <>
+                <div className="bg-border hidden h-6 w-px sm:block"></div>{" "}
+                {rightSlot}
+              </>
+            )}
           </div>
         </div>
       </nav>
       {/* Spacer */}
-      <div className="h-[65px]" />
+      <div className="h-16.25" />
     </>
   );
 }

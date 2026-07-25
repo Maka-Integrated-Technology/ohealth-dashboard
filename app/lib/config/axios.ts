@@ -1,24 +1,20 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+  // When the real API is ready, set this to the actual backend URL
+  baseURL: import.meta.env.VITE_API_URL ?? "",
   headers: {
-    common: { Accept: "application/json" },
-    post: { "Content-Type": "application/json" },
+    "Content-Type": "application/json",
   },
+  timeout: 10000,
 });
 
-// Only retry true network errors (no connection, timeout).
-// 5xx server errors are retried by TanStack Query instead — having both
-// retry on 5xx multiplies attempts: (axios retries + 1) × (TQ retries + 1).
 axiosRetry(axiosInstance, {
-  retries: 2,
+  retries: 3,
   retryDelay: axiosRetry.exponentialDelay,
-  shouldResetTimeout: true,
-  retryCondition: (error) => axiosRetry.isNetworkError(error),
+  retryCondition: (error) =>
+    axiosRetry.isNetworkOrIdempotentRequestError(error),
 });
 
 export default axiosInstance;
