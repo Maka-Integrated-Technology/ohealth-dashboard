@@ -8,4 +8,11 @@ export const QUERY_KEYS = {
     list: (params: SearchParams) => ["example", "list", params] as const,
     byId: (id: string | number) => ["example", id] as const,
   },
+  appointments: {
+    all: ["appointments"] as const,
+    next: () => ["appointments", "next"] as const,
+    today: () => ["appointments", "today"] as const,
+    upcoming: () => ["appointments", "upcoming"] as const,
+    requests: () => ["appointments", "requests"] as const,
+  },
 };

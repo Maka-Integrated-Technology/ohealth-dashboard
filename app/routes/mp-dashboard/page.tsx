@@ -1,60 +1,28 @@
-import { CalendarClock, Users, FileText, MessageSquare } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { ActivityFeed } from "./_sections/activity-feed";
+import { AppointmentRequests } from "./_sections/appointment-requests";
+import { Header } from "./_sections/header";
+import { NextAppointment } from "./_sections/next-appointment";
+import { StatsCards } from "./_sections/stats-cards";
+import { TodaysAppointments } from "./_sections/todays-appointments";
 
-const STATS = [
-  {
-    icon: CalendarClock,
-    label: "Today's appointments",
-    value: "12",
-    hint: "3 awaiting confirmation",
-  },
-  {
-    icon: Users,
-    label: "Active patients",
-    value: "248",
-    hint: "+8 this week",
-  },
-  {
-    icon: FileText,
-    label: "Prescriptions issued",
-    value: "37",
-    hint: "This month",
-  },
-  {
-    icon: MessageSquare,
-    label: "Unread messages",
-    value: "5",
-    hint: "2 flagged urgent",
-  },
-];
-
-export default function MedicalProfessionalDashboard() {
+export default function MpDashboardPage() {
   return (
-    <div className="max-w-content mx-auto w-full px-4 py-8 sm:px-6">
-      <div className="mb-6">
-        <h1 className="mb-1 text-2xl font-bold">Medical Professional</h1>
-        <p className="text-muted-foreground text-sm">
-          Overview of your appointments, patients, and prescriptions.
-        </p>
-      </div>
+    <div className="bg-background min-h-screen p-6 lg:p-8">
+      <div className="mx-auto w-full max-w-350">
+        <Header />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {STATS.map((stat) => (
-          <Card key={stat.label}>
-            <CardHeader>
-              <div className="bg-primary/10 mb-1 flex size-9 items-center justify-center rounded-lg">
-                <stat.icon className="text-primary size-5" strokeWidth={1.5} />
-              </div>
-              <CardTitle className="text-muted-foreground text-sm font-medium">
-                {stat.label}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-muted-foreground mt-1 text-xs">{stat.hint}</p>
-            </CardContent>
-          </Card>
-        ))}
+        <div className="mt-8 flex flex-col gap-6 lg:flex-row">
+          <div className="flex-1 space-y-6">
+            <StatsCards />
+            <TodaysAppointments />
+            <AppointmentRequests />
+          </div>
+
+          <div className="w-full shrink-0 space-y-6 lg:w-96">
+            <NextAppointment />
+            <ActivityFeed />
+          </div>
+        </div>
       </div>
     </div>
   );

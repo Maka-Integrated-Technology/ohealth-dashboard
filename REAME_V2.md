@@ -28,15 +28,9 @@ Each portal is a separate build selected at build time by `VITE_ROUTE`:
 
 ```bash
 npm install
-cp .env.example .env.local   # defaults work as-is — see note below
+cp .env.example .env.local   # then fill in VITE_API_BASE_URL (and optionally VITE_ROUTE)
 npm run dev                  # Medical Professional (default), http://localhost:5100
 ```
-
-> No real backend needed to run this locally. There isn't one wired up yet —
-> `/api/appointments/*` requests are intercepted and served by **MSW**
-> (`app/mocks/handlers/appointments.ts`), which starts automatically in dev.
-> Leave `VITE_API_BASE_URL` empty until the real API is ready; just fill it
-> in when it is.
 
 ## Running the different dashboards
 
@@ -73,8 +67,6 @@ Deploys run on pushes to `staging` and `prod` via `.github/workflows/deploy.yml`
 
 ## Documentation
 
-- [Progress](docs/progress.md) — what's built, what's still mocked, what's
-  next.
 - [Setup & Local Development](docs/setup.md) — prerequisites, environment
   variables, dashboard selection, dev server, build, CI, and Docker.
 - [Architecture](docs/architecture.md) — the per-dashboard `VITE_ROUTE` routing

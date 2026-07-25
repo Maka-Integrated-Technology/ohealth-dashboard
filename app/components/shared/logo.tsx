@@ -1,69 +1,42 @@
 import { Link } from "react-router";
-import { cn } from "~/lib/utils/helpers";
-import { Layers } from "lucide-react";
 
-const logoSizes = {
-  sm: { icon: "size-5", text: "text-lg" },
-  default: { icon: "size-6", text: "text-xl" },
-  lg: { icon: "size-8", text: "text-2xl" },
-} as const;
-
-type LogoSize = keyof typeof logoSizes;
-
-interface Props {
-  containerClassName?: string;
-  size?: LogoSize;
-  disabled?: boolean;
-  iconOnly?: boolean;
-  label?: string;
+interface LogoProps {
+  size?: "sm" | "md" | "lg";
 }
 
-function LogoContent({
-  size,
-  iconOnly,
-  label,
-}: {
-  size: LogoSize;
-  iconOnly?: boolean;
-  label: string;
-}) {
-  const s = logoSizes[size];
-  return (
-    <div className="flex items-center gap-2">
-      <Layers className={cn(s.icon, "text-primary")} strokeWidth={1.5} />
-      {!iconOnly && (
-        <span className={cn("font-bold tracking-tight", s.text)}>
-          <span className="text-primary">{label}</span>
-        </span>
-      )}
-    </div>
-  );
-}
-
-export default function Logo({
-  containerClassName,
-  size = "default",
-  disabled = false,
-  iconOnly = false,
-  label = "OHealth",
-}: Props) {
-  const containerClass = cn("flex w-fit items-center", containerClassName);
-
-  if (disabled) {
-    return (
-      <div className={containerClass} aria-label={label}>
-        <LogoContent size={size} iconOnly={iconOnly} label={label} />
-      </div>
-    );
-  }
+export default function Logo({ size = "md" }: LogoProps) {
+  const linkClass =
+    size === "sm" ? "flex items-center gap-2" : "flex items-center gap-2.5";
+  const textClass =
+    size === "sm"
+      ? "text-base font-bold tracking-tight text-slate-900"
+      : "text-xl font-bold tracking-tight text-slate-900";
+  const svgSize = size === "sm" ? 24 : 32;
 
   return (
-    <Link
-      to="/"
-      className={containerClass}
-      aria-label={`${label} — Go to homepage`}
-    >
-      <LogoContent size={size} iconOnly={iconOnly} label={label} />
+    <Link to="/" className={linkClass}>
+      <svg
+        width={svgSize}
+        height={svgSize}
+        viewBox="0 0 32 32"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="shrink-0"
+      >
+        <path
+          d="M16 28.5S3 20.5 3 11.5C3 7.36 6.36 4 10.5 4c2.55 0 4.8 1.27 5.5 3.22C16.7 5.27 18.95 4 21.5 4 25.64 4 29 7.36 29 11.5c0 9-13 17-13 17z"
+          fill="#1D4ED8"
+        />
+        <path
+          d="M16 9.5v8M12 13.5h8"
+          stroke="#FFFFFF"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+      </svg>
+      <span className={textClass}>
+        OHealth<span className="text-blue-600">+</span>
+      </span>
     </Link>
   );
 }
