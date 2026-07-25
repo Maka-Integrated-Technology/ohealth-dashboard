@@ -91,7 +91,7 @@ export function NextAppointment() {
               {apt.consultationType} Consultation
             </p>
           </button>
-          
+
           <div className="mt-2 grid grid-cols-2 gap-4 text-sm">
             <div>
               <p className="text-xs font-medium">Age</p>

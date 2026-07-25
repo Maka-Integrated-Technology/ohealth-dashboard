@@ -6,11 +6,11 @@ rather than a full changelog.
 
 ## Status by dashboard
 
-| Surface               | Status                     | Notes                                                       |
-| ---------------------- | --------------------------- | ------------------------------------------------------------ |
-| Medical Professional (`mp-dashboard`) | 🟢 In active development | Main dashboard page is built out; see below.                 |
-| Pharmacy (`ph-dashboard`)             | ⚪ Scaffolded only        | Route + layout exist, no page content yet.                   |
-| Laboratory (`lb-dashboard`)           | ⚪ Scaffolded only        | Route + layout exist, no page content yet.                   |
+| Surface                               | Status                   | Notes                                        |
+| ------------------------------------- | ------------------------ | -------------------------------------------- |
+| Medical Professional (`mp-dashboard`) | 🟢 In active development | Main dashboard page is built out; see below. |
+| Pharmacy (`ph-dashboard`)             | ⚪ Scaffolded only       | Route + layout exist, no page content yet.   |
+| Laboratory (`lb-dashboard`)           | ⚪ Scaffolded only       | Route + layout exist, no page content yet.   |
 
 ## Medical Professional dashboard — what's built
 

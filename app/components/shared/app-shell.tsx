@@ -26,7 +26,7 @@ export default function AppShell({
           leftSlot={
             hasSidebar ? <SidebarMobileTrigger items={sidebarItems!} /> : null
           }
-          rightSlot={rightSlot} 
+          rightSlot={rightSlot}
           hasSidebar={hasSidebar}
         />
         <OfflineBanner />

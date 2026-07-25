@@ -5,8 +5,12 @@ interface LogoProps {
 }
 
 export default function Logo({ size = "md" }: LogoProps) {
-  const linkClass = size === "sm" ? "flex items-center gap-2" : "flex items-center gap-2.5";
-  const textClass = size === "sm" ? "text-base font-bold tracking-tight text-slate-900" : "text-xl font-bold tracking-tight text-slate-900";
+  const linkClass =
+    size === "sm" ? "flex items-center gap-2" : "flex items-center gap-2.5";
+  const textClass =
+    size === "sm"
+      ? "text-base font-bold tracking-tight text-slate-900"
+      : "text-xl font-bold tracking-tight text-slate-900";
   const svgSize = size === "sm" ? 24 : 32;
 
   return (

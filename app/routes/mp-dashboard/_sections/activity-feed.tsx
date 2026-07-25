@@ -10,7 +10,7 @@ const ACTIVITY_ITEMS = [
     rest: " cancelled their 2:30 PM appointment today.",
     time: "12 minutes ago",
     icon: CalendarX2,
-    accent: "alert" as const, 
+    accent: "alert" as const,
   },
   {
     id: 1,
