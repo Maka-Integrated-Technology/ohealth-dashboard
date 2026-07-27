@@ -1,11 +1,143 @@
 import { delay, http, HttpResponse } from "msw";
 import type {
+  Appointment,
   AppointmentRequest,
   AppointmentRequestsResponse,
   NextAppointment,
   TodayAppointment,
   UpcomingAppointment,
 } from "~/features/appointments/types";
+
+const appointments: Appointment[] = [
+  {
+    id: "list-001",
+    patientId: "pat-101",
+    patientName: "Emeka Bello",
+    patientInitials: "EB",
+    patientEmail: "emekabello@gmail.com",
+    patientAge: 35,
+    patientSex: "Male",
+    consultationType: "Video",
+    startsAt: new Date("2026-06-14T10:30:00").toISOString(),
+    endsAt: new Date("2026-06-14T11:30:00").toISOString(),
+    reason: "General health checkup",
+    status: "confirmed",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-002",
+    patientId: "pat-102",
+    patientName: "James Whitfield",
+    patientInitials: "JW",
+    patientEmail: "jameswhitfield@gmail.com",
+    patientAge: 42,
+    patientSex: "Male",
+    reason: "Anxiety consultation",
+    consultationType: "Chat",
+    startsAt: new Date("2026-05-28T10:00:00").toISOString(),
+    endsAt: new Date("2026-05-28T10:45:00").toISOString(),
+    status: "pending",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-003",
+    patientId: "pat-103",
+    patientName: "Priya Nair",
+    patientInitials: "PN",
+    patientEmail: "priyanair@gmail.com",
+    patientAge: 29,
+    patientSex: "Female",
+    reason: "Diabetes management",
+    consultationType: "Video",
+    startsAt: new Date("2026-05-25T11:00:00").toISOString(),
+    endsAt: new Date("2026-05-25T12:00:00").toISOString(),
+    status: "confirmed",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-004",
+    patientId: "pat-104",
+    patientName: "David Chen",
+    patientInitials: "DC",
+    patientEmail: "davidchen@gmail.com",
+    patientAge: 50,
+    patientSex: "Male",
+    reason: "Post-op review",
+    consultationType: "Video",
+    startsAt: new Date("2026-05-25T14:00:00").toISOString(),
+    endsAt: new Date("2026-05-25T14:30:00").toISOString(),
+    status: "confirmed",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-005",
+    patientId: "pat-105",
+    patientName: "David Chang",
+    patientInitials: "DC",
+    patientEmail: "davidchang@gmail.com",
+    patientAge: 50,
+    patientSex: "Male",
+    reason: "Post-op review",
+    consultationType: "Video",
+    startsAt: new Date("2026-05-30T11:00:00").toISOString(),
+    endsAt: new Date("2026-05-30T11:45:00").toISOString(),
+    status: "confirmed",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-006",
+    patientId: "pat-106",
+    patientName: "Fatima Al-Hassan",
+    patientInitials: "FA",
+    patientEmail: "fatimaalhassan@gmail.com",
+    patientAge: 28,
+    patientSex: "Female",
+    reason: "Skin rash assessment",
+    consultationType: "Chat",
+    startsAt: new Date("2026-05-28T13:00:00").toISOString(),
+    endsAt: new Date("2026-05-28T13:45:00").toISOString(),
+    status: "cancelled",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-007",
+    patientId: "pat-107",
+    patientName: "Fathia Al-Hassan",
+    patientInitials: "FA",
+    patientEmail: "fathiaalhassan@gmail.com",
+    patientAge: 28,
+    patientSex: "Female",
+    reason: "Skin rash assessment",
+    consultationType: "Chat",
+    startsAt: new Date("2026-05-30T09:00:00").toISOString(),
+    endsAt: new Date("2026-05-30T09:45:00").toISOString(),
+    status: "cancelled",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-008",
+    patientId: "pat-108",
+    patientName: "Marcus Reid",
+    patientInitials: "MR",
+    patientEmail: "marcusreid@gmail.com",
+    patientAge: 45,
+    patientSex: "Male",
+    reason: "Cardiac screening",
+    consultationType: "Video",
+    startsAt: new Date("2026-05-28T13:00:00").toISOString(),
+    endsAt: new Date("2026-05-28T13:45:00").toISOString(),
+    status: "completed",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+]
 
 const nextAppointment: NextAppointment = {
   id: "apt-001",
@@ -172,6 +304,32 @@ const appointmentRequests: AppointmentRequest[] = [
 const MOCK_NETWORK_DELAY_MS = 900;
 
 export const appointmentHandlers = [
+  http.get("/api/appointments", async ({ request }) => {
+    await delay(MOCK_NETWORK_DELAY_MS);
+
+    const url = new URL(request.url);
+    const from = url.searchParams.get("from");
+    const to = url.searchParams.get("to");
+    const status = url.searchParams.get("status");
+
+    let filteredAppointments = appointments;
+
+    if (from && to) {
+      const fromTime = new Date(from).getTime();
+      const toTime = new Date(to).getTime();
+      filteredAppointments = filteredAppointments.filter(apt => {
+        const startTime = new Date(apt.startsAt).getTime()
+        return startTime >= fromTime && startTime <= toTime
+      })
+    }
+
+    if (status && status !== "all") {
+      filteredAppointments = filteredAppointments.filter((apt) => apt.status === status)
+    }
+
+    return HttpResponse.json(filteredAppointments)
+  }),
+
   http.get("/api/appointments/next", async () => {
     await delay(MOCK_NETWORK_DELAY_MS);
     return HttpResponse.json(nextAppointment);
@@ -203,5 +361,10 @@ export const appointmentHandlers = [
   http.post("/api/appointments/requests/:id/reject", ({ params }) => {
     console.info(`[MSW] Rejected request ${params.id}`);
     return HttpResponse.json({ success: true });
+  }),
+
+  http.post("/api/appointments/:id/cancel", ({ params }) => {
+    console.info(`[MSW] Cancelled appointment ${params.id}`)
+    return HttpResponse.json({ success: true })
   }),
 ];
