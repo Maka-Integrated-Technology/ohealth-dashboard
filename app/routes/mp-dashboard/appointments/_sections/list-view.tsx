@@ -90,7 +90,13 @@ export function ListView({
                   <Button size="sm" variant="outline" onClick={() => onReschedule(appointment)}>
                     Reschedule
                   </Button>
-                  <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive" disabled={cancellingId === appointment.id} onClick={() => onCancel(appointment)}>
+                  <Button 
+                    size="sm" 
+                    variant="ghost" 
+                    className="text-destructive hover:text-destructive" 
+                    isLoading={cancellingId === appointment.id} 
+                    onClick={() => onCancel(appointment)}
+                  >
                     Cancel
                   </Button>
                 </>
