@@ -59,5 +59,5 @@ export function formatWeekRangeLabel(start: Date, end: Date) {
   const sameMonth = start.getMonth() === end.getMonth()
   const startLabel = start.toLocaleDateString("en-US", { month: "long", day: "numeric" })
   const endLabel = sameMonth ? end.getDate().toString() : end.toLocaleDateString("en-US", { month: "long", day: "numeric" })
-  return `${startLabel}-${endLabel}, ${end.getFullYear}`
+  return `${startLabel}-${endLabel}, ${end.getFullYear()}`
 }

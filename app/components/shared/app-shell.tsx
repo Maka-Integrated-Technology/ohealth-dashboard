@@ -10,7 +10,7 @@ export default function AppShell({
   sidebarItems,
   rightSlot,
 }: {
-  portal: string;
+  portal?: string;
   sidebarItems?: SidebarItem[];
   rightSlot?: ReactNode;
 }) {
