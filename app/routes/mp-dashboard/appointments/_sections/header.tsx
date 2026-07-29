@@ -9,6 +9,7 @@ import {
 } from "~/components/ui/select";
 import { DateRangePicker } from "./date-range-picker";
 import type { AppointmentStatus } from "~/features/appointments/types";
+import { FilterSearchIcon } from "~/components/ui/filter-search-icon";
 
 type ViewMode = "calendar" | "list";
 type StatusFilter = AppointmentStatus | "all";
@@ -52,6 +53,7 @@ export function AppointmentsHeader({
             onValueChange={(value) => onStatusChange(value as StatusFilter)}
           >
             <SelectTrigger className="w-40">
+              <FilterSearchIcon className="size-4 text-muted-foreground" />
               <SelectValue placeholder="All Status" />
             </SelectTrigger>
             <SelectContent>
