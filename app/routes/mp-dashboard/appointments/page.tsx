@@ -162,6 +162,7 @@ export default function AppointmentsPage() {
           appointments={appointments}
           isLoading={isLoading}
           isError={isError}
+          onSelect={setSelectedAppointment}
           onStart={handleStart}
           onReschedule={handleReschedule}
           onCancel={handleCancel}

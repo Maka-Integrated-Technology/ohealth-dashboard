@@ -58,7 +58,7 @@ export function CalendarView({
     <>
       <div className="overflow-x-auto rounded-lg border border-border">
         <div
-          className="grid"
+          className="grid min-w-[700px]"
           style={{ gridTemplateColumns: `80px repeat(${days.length}, 1fr)` }}
         >
           {/* Header row */}

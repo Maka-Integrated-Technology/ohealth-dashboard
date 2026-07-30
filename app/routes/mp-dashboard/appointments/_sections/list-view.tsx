@@ -15,6 +15,7 @@ interface ListViewProps {
   appointments: Appointment[];
   isLoading: boolean;
   isError: boolean;
+  onSelect: (appointment: Appointment) => void;
   onStart: (appointment: Appointment) => void;
   onReschedule: (appointment: Appointment) => void;
   onCancel: (appointment: Appointment) => void;
@@ -25,7 +26,7 @@ export function ListView({
   appointments,
   isLoading,
   isError,
-  onStart,
+  onSelect,
   onReschedule,
   onCancel,
   cancellingId,
@@ -66,11 +67,14 @@ export function ListView({
         {appointments.map((appointment) => (
           <div
             key={appointment.id}
-            className="flex items-center justify-between gap-4 rounded-lg border border-border bg-card p-4"
+            onClick={() => onSelect(appointment)}
+            className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-muted/50"
           >
             <div className="flex items-center gap-3">
               <Avatar>
-                <AvatarFallback className="bg-blue-100 text-blue-700 font-bold">{appointment.patientInitials}</AvatarFallback>
+                <AvatarFallback className="bg-blue-100 font-bold text-blue-700">
+                  {appointment.patientInitials}
+                </AvatarFallback>
               </Avatar>
               <div className="flex flex-col gap-1">
                 <p className="font-medium text-foreground">
@@ -96,12 +100,15 @@ export function ListView({
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div
+              className="flex items-center gap-2"
+              onClick={(e) => e.stopPropagation()}
+            >
               {appointment.status === "confirmed" && (
                 <Button
                   size="sm"
                   className="rounded-full"
-                  onClick={() => onStart(appointment)}
+                  onClick={() => onSelect(appointment)}
                 >
                   Start
                 </Button>
