@@ -133,7 +133,7 @@ export default function AppointmentsPage() {
   );
 
   return (
-    <div>
+    <div className="p-6">
       <AppointmentsHeader
         from={from}
         to={to}
