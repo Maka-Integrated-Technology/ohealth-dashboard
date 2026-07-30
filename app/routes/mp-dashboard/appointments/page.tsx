@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useCustomSearchParams } from "~/hooks/use-custom-search-params";
 import {
@@ -12,6 +12,8 @@ import type {
 import { AppointmentsHeader } from "./_sections/header";
 import { ListView } from "./_sections/list-view";
 import { getWeekRange } from "./_sections/_primitives";
+import { CalendarView } from "./_sections/calendar-view";
+import { AppointmentDetailDialog } from "./_sections/appointment-detail-dialog";
 
 type ViewMode = "calendar" | "list";
 type StatusFilter = AppointmentStatus | "all";
@@ -76,6 +78,9 @@ export default function AppointmentsPage() {
     variables: cancellingId,
   } = useCancelAppointment();
 
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<Appointment | null>(null);
+
   const handleViewChange = useCallback(
     (nextView: ViewMode) => {
       setSearchParams((prev) => {
@@ -132,6 +137,14 @@ export default function AppointmentsPage() {
     [cancelAppointment]
   );
 
+  const handleCancelFromDialog = useCallback(
+    async (appointment: Appointment) => {
+      await handleCancel(appointment);
+      setSelectedAppointment(null);
+    },
+    [handleCancel]
+  );
+
   return (
     <div className="p-6">
       <AppointmentsHeader
@@ -155,10 +168,23 @@ export default function AppointmentsPage() {
           cancellingId={isCancelling ? (cancellingId as string) : undefined}
         />
       ) : (
-        <div className="rounded-lg border border-dashed border-border p-12 text-center text-muted-foreground">
-          Calendar view coming soon.
-        </div>
+        <CalendarView
+          from={from}
+          to={to}
+          appointments={appointments}
+          isLoading={isLoading}
+          isError={isError}
+          onSelect={setSelectedAppointment}
+        />
       )}
+
+      <AppointmentDetailDialog
+        appointment={selectedAppointment}
+        onOpenChange={(open) => !open && setSelectedAppointment(null)}
+        onStart={handleStart}
+        onCancel={handleCancelFromDialog}
+        isCancelling={isCancelling}
+      />
     </div>
   );
 }
