@@ -69,7 +69,8 @@ export function AppointmentsHeader({
         <div className="flex items-center gap-1 rounded-lg border border-border p-1">
           <Button
             size="sm"
-            variant={view === "calendar" ? "default" : "ghost"}
+            variant="ghost"
+            className={view === "calendar" ? "bg-foreground text-background hover:bg-foreground/90" : ""}
             onClick={() => onViewChange("calendar")}
           >
             <LayoutGrid className="size-4" />
@@ -77,7 +78,8 @@ export function AppointmentsHeader({
           </Button>
           <Button
             size="sm"
-            variant={view === "list" ? "default" : "ghost"}
+            variant="ghost"
+            className={view === "list" ? "bg-foreground text-background hover:bg-foreground/90" : ""}
             onClick={() => onViewChange("list")}
           >
             <List className="size-4" />
