@@ -105,23 +105,27 @@ export function AppointmentDetailDialog({
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-3 pt-2">
-              <Button
-                variant="ghost"
-                className="px-6 py-5 text-destructive hover:text-destructive"
-                isLoading={isCancelling}
-                onClick={() => onCancel(appointment)}
-              >
-                Cancel Consultation
-              </Button>
-              <Button
-                className="gap-1 px-6 py-5"
-                onClick={() => onStart(appointment)}
-              >
-                Start Consultation
-                <ChevronRight className="size-4" />
-              </Button>
-            </div>
+            {(appointment.status === "confirmed" ||
+              appointment.status === "pending") && (
+                <div className="flex items-center justify-center gap-3 pt-2">
+                  {appointment.status === "pending" || appointment.status === "confirmed" ? (
+                    <Button
+                      variant="ghost"
+                      className="px-6 py-5 text-destructive hover:text-destructive"
+                      isLoading={isCancelling}
+                      onClick={() => onCancel(appointment)}
+                    >
+                      Cancel Consultation
+                    </Button>
+                  ) : null}
+                  {appointment.status === "confirmed" && (
+                    <Button className="gap-1 px-6 py-5" onClick={() => onStart(appointment)}>
+                      Start Consultation
+                      <ChevronRight className="size-4" />
+                    </Button>
+                  )}
+                </div>
+              )}
           </>
         )}
       </DialogContent>
