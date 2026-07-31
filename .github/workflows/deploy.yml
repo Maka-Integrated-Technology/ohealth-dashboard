@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [staging, prod]
+    branches: [staging, main]
 
 concurrency:
   group: deploy-${{ github.ref }}
