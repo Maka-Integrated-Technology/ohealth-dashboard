@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
+import { LabIcon } from "~/components/ui/icons/lab-icon";
 
 interface LabFormValues {
   testType: string;
@@ -71,6 +72,7 @@ export function LabTab({ onSubmitRequest }: LabTabProps) {
           </div>
 
           <Button type="submit" isLoading={isSubmitting} className="w-full">
+            <LabIcon className="size-3.5" />
             Submit Request
           </Button>
         </Form>

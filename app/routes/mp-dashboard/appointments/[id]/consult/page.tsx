@@ -131,19 +131,21 @@ export default function ConsultPage() {
           )}
         </div>
 
-        <div className="relative flex-1 bg-muted">
-          {/* video feed placeholder */}
-          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-3 rounded-full bg-background/90 px-4 py-2 shadow-lg">
-            <button className="rounded-full bg-secondary p-3">
+        <div className="relative flex-1 overflow-hidden bg-muted">
+          {/* video feed placeholder goes here */}
+
+          <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-3 bg-black/10 px-4 py-4 backdrop-blur-sm">
+            <button className="flex size-11 items-center justify-center rounded-full bg-slate-700 text-white hover:bg-slate-600">
               <Mic className="size-5" />
             </button>
-            <button className="rounded-full bg-secondary p-3">
+            <button className="flex size-11 items-center justify-center rounded-full bg-slate-700 text-white hover:bg-slate-600">
               <Video className="size-5" />
             </button>
-            <button className="rounded-full bg-destructive p-3 text-destructive-foreground">
+            <button className="flex h-11 items-center gap-2 rounded-full bg-destructive px-4 text-white hover:bg-destructive/90">
               <PhoneOff className="size-5" />
+              <span className="text-sm font-medium">End</span>
             </button>
-            <button className="rounded-full bg-secondary p-3">
+            <button className="flex size-11 items-center justify-center rounded-full bg-slate-700 text-white hover:bg-slate-600">
               <Maximize2 className="size-5" />
             </button>
           </div>

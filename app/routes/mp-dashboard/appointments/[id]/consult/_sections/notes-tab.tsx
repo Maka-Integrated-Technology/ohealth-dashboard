@@ -1,6 +1,7 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Button } from "~/components/ui/button";
+import { NotesIcon } from "~/components/ui/icons/notes-icon";
 import { Label } from "~/components/ui/label";
 
 interface NotesFormValues {
@@ -68,6 +69,7 @@ export function NotesTab({ onSaveDraft }: NotesTabProps) {
           ))}
 
           <Button type="submit" isLoading={isSubmitting} className="w-full">
+            <NotesIcon className="size-3.5" />
             Save Draft
           </Button>
         </Form>
