@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "~/lib/utils/query-keys";
 import { appointmentsApi } from "./api";
-import type { GetAppoinmentsParams, ConsultationDetail } from "./types";
+import type { GetAppoinmentsParams } from "./types";
 
 export function useNextAppointment() {
   return useQuery({
@@ -67,7 +67,7 @@ export function useRejectRequest() {
 export function useAppointments(params: GetAppoinmentsParams) {
   return useQuery({
     queryKey: QUERY_KEYS.appointments.list(params),
-    queryFn: () => appointmentsApi.getAppoinmtents(params),
+    queryFn: () => appointmentsApi.getAppointments(params),
     staleTime: 60 * 1000,
   })
 }

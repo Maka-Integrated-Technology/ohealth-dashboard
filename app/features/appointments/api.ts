@@ -47,7 +47,7 @@ export const appointmentsApi = {
     await axiosInstance.post(`/api/appointments/requests/${id}/reject`);
   },
 
-  getAppoinmtents: async (
+  getAppointments: async (
     params: GetAppoinmentsParams
   ): Promise<Appointment[]> => {
     const { data } = await axiosInstance.get<Appointment[]>("/api/appointments", { params })
