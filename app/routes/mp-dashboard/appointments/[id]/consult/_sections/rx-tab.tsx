@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
+import { RxIcon } from "~/components/ui/icons/rx-icon";
 
 interface RxFormValues {
   medicine: string;
@@ -86,6 +87,7 @@ export function RxTab({ onAddPrescription }: RxTabProps) {
           </div>
 
           <Button type="submit" isLoading={isSubmitting} className="w-full">
+            <RxIcon className="size-3.5" />
             Add Prescription
           </Button>
         </Form>
