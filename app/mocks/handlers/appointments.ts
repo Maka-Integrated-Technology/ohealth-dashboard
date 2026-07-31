@@ -6,6 +6,7 @@ import type {
   NextAppointment,
   TodayAppointment,
   UpcomingAppointment,
+  ConsultationDetail,
 } from "~/features/appointments/types";
 
 const appointments: Appointment[] = [
@@ -303,6 +304,51 @@ const appointmentRequests: AppointmentRequest[] = [
 
 const MOCK_NETWORK_DELAY_MS = 900;
 
+const consultationDetails: Record<string, ConsultationDetail> = {
+  "list-001": {
+    id: "list-001",
+    patientId: "pat-101",
+    patientName: "Emeka Bello",
+    patientInitials: "EB",
+    patientSex: "Male",
+    patientAge: 35,
+    condition: "General checkup",
+    bloodType: "O+",
+    allergies: "None reported",
+    lastVisit: "March 15, 2026",
+    consultationType: "Video",
+    title: "General Health Checkup",
+    startsAt: new Date("2026-06-14T10:30:00").toISOString(),
+    endsAt: new Date("2026-06-14T11:30:00").toISOString(),
+    previousConsultations: [{ label: "First Timer", date: "N/A" }],
+  },
+};
+
+function getConsultationDetail(id: string): ConsultationDetail | undefined {
+  if (consultationDetails[id]) return consultationDetails[id];
+
+  const appointment = appointments.find((apt) => apt.id === id);
+  if (!appointment) return undefined;
+
+  return {
+    id: appointment.id,
+    patientId: appointment.patientId,
+    patientName: appointment.patientName,
+    patientInitials: appointment.patientInitials,
+    patientSex: appointment.patientSex,
+    patientAge: appointment.patientAge,
+    condition: appointment.reason,
+    bloodType: "Not on file",
+    allergies: "Not on file",
+    lastVisit: appointment.dateRegistered,
+    consultationType: appointment.consultationType,
+    title: appointment.reason,
+    startsAt: appointment.startsAt,
+    endsAt: appointment.endsAt,
+    previousConsultations: [],
+  };
+}
+
 export const appointmentHandlers = [
   http.get("/api/appointments", async ({ request }) => {
     await delay(MOCK_NETWORK_DELAY_MS);
@@ -317,17 +363,19 @@ export const appointmentHandlers = [
     if (from && to) {
       const fromTime = new Date(from).getTime();
       const toTime = new Date(to).getTime();
-      filteredAppointments = filteredAppointments.filter(apt => {
-        const startTime = new Date(apt.startsAt).getTime()
-        return startTime >= fromTime && startTime <= toTime
-      })
+      filteredAppointments = filteredAppointments.filter((apt) => {
+        const startTime = new Date(apt.startsAt).getTime();
+        return startTime >= fromTime && startTime <= toTime;
+      });
     }
 
     if (status && status !== "all") {
-      filteredAppointments = filteredAppointments.filter((apt) => apt.status === status)
+      filteredAppointments = filteredAppointments.filter(
+        (apt) => apt.status === status
+      );
     }
 
-    return HttpResponse.json(filteredAppointments)
+    return HttpResponse.json(filteredAppointments);
   }),
 
   http.get("/api/appointments/next", async () => {
@@ -363,8 +411,21 @@ export const appointmentHandlers = [
     return HttpResponse.json({ success: true });
   }),
 
-  http.post("/api/appointments/:id/cancel", ({ params }) => {
-    console.info(`[MSW] Cancelled appointment ${params.id}`)
-    return HttpResponse.json({ success: true })
+  http.post("/api/appointments/:id/cancel", async ({ params }) => {
+    await delay(MOCK_NETWORK_DELAY_MS);
+    const appointment = appointments.find((apt) => apt.id === params.id);
+    if (appointment) {
+      appointment.status = "cancelled";
+    }
+    return HttpResponse.json({ success: true });
+  }),
+
+  http.get("/api/appointments/:id/consultation", async ({ params }) => {
+    await delay(MOCK_NETWORK_DELAY_MS);
+    const detail = getConsultationDetail(params.id as string);
+    if (!detail) {
+      return new HttpResponse(null, { status: 404 });
+    }
+    return HttpResponse.json(detail);
   }),
 ];
