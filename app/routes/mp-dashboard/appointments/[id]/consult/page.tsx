@@ -13,13 +13,24 @@ import { NotesTab } from "./_sections/notes-tab";
 import { RxTab } from "./_sections/rx-tab";
 import { LabTab } from "./_sections/lab-tab";
 import { FollowUpTab } from "./_sections/follow-up-tab";
+import { OHealthMark } from "~/components/ui/icons/ohealth-mark";
+
+const TAB_TRIGGER_CLASSES =
+  "rounded-none border-b-2 border-transparent bg-transparent px-1 pb-2 text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none";
 
 function formatDateTimeHeader(startsAt: string, endsAt: string) {
   const start = new Date(startsAt);
   const end = new Date(endsAt);
-  const dateLabel = start.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  const dateLabel = start.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
   const fmtTime = (d: Date) =>
-    d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
+    d.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
   return `${dateLabel} · ${fmtTime(start)} - ${fmtTime(end)}`;
 }
 
@@ -28,90 +39,97 @@ export default function ConsultPage() {
   const { data: consultation, isLoading, isError } = useConsultationDetail(id);
 
   return (
-    <div className="flex h-[calc(100vh-0px)]">
+    <div className="flex h-[calc(100vh-0px)] p-3">
       {/* Left: patient snapshot */}
-      <aside className="w-72 shrink-0 overflow-y-auto border-r border-border bg-card p-4">
-        {isLoading && (
-          <div className="space-y-3">
-            <Skeleton className="h-10 w-10 rounded-full" />
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-24" />
-          </div>
-        )}
+      <aside className="w-72 shrink-0 overflow-y-auto border-r border-border bg-card">
+        <div className="flex items-center gap-1.5 border-border p-5 mb-3">
+          <OHealthMark />
+          <span className="font-semibold text-foreground">OHealth</span>
+        </div>
 
-        {isError && (
-          <Empty>
-            <p className="text-sm text-muted-foreground">
-              Couldn&apos;t load patient details.
-            </p>
-          </Empty>
-        )}
-
-        {consultation && (
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 rounded-lg bg-blue-50 p-3">
-              <div className="flex size-10 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-700">
-                {consultation.patientInitials}
-              </div>
-              <div>
-                <p className="font-bold text-foreground">
-                  {consultation.patientName}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {consultation.patientSex}, {consultation.patientAge} yrs
-                </p>
-              </div>
+        <div className="p-4">
+          {isLoading && (
+            <div className="space-y-3">
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-4 w-24" />
             </div>
+          )}
 
-            <div className="space-y-3 text-sm">
-              <div>
-                <p className="text-muted-foreground">Condition</p>
-                <p className="font-medium text-foreground">
-                  {consultation.condition}
-                </p>
+          {isError && (
+            <Empty>
+              <p className="text-sm text-muted-foreground">
+                Couldn&apos;t load patient details.
+              </p>
+            </Empty>
+          )}
+
+          {consultation && (
+            <div className="space-y-4">
+              <div className="-mx-4 -mt-4 flex items-center gap-3 bg-blue-50 p-4">
+                <div className="flex size-10 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-700">
+                  {consultation.patientInitials}
+                </div>
+                <div>
+                  <p className="font-bold text-foreground">
+                    {consultation.patientName}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {consultation.patientSex}, {consultation.patientAge} yrs
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-muted-foreground">Blood Type</p>
-                <p className="font-medium text-foreground">
-                  {consultation.bloodType}
-                </p>
+
+              <div className="space-y-3 text-sm">
+                <div>
+                  <p className="text-muted-foreground">Condition</p>
+                  <p className="font-medium text-foreground">
+                    {consultation.condition}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Blood Type</p>
+                  <p className="font-medium text-foreground">
+                    {consultation.bloodType}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Allergies</p>
+                  <p className="font-medium text-foreground">
+                    {consultation.allergies}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Last Visit</p>
+                  <p className="font-medium text-foreground">
+                    {consultation.lastVisit}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Consult Type</p>
+                  <p className="font-medium text-foreground">
+                    {consultation.consultationType}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-muted-foreground">Allergies</p>
-                <p className="font-medium text-foreground">
-                  {consultation.allergies}
-                </p>
-              </div>
-              <div>
-                <p className="text-muted-foreground">Last Visit</p>
-                <p className="font-medium text-foreground">
-                  {consultation.lastVisit}
-                </p>
-              </div>
-              <div>
-                <p className="text-muted-foreground">Consult Type</p>
-                <p className="font-medium text-foreground">
-                  {consultation.consultationType}
-                </p>
-              </div>
+
+              {consultation.previousConsultations.length > 0 && (
+                <div>
+                  <p className="mb-2 text-sm font-medium text-foreground">
+                    Previous Consultations
+                  </p>
+                  <ul className="space-y-1">
+                    {consultation.previousConsultations.map((c, i) => (
+                      <li key={i} className="text-sm text-muted-foreground">
+                        {c.label} — {c.date}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
-
-            {consultation.previousConsultations.length > 0 && (
-              <div>
-                <p className="mb-2 text-sm font-medium text-foreground">
-                  Previous Consultations
-                </p>
-                <ul className="space-y-1">
-                  {consultation.previousConsultations.map((c, i) => (
-                    <li key={i} className="text-sm text-muted-foreground">
-                      {c.label} — {c.date}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </aside>
 
       {/* Center: video feed + header */}
@@ -123,7 +141,10 @@ export default function ConsultPage() {
                 {consultation.title}
               </h1>
               <p className="text-sm text-muted-foreground">
-                {formatDateTimeHeader(consultation.startsAt, consultation.endsAt)}
+                {formatDateTimeHeader(
+                  consultation.startsAt,
+                  consultation.endsAt
+                )}
               </p>
             </>
           ) : (
@@ -153,27 +174,53 @@ export default function ConsultPage() {
       </div>
 
       {/* Right: tabs panel */}
-      <aside className="w-80 shrink-0 overflow-y-auto border-l border-border p-4">
+      <aside className="w-80 shrink-0 overflow-y-auto border-l border-border">
         <Tabs defaultValue="notes">
-          <TabsList className="w-full">
-            <TabsTrigger value="notes">Notes</TabsTrigger>
-            <TabsTrigger value="rx">Rx</TabsTrigger>
-            <TabsTrigger value="lab">Lab</TabsTrigger>
-            <TabsTrigger value="follow-up">Follow-up</TabsTrigger>
-          </TabsList>
+          <div className="border-border mt-7 p-4">
+            <TabsList className="w-full justify-start gap-4 rounded-none bg-transparent p-0">
+              <TabsTrigger value="notes" className={TAB_TRIGGER_CLASSES}>
+                Notes
+              </TabsTrigger>
+              <TabsTrigger value="rx" className={TAB_TRIGGER_CLASSES}>
+                Rx
+              </TabsTrigger>
+              <TabsTrigger value="lab" className={TAB_TRIGGER_CLASSES}>
+                Lab
+              </TabsTrigger>
+              <TabsTrigger value="follow-up" className={TAB_TRIGGER_CLASSES}>
+                Follow-up
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="notes">
-            <NotesTab onSaveDraft={(values) => console.log("save draft", values)} />
-          </TabsContent>
-          <TabsContent value="rx">
-            <RxTab onAddPrescription={(values) => console.log("add prescription", values)} />
-          </TabsContent>
-          <TabsContent value="lab">
-            <LabTab onSubmitRequest={(values) => console.log("submit lab request", values)} />
-          </TabsContent>
-          <TabsContent value="follow-up">
-            <FollowUpTab onSchedule={(values) => console.log("schedule follow-up", values)} />
-          </TabsContent>
+          <div className="p-4">
+            <TabsContent value="notes">
+              <NotesTab
+                onSaveDraft={(values) => console.log("save draft", values)}
+              />
+            </TabsContent>
+            <TabsContent value="rx">
+              <RxTab
+                onAddPrescription={(values) =>
+                  console.log("add prescription", values)
+                }
+              />
+            </TabsContent>
+            <TabsContent value="lab">
+              <LabTab
+                onSubmitRequest={(values) =>
+                  console.log("submit lab request", values)
+                }
+              />
+            </TabsContent>
+            <TabsContent value="follow-up">
+              <FollowUpTab
+                onSchedule={(values) =>
+                  console.log("schedule follow-up", values)
+                }
+              />
+            </TabsContent>
+          </div>
         </Tabs>
       </aside>
     </div>
