@@ -1,8 +1,8 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Button } from "~/components/ui/button";
-import { NotesIcon } from "~/components/ui/icons/notes-icon";
 import { Label } from "~/components/ui/label";
+import { NotesIcon } from "~/components/ui/icons/notes-icon";
 
 interface NotesFormValues {
   subjective: string;
@@ -52,7 +52,7 @@ export function NotesTab({ onSaveDraft }: NotesTabProps) {
           <p className="text-sm font-medium text-foreground">SOAP Notes</p>
 
           {FIELDS.map((field) => (
-            <div key={field.name} className="space-y-1">
+            <div key={field.name} className="space-y-2">
               <Label htmlFor={field.name} className="text-xs font-semibold text-primary">
                 {field.label}
               </Label>
@@ -63,12 +63,12 @@ export function NotesTab({ onSaveDraft }: NotesTabProps) {
                 onChange={handleChange}
                 placeholder={field.placeholder}
                 rows={3}
-                className="w-full resize-none rounded-lg border border-input bg-input-background p-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/50"
+                className="w-full resize-none rounded-lg border border-input bg-input-background p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/50"
               />
             </div>
           ))}
 
-          <Button type="submit" isLoading={isSubmitting} className="w-full">
+          <Button type="submit" isLoading={isSubmitting} className="w-full gap-1.5 p-6">
             <NotesIcon className="size-3.5" />
             Save Draft
           </Button>

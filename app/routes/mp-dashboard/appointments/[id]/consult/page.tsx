@@ -16,7 +16,7 @@ import { FollowUpTab } from "./_sections/follow-up-tab";
 import { OHealthMark } from "~/components/ui/icons/ohealth-mark";
 
 const TAB_TRIGGER_CLASSES =
-  "rounded-none border-b-2 border-transparent bg-transparent px-1 pb-2 text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none";
+  "flex-1 rounded-none border-x-0 border-t-0 border-b-2 border-transparent bg-transparent px-1 pb-3 text-sm font-medium text-muted-foreground shadow-none ring-0 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:ring-0";
 
 function formatDateTimeHeader(startsAt: string, endsAt: string) {
   const start = new Date(startsAt);
@@ -42,7 +42,7 @@ export default function ConsultPage() {
     <div className="flex h-[calc(100vh-0px)] p-3">
       {/* Left: patient snapshot */}
       <aside className="w-72 shrink-0 overflow-y-auto border-r border-border bg-card">
-        <div className="flex items-center gap-1.5 border-border p-5 mb-3">
+        <div className="flex items-center gap-1.5 border-b border-border p-4">
           <OHealthMark />
           <span className="font-semibold text-foreground">OHealth</span>
         </div>
@@ -176,8 +176,8 @@ export default function ConsultPage() {
       {/* Right: tabs panel */}
       <aside className="w-80 shrink-0 overflow-y-auto border-l border-border">
         <Tabs defaultValue="notes">
-          <div className="border-border mt-7 p-4">
-            <TabsList className="w-full justify-start gap-4 rounded-none bg-transparent p-0">
+          <div className="border-b border-border p-4">
+            <TabsList className="w-full justify-between gap-0 rounded-none bg-transparent p-0">
               <TabsTrigger value="notes" className={TAB_TRIGGER_CLASSES}>
                 Notes
               </TabsTrigger>
