@@ -41,7 +41,7 @@ export function RxTab({ onAddPrescription }: RxTabProps) {
         <Form onSubmit={handleSubmit} className="space-y-4">
           <p className="text-sm font-medium text-foreground">Prescription</p>
 
-          <div className="space-y-1">
+          <div className="space-y-2">
             <Label htmlFor="medicine">Medicine</Label>
             <Input
               id="medicine"
@@ -52,7 +52,7 @@ export function RxTab({ onAddPrescription }: RxTabProps) {
             />
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-2">
             <Label htmlFor="dosage">Dosage</Label>
             <Input
               id="dosage"
@@ -63,7 +63,7 @@ export function RxTab({ onAddPrescription }: RxTabProps) {
             />
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-2">
             <Label htmlFor="duration">Duration</Label>
             <Input
               id="duration"
@@ -73,7 +73,7 @@ export function RxTab({ onAddPrescription }: RxTabProps) {
             />
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-2">
             <Label htmlFor="instructions">Instructions</Label>
             <textarea
               id="instructions"
@@ -82,11 +82,11 @@ export function RxTab({ onAddPrescription }: RxTabProps) {
               onChange={handleChange}
               placeholder="Take after meals, avoid alcohol..."
               rows={3}
-              className="w-full resize-none rounded-lg border border-input bg-input-background p-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/50"
+              className="w-full resize-none rounded-lg border border-input bg-input-background p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/50"
             />
           </div>
 
-          <Button type="submit" isLoading={isSubmitting} className="w-full">
+          <Button type="submit" isLoading={isSubmitting} className="w-full gap-1.5 p-6">
             <RxIcon className="size-3.5" />
             Add Prescription
           </Button>

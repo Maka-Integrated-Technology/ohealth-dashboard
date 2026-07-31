@@ -38,7 +38,7 @@ export function LabTab({ onSubmitRequest }: LabTabProps) {
         <Form onSubmit={handleSubmit} className="space-y-4">
           <p className="text-sm font-medium text-foreground">Lab Request</p>
 
-          <div className="space-y-1">
+          <div className="space-y-2">
             <Label htmlFor="testType">Test Type</Label>
             <Input
               id="testType"
@@ -48,7 +48,7 @@ export function LabTab({ onSubmitRequest }: LabTabProps) {
             />
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-2">
             <Label htmlFor="priority">Priority</Label>
             <Input
               id="priority"
@@ -58,7 +58,7 @@ export function LabTab({ onSubmitRequest }: LabTabProps) {
             />
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-2">
             <Label htmlFor="notes">Notes</Label>
             <textarea
               id="notes"
@@ -67,11 +67,11 @@ export function LabTab({ onSubmitRequest }: LabTabProps) {
               onChange={handleChange}
               placeholder="Additional clinical notes for the lab..."
               rows={3}
-              className="w-full resize-none rounded-lg border border-input bg-input-background p-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/50"
+              className="w-full resize-none rounded-lg border border-input bg-input-background p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/50"
             />
           </div>
 
-          <Button type="submit" isLoading={isSubmitting} className="w-full">
+          <Button type="submit" isLoading={isSubmitting} className="w-full gap-1.5 p-6">
             <LabIcon className="size-3.5" />
             Submit Request
           </Button>

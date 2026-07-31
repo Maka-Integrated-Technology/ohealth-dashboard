@@ -38,7 +38,7 @@ export function FollowUpTab({ onSchedule }: FollowUpTabProps) {
         <Form onSubmit={handleSubmit} className="space-y-4">
           <p className="text-sm font-medium text-foreground">Schedule Follow-up</p>
 
-          <div className="space-y-1">
+          <div className="space-y-2">
             <Label htmlFor="followUpDate">Follow-up Date</Label>
             <Input
               id="followUpDate"
@@ -49,7 +49,7 @@ export function FollowUpTab({ onSchedule }: FollowUpTabProps) {
             />
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-2">
             <Label htmlFor="consultationType">Consultation Type</Label>
             <Input
               id="consultationType"
@@ -68,7 +68,7 @@ export function FollowUpTab({ onSchedule }: FollowUpTabProps) {
             />
           </div>
 
-          <Button type="submit" isLoading={isSubmitting} className="w-full">
+          <Button type="submit" isLoading={isSubmitting} className="w-full p-6">
             Schedule Follow-up
           </Button>
         </Form>
