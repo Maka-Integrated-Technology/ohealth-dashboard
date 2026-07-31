@@ -6,6 +6,7 @@ import type {
   NextAppointment,
   TodayAppointment,
   UpcomingAppointment,
+  ConsultationDetail,
 } from "./types";
 
 export const appointmentsApi = {
@@ -13,6 +14,7 @@ export const appointmentsApi = {
     const { data } = await axiosInstance.get<NextAppointment | null>(
       "/api/appointments/next"
     );
+
     return data;
   },
 
@@ -49,6 +51,13 @@ export const appointmentsApi = {
     params: GetAppoinmentsParams
   ): Promise<Appointment[]> => {
     const { data } = await axiosInstance.get<Appointment[]>("/api/appointments", { params })
+    return data;
+  },
+
+  getConsultationById: async (id: string): Promise<ConsultationDetail> => {
+    const { data } = await axiosInstance.get<ConsultationDetail>(
+      `/api/appointments/${id}/consultation`
+    );
     return data;
   },
 

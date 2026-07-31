@@ -89,3 +89,26 @@ export interface AppointmentRequestsResponse {
   data: AppointmentRequest[];
   total: number;
 }
+
+export interface PreviousConsultation {
+  label: string;
+  date: string;
+}
+
+export interface ConsultationDetail {
+  id: string;
+  patientId: string;
+  patientName: string;
+  patientInitials: string;
+  patientSex: "Male" | "Female";
+  patientAge: number;
+  condition: string;
+  bloodType: string;
+  allergies: string;
+  lastVisit: string;
+  consultationType: ConsultationType;
+  title: string;
+  startsAt: string;
+  endsAt: string;
+  previousConsultations: PreviousConsultation[];
+}
