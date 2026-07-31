@@ -3,6 +3,16 @@ import { Mic, Video, PhoneOff, Maximize2 } from "lucide-react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Empty } from "~/components/ui/empty";
 import { useConsultationDetail } from "~/features/appointments/hooks";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "~/components/ui/tabs";
+import { NotesTab } from "./_sections/notes-tab";
+import { RxTab } from "./_sections/rx-tab";
+import { LabTab } from "./_sections/lab-tab";
+import { FollowUpTab } from "./_sections/follow-up-tab";
 
 function formatDateTimeHeader(startsAt: string, endsAt: string) {
   const start = new Date(startsAt);
@@ -142,9 +152,27 @@ export default function ConsultPage() {
 
       {/* Right: tabs panel */}
       <aside className="w-80 shrink-0 overflow-y-auto border-l border-border p-4">
-        <p className="text-sm text-muted-foreground">
-          Notes / Rx / Lab / Follow-up tabs
-        </p>
+        <Tabs defaultValue="notes">
+          <TabsList className="w-full">
+            <TabsTrigger value="notes">Notes</TabsTrigger>
+            <TabsTrigger value="rx">Rx</TabsTrigger>
+            <TabsTrigger value="lab">Lab</TabsTrigger>
+            <TabsTrigger value="follow-up">Follow-up</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="notes">
+            <NotesTab onSaveDraft={(values) => console.log("save draft", values)} />
+          </TabsContent>
+          <TabsContent value="rx">
+            <RxTab onAddPrescription={(values) => console.log("add prescription", values)} />
+          </TabsContent>
+          <TabsContent value="lab">
+            <LabTab onSubmitRequest={(values) => console.log("submit lab request", values)} />
+          </TabsContent>
+          <TabsContent value="follow-up">
+            <FollowUpTab onSchedule={(values) => console.log("schedule follow-up", values)} />
+          </TabsContent>
+        </Tabs>
       </aside>
     </div>
   );
