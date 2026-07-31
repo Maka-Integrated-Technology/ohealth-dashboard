@@ -7,7 +7,7 @@ import {
   Settings,
   Bell,
 } from "lucide-react";
-import { useLocation } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import AppShell from "~/components/shared/app-shell";
 import { UserMenu } from "~/components/shared/user-menu";
 
@@ -20,11 +20,19 @@ const MP_SIDEBAR_ITEMS = [
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 
-const HIDE_PORTAL_ROUTES = ["/appointments"]
+const HIDE_PORTAL_ROUTES = ["/appointments"];
 
 export default function MpDashboardLayout() {
-  const location = useLocation()
-  const hidePortal = HIDE_PORTAL_ROUTES.some((path) => location.pathname.startsWith(path))
+  const location = useLocation();
+  const isConsultRoute = location.pathname.includes("/consult");
+
+  if (isConsultRoute) {
+    return <Outlet />;
+  }
+
+  const hidePortal = HIDE_PORTAL_ROUTES.some((path) =>
+    location.pathname.startsWith(path)
+  );
 
   const rightSlotUI = (
     <div className="flex items-center gap-4">
