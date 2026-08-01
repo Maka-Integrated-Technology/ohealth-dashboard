@@ -1,4 +1,5 @@
-import { useParams } from "react-router";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import { Mic, Video, PhoneOff, Maximize2 } from "lucide-react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Empty } from "~/components/ui/empty";
@@ -14,6 +15,7 @@ import { RxTab } from "./_sections/rx-tab";
 import { LabTab } from "./_sections/lab-tab";
 import { FollowUpTab } from "./_sections/follow-up-tab";
 import { OHealthMark } from "~/components/ui/icons/ohealth-mark";
+import { EndConsultationDialog } from "./_sections/end-consultation";
 
 const TAB_TRIGGER_CLASSES =
   "flex-1 rounded-none border-x-0 border-t-0 border-b-2 border-transparent bg-transparent px-1 pb-3 text-sm font-medium text-muted-foreground shadow-none ring-0 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:ring-0";
@@ -37,6 +39,19 @@ function formatDateTimeHeader(startsAt: string, endsAt: string) {
 export default function ConsultPage() {
   const { id } = useParams();
   const { data: consultation, isLoading, isError } = useConsultationDetail(id);
+
+  const navigate = useNavigate()
+  const [isEndDialogOpen, setIsEndDialogOpen] = useState(false)
+  const [isEnding, setIsEnding] = useState(false)
+
+  function handleMarkCompleted() {
+    setIsEnding(true)
+    setTimeout(() => {
+      setIsEnding(false)
+      setIsEndDialogOpen(false)
+      navigate("/appointments")
+    }, 600)
+  }
 
   return (
     <div className="flex h-[calc(100vh-0px)] p-3">
@@ -163,7 +178,7 @@ export default function ConsultPage() {
             <button className="flex size-11 items-center justify-center rounded-full bg-slate-700 text-white hover:bg-slate-600">
               <Video className="size-5" />
             </button>
-            <button className="flex h-11 items-center gap-2 rounded-full bg-destructive px-4 text-white hover:bg-destructive/90">
+            <button onClick={() => setIsEndDialogOpen(true)} className="flex h-11 items-center gap-2 rounded-full bg-destructive px-4 text-white hover:bg-destructive/90">
               <PhoneOff className="size-5" />
               <span className="text-sm font-medium">End</span>
             </button>
@@ -224,6 +239,12 @@ export default function ConsultPage() {
           </div>
         </Tabs>
       </aside>
+      <EndConsultationDialog
+        open={isEndDialogOpen}
+        onOpenChange={setIsEndDialogOpen}
+        onMarkCompleted={handleMarkCompleted}
+        isSubmitting={isEnding}
+      />
     </div>
   );
 }
