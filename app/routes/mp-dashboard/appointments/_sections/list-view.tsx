@@ -4,12 +4,12 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { Empty } from "~/components/ui/empty";
 import type { Appointment } from "~/features/appointments/types";
 import {
-  ConsultTypeIcon,
   formatTimeRange,
   STATUS_BADGE_CLASSES,
   STATUS_DOT_CLASSES,
   STATUS_LABEL,
 } from "./_primitives";
+import { ConsultTypeIcon } from "./consult-type-icon";
 
 interface ListViewProps {
   appointments: Appointment[];

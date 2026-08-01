@@ -1,8 +1,4 @@
-import { MessageSquare, Video, MapPin } from "lucide-react";
-import type {
-  AppointmentStatus,
-  ConsultationType,
-} from "~/features/appointments/types";
+import type { AppointmentStatus } from "~/features/appointments/types";
 
 export const STATUS_LABEL: Record<AppointmentStatus, string> = {
   confirmed: "Confirmed",
@@ -24,17 +20,6 @@ export const STATUS_DOT_CLASSES: Record<AppointmentStatus, string> = {
   cancelled: "bg-red-500",
   completed: "bg-gray-400",
 };
-
-const CONSULT_ICON = {
-  Video: Video,
-  Chat: MessageSquare,
-  "In-Person": MapPin,
-} as const;
-
-export function ConsultTypeIcon({ type }: { type: ConsultationType }) {
-  const Icon = CONSULT_ICON[type];
-  return <Icon className="size-3.5" />;
-}
 
 export function formatTimeRange(startsAt: string, endsAt: string) {
   const start = new Date(startsAt);

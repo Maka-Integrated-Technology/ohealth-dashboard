@@ -3,7 +3,6 @@ import { Empty } from "~/components/ui/empty";
 import type { Appointment } from "~/features/appointments/types";
 import {
   CALENDAR_ROW_HEIGHT_PX,
-  ConsultTypeIcon,
   formatDayLabel,
   formatHourLabel,
   formatTimeRange,
@@ -15,6 +14,7 @@ import {
   STATUS_DOT_CLASSES,
   STATUS_LABEL,
 } from "./_primitives";
+import { ConsultTypeIcon } from "./consult-type-icon";
 
 interface CalendarViewProps {
   from: Date;
