@@ -1,11 +1,144 @@
 import { delay, http, HttpResponse } from "msw";
 import type {
+  Appointment,
   AppointmentRequest,
   AppointmentRequestsResponse,
   NextAppointment,
   TodayAppointment,
   UpcomingAppointment,
+  ConsultationDetail,
 } from "~/features/appointments/types";
+
+const appointments: Appointment[] = [
+  {
+    id: "list-001",
+    patientId: "pat-101",
+    patientName: "Emeka Bello",
+    patientInitials: "EB",
+    patientEmail: "emekabello@gmail.com",
+    patientAge: 35,
+    patientSex: "Male",
+    consultationType: "Video",
+    startsAt: new Date("2026-06-14T10:30:00").toISOString(),
+    endsAt: new Date("2026-06-14T11:30:00").toISOString(),
+    reason: "General health checkup",
+    status: "confirmed",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-002",
+    patientId: "pat-102",
+    patientName: "James Whitfield",
+    patientInitials: "JW",
+    patientEmail: "jameswhitfield@gmail.com",
+    patientAge: 42,
+    patientSex: "Male",
+    reason: "Anxiety consultation",
+    consultationType: "Chat",
+    startsAt: new Date("2026-05-28T10:00:00").toISOString(),
+    endsAt: new Date("2026-05-28T10:45:00").toISOString(),
+    status: "pending",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-003",
+    patientId: "pat-103",
+    patientName: "Priya Nair",
+    patientInitials: "PN",
+    patientEmail: "priyanair@gmail.com",
+    patientAge: 29,
+    patientSex: "Female",
+    reason: "Diabetes management",
+    consultationType: "Video",
+    startsAt: new Date("2026-05-25T11:00:00").toISOString(),
+    endsAt: new Date("2026-05-25T12:00:00").toISOString(),
+    status: "confirmed",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-004",
+    patientId: "pat-104",
+    patientName: "David Chen",
+    patientInitials: "DC",
+    patientEmail: "davidchen@gmail.com",
+    patientAge: 50,
+    patientSex: "Male",
+    reason: "Post-op review",
+    consultationType: "Video",
+    startsAt: new Date("2026-05-25T14:00:00").toISOString(),
+    endsAt: new Date("2026-05-25T14:30:00").toISOString(),
+    status: "confirmed",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-005",
+    patientId: "pat-105",
+    patientName: "David Chang",
+    patientInitials: "DC",
+    patientEmail: "davidchang@gmail.com",
+    patientAge: 50,
+    patientSex: "Male",
+    reason: "Post-op review",
+    consultationType: "Video",
+    startsAt: new Date("2026-05-30T11:00:00").toISOString(),
+    endsAt: new Date("2026-05-30T11:45:00").toISOString(),
+    status: "confirmed",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-006",
+    patientId: "pat-106",
+    patientName: "Fatima Al-Hassan",
+    patientInitials: "FA",
+    patientEmail: "fatimaalhassan@gmail.com",
+    patientAge: 28,
+    patientSex: "Female",
+    reason: "Skin rash assessment",
+    consultationType: "Chat",
+    startsAt: new Date("2026-05-28T13:00:00").toISOString(),
+    endsAt: new Date("2026-05-28T13:45:00").toISOString(),
+    status: "cancelled",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-007",
+    patientId: "pat-107",
+    patientName: "Fathia Al-Hassan",
+    patientInitials: "FA",
+    patientEmail: "fathiaalhassan@gmail.com",
+    patientAge: 28,
+    patientSex: "Female",
+    reason: "Skin rash assessment",
+    consultationType: "Chat",
+    startsAt: new Date("2026-05-30T09:00:00").toISOString(),
+    endsAt: new Date("2026-05-30T09:45:00").toISOString(),
+    status: "cancelled",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+  {
+    id: "list-008",
+    patientId: "pat-108",
+    patientName: "Marcus Reid",
+    patientInitials: "MR",
+    patientEmail: "marcusreid@gmail.com",
+    patientAge: 45,
+    patientSex: "Male",
+    reason: "Cardiac screening",
+    consultationType: "Video",
+    startsAt: new Date("2026-05-28T13:00:00").toISOString(),
+    endsAt: new Date("2026-05-28T13:45:00").toISOString(),
+    status: "completed",
+    lastAppointment: "First Timer",
+    dateRegistered: "15th March, 2026",
+  },
+];
 
 const nextAppointment: NextAppointment = {
   id: "apt-001",
@@ -171,7 +304,211 @@ const appointmentRequests: AppointmentRequest[] = [
 
 const MOCK_NETWORK_DELAY_MS = 900;
 
+const consultationDetails: Record<string, ConsultationDetail> = {
+  "list-001": {
+    id: "list-001",
+    patientId: "pat-101",
+    patientName: "Emeka Bello",
+    patientInitials: "EB",
+    patientSex: "Male",
+    patientAge: 35,
+    condition: "General checkup",
+    bloodType: "O+",
+    allergies: "None reported",
+    lastVisit: "March 15, 2026",
+    consultationType: "Video",
+    title: "General Health Checkup",
+    startsAt: new Date("2026-06-14T10:30:00").toISOString(),
+    endsAt: new Date("2026-06-14T11:30:00").toISOString(),
+    previousConsultations: [
+      { label: "Routine checkup", date: "Feb 10" },
+      { label: "Flu symptoms", date: "Jan 3" },
+    ],
+  },
+  "list-002": {
+    id: "list-002",
+    patientId: "pat-102",
+    patientName: "James Whitfield",
+    patientInitials: "JW",
+    patientSex: "Male",
+    patientAge: 42,
+    condition: "Generalized anxiety disorder",
+    bloodType: "A+",
+    allergies: "None reported",
+    lastVisit: "March 15, 2026",
+    consultationType: "Chat",
+    title: "Anxiety Consultation",
+    startsAt: new Date("2026-05-28T10:00:00").toISOString(),
+    endsAt: new Date("2026-05-28T10:45:00").toISOString(),
+    previousConsultations: [{ label: "Initial consultation", date: "Mar 15" }],
+  },
+  "list-003": {
+    id: "list-003",
+    patientId: "pat-103",
+    patientName: "Priya Nair",
+    patientInitials: "PN",
+    patientSex: "Female",
+    patientAge: 29,
+    condition: "Type 2 Diabetes",
+    bloodType: "B+",
+    allergies: "Sulfa drugs",
+    lastVisit: "April 2, 2026",
+    consultationType: "Video",
+    title: "Diabetes Management",
+    startsAt: new Date("2026-05-25T11:00:00").toISOString(),
+    endsAt: new Date("2026-05-25T12:00:00").toISOString(),
+    previousConsultations: [
+      { label: "Diabetes management", date: "Apr 2" },
+      { label: "Blood sugar review", date: "Feb 20" },
+    ],
+  },
+  "list-004": {
+    id: "list-004",
+    patientId: "pat-104",
+    patientName: "David Chen",
+    patientInitials: "DC",
+    patientSex: "Male",
+    patientAge: 50,
+    condition: "Post-surgical recovery",
+    bloodType: "O-",
+    allergies: "Latex",
+    lastVisit: "May 10, 2026",
+    consultationType: "Video",
+    title: "Post-op Review",
+    startsAt: new Date("2026-05-25T14:00:00").toISOString(),
+    endsAt: new Date("2026-05-25T14:30:00").toISOString(),
+    previousConsultations: [
+      { label: "Surgery follow-up", date: "May 10" },
+      { label: "Pre-op assessment", date: "Apr 28" },
+    ],
+  },
+  "list-005": {
+    id: "list-005",
+    patientId: "pat-105",
+    patientName: "David Chang",
+    patientInitials: "DC",
+    patientSex: "Male",
+    patientAge: 50,
+    condition: "Post-surgical recovery",
+    bloodType: "AB+",
+    allergies: "None reported",
+    lastVisit: "May 12, 2026",
+    consultationType: "Video",
+    title: "Post-op Review",
+    startsAt: new Date("2026-05-30T11:00:00").toISOString(),
+    endsAt: new Date("2026-05-30T11:45:00").toISOString(),
+    previousConsultations: [{ label: "Surgery follow-up", date: "May 12" }],
+  },
+  "list-006": {
+    id: "list-006",
+    patientId: "pat-106",
+    patientName: "Fatima Al-Hassan",
+    patientInitials: "FA",
+    patientSex: "Female",
+    patientAge: 28,
+    condition: "Contact dermatitis",
+    bloodType: "A-",
+    allergies: "Nickel",
+    lastVisit: "May 1, 2026",
+    consultationType: "Chat",
+    title: "Skin Rash Assessment",
+    startsAt: new Date("2026-05-28T13:00:00").toISOString(),
+    endsAt: new Date("2026-05-28T13:45:00").toISOString(),
+    previousConsultations: [{ label: "Skin rash assessment", date: "May 1" }],
+  },
+  "list-007": {
+    id: "list-007",
+    patientId: "pat-107",
+    patientName: "Fathia Al-Hassan",
+    patientInitials: "FA",
+    patientSex: "Female",
+    patientAge: 28,
+    condition: "Contact dermatitis",
+    bloodType: "A-",
+    allergies: "Nickel",
+    lastVisit: "May 1, 2026",
+    consultationType: "Chat",
+    title: "Skin Rash Assessment",
+    startsAt: new Date("2026-05-30T09:00:00").toISOString(),
+    endsAt: new Date("2026-05-30T09:45:00").toISOString(),
+    previousConsultations: [{ label: "Skin rash assessment", date: "May 1" }],
+  },
+  "list-008": {
+    id: "list-008",
+    patientId: "pat-108",
+    patientName: "Marcus Reid",
+    patientInitials: "MR",
+    patientSex: "Male",
+    patientAge: 45,
+    condition: "Cardiovascular monitoring",
+    bloodType: "B-",
+    allergies: "Aspirin",
+    lastVisit: "April 15, 2026",
+    consultationType: "Video",
+    title: "Cardiac Screening",
+    startsAt: new Date("2026-05-28T13:00:00").toISOString(),
+    endsAt: new Date("2026-05-28T13:45:00").toISOString(),
+    previousConsultations: [
+      { label: "Cardiac screening", date: "Apr 15" },
+      { label: "ECG follow-up", date: "Mar 2" },
+    ],
+  },
+};
+
+function getConsultationDetail(id: string): ConsultationDetail | undefined {
+  if (consultationDetails[id]) return consultationDetails[id];
+
+  const appointment = appointments.find((apt) => apt.id === id);
+  if (!appointment) return undefined;
+
+  return {
+    id: appointment.id,
+    patientId: appointment.patientId,
+    patientName: appointment.patientName,
+    patientInitials: appointment.patientInitials,
+    patientSex: appointment.patientSex,
+    patientAge: appointment.patientAge,
+    condition: appointment.reason,
+    bloodType: "Not on file",
+    allergies: "Not on file",
+    lastVisit: appointment.dateRegistered,
+    consultationType: appointment.consultationType,
+    title: appointment.reason,
+    startsAt: appointment.startsAt,
+    endsAt: appointment.endsAt,
+    previousConsultations: [],
+  };
+}
+
 export const appointmentHandlers = [
+  http.get("/api/appointments", async ({ request }) => {
+    await delay(MOCK_NETWORK_DELAY_MS);
+
+    const url = new URL(request.url);
+    const from = url.searchParams.get("from");
+    const to = url.searchParams.get("to");
+    const status = url.searchParams.get("status");
+
+    let filteredAppointments = appointments;
+
+    if (from && to) {
+      const fromTime = new Date(from).getTime();
+      const toTime = new Date(to).getTime();
+      filteredAppointments = filteredAppointments.filter((apt) => {
+        const startTime = new Date(apt.startsAt).getTime();
+        return startTime >= fromTime && startTime <= toTime;
+      });
+    }
+
+    if (status && status !== "all") {
+      filteredAppointments = filteredAppointments.filter(
+        (apt) => apt.status === status
+      );
+    }
+
+    return HttpResponse.json(filteredAppointments);
+  }),
+
   http.get("/api/appointments/next", async () => {
     await delay(MOCK_NETWORK_DELAY_MS);
     return HttpResponse.json(nextAppointment);
@@ -202,6 +539,33 @@ export const appointmentHandlers = [
 
   http.post("/api/appointments/requests/:id/reject", ({ params }) => {
     console.info(`[MSW] Rejected request ${params.id}`);
+    return HttpResponse.json({ success: true });
+  }),
+
+  http.post("/api/appointments/:id/cancel", async ({ params }) => {
+    await delay(MOCK_NETWORK_DELAY_MS);
+    const appointment = appointments.find((apt) => apt.id === params.id);
+    if (appointment) {
+      appointment.status = "cancelled";
+    }
+    return HttpResponse.json({ success: true });
+  }),
+
+  http.get("/api/appointments/:id/consultation", async ({ params }) => {
+    await delay(MOCK_NETWORK_DELAY_MS);
+    const detail = getConsultationDetail(params.id as string);
+    if (!detail) {
+      return new HttpResponse(null, { status: 404 });
+    }
+    return HttpResponse.json(detail);
+  }),
+
+  http.post("/api/appointments/:id/complete", async ({ params }) => {
+    await delay(MOCK_NETWORK_DELAY_MS);
+    const appointment = appointments.find((apt) => apt.id === params.id);
+    if (appointment) {
+      appointment.status = "completed";
+    }
     return HttpResponse.json({ success: true });
   }),
 ];
