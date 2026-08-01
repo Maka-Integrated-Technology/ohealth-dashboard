@@ -2,7 +2,11 @@ import { useState } from "react";
 import { CalendarIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Calendar } from "~/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
 import { formatWeekRangeLabel, getWeekRange } from "./_primitives";
 
 interface DateRangePickerProps {
@@ -26,9 +30,9 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          className="gap-2 border-0 px-2 font-normal text-foreground"
+          className="text-foreground gap-2 border-0 px-2 font-normal"
         >
-          <CalendarIcon className="size-4 text-muted-foreground" />
+          <CalendarIcon className="text-muted-foreground size-4" />
           {formatWeekRangeLabel(from, to)}
         </Button>
       </PopoverTrigger>

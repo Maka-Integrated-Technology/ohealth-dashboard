@@ -138,7 +138,7 @@ const appointments: Appointment[] = [
     lastAppointment: "First Timer",
     dateRegistered: "15th March, 2026",
   },
-]
+];
 
 const nextAppointment: NextAppointment = {
   id: "apt-001",
@@ -558,5 +558,14 @@ export const appointmentHandlers = [
       return new HttpResponse(null, { status: 404 });
     }
     return HttpResponse.json(detail);
+  }),
+
+  http.post("/api/appointments/:id/complete", async ({ params }) => {
+    await delay(MOCK_NETWORK_DELAY_MS);
+    const appointment = appointments.find((apt) => apt.id === params.id);
+    if (appointment) {
+      appointment.status = "completed";
+    }
+    return HttpResponse.json({ success: true });
   }),
 ];

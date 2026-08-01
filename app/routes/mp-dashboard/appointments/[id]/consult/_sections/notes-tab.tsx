@@ -34,8 +34,16 @@ const FIELDS: {
   label: string;
   placeholder: string;
 }[] = [
-  { name: "subjective", label: "S", placeholder: "Subjective — Patient complaints" },
-  { name: "objective", label: "O", placeholder: "Objective — Examination findings" },
+  {
+    name: "subjective",
+    label: "S",
+    placeholder: "Subjective — Patient complaints",
+  },
+  {
+    name: "objective",
+    label: "O",
+    placeholder: "Objective — Examination findings",
+  },
   { name: "assessment", label: "A", placeholder: "Assessment — Diagnosis" },
   { name: "plan", label: "P", placeholder: "Plan — Treatment steps" },
 ];
@@ -49,11 +57,14 @@ export function NotesTab({ onSaveDraft }: NotesTabProps) {
     >
       {({ values, handleChange, handleSubmit, isSubmitting }) => (
         <Form onSubmit={handleSubmit} className="space-y-4">
-          <p className="text-sm font-medium text-foreground">SOAP Notes</p>
+          <p className="text-foreground text-sm font-medium">SOAP Notes</p>
 
           {FIELDS.map((field) => (
             <div key={field.name} className="space-y-2">
-              <Label htmlFor={field.name} className="text-xs font-semibold text-primary">
+              <Label
+                htmlFor={field.name}
+                className="text-primary text-xs font-semibold"
+              >
                 {field.label}
               </Label>
               <textarea
@@ -63,12 +74,16 @@ export function NotesTab({ onSaveDraft }: NotesTabProps) {
                 onChange={handleChange}
                 placeholder={field.placeholder}
                 rows={3}
-                className="w-full resize-none rounded-lg border border-input bg-input-background p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/50"
+                className="border-input bg-input-background placeholder:text-muted-foreground focus:ring-ring/50 w-full resize-none rounded-lg border p-3 text-sm focus:ring-2 focus:outline-none"
               />
             </div>
           ))}
 
-          <Button type="submit" isLoading={isSubmitting} className="w-full gap-1.5 p-6">
+          <Button
+            type="submit"
+            isLoading={isSubmitting}
+            className="w-full gap-1.5 p-6"
+          >
             <NotesIcon className="size-3.5" />
             Save Draft
           </Button>

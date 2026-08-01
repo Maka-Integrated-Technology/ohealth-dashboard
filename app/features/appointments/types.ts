@@ -1,5 +1,9 @@
 export type ConsultationType = "Video" | "Chat" | "In-Person";
-export type AppointmentStatus = "completed" | "pending" | "confirmed" | "cancelled";
+export type AppointmentStatus =
+  | "completed"
+  | "pending"
+  | "confirmed"
+  | "cancelled";
 
 export interface Appointment {
   id: string;
@@ -19,7 +23,7 @@ export interface Appointment {
   lastConsultationSummary?: string;
 }
 
-export interface GetAppoinmentsParams {
+export interface GetAppointmentsParams {
   [key: string]: string | number | boolean | undefined;
   from?: string;
   to?: string;
