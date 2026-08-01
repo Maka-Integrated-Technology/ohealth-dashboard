@@ -1,21 +1,19 @@
-import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Mic, Video, PhoneOff, Maximize2 } from "lucide-react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Empty } from "~/components/ui/empty";
-import { useConsultationDetail } from "~/features/appointments/hooks";
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "~/components/ui/tabs";
+  useConsultationDetail,
+  useCompleteAppointment,
+} from "~/features/appointments/hooks";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { NotesTab } from "./_sections/notes-tab";
 import { RxTab } from "./_sections/rx-tab";
 import { LabTab } from "./_sections/lab-tab";
 import { FollowUpTab } from "./_sections/follow-up-tab";
 import { OHealthMark } from "~/components/ui/icons/ohealth-mark";
 import { EndConsultationDialog } from "./_sections/end-consultation";
+import { useState } from "react";
 
 const TAB_TRIGGER_CLASSES =
   "flex-1 rounded-none border-x-0 border-t-0 border-b-2 border-transparent bg-transparent px-1 pb-3 text-sm font-medium text-muted-foreground shadow-none ring-0 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:ring-0";
@@ -40,26 +38,27 @@ export default function ConsultPage() {
   const { id } = useParams();
   const { data: consultation, isLoading, isError } = useConsultationDetail(id);
 
-  const navigate = useNavigate()
-  const [isEndDialogOpen, setIsEndDialogOpen] = useState(false)
-  const [isEnding, setIsEnding] = useState(false)
+  const navigate = useNavigate();
+  const [isEndDialogOpen, setIsEndDialogOpen] = useState(false);
 
-  function handleMarkCompleted() {
-    setIsEnding(true)
-    setTimeout(() => {
-      setIsEnding(false)
-      setIsEndDialogOpen(false)
-      navigate("/appointments")
-    }, 600)
+  const { mutateAsync: completeAppointment, isPending: isEnding } =
+    useCompleteAppointment();
+
+  async function handleMarkCompleted() {
+    if (id) {
+      await completeAppointment(id);
+    }
+    setIsEndDialogOpen(false);
+    navigate("/appointments");
   }
 
   return (
     <div className="flex h-[calc(100vh-0px)] p-3">
       {/* Left: patient snapshot */}
-      <aside className="w-72 shrink-0 overflow-y-auto border-r border-border bg-card">
-        <div className="flex h-20 items-center gap-1.5 border-b border-border p-4">
+      <aside className="border-border bg-card w-72 shrink-0 overflow-y-auto border-r">
+        <div className="border-border flex h-20 items-center gap-1.5 border-b p-4">
           <OHealthMark />
-          <span className="font-semibold text-foreground">OHealth</span>
+          <span className="text-foreground font-semibold">OHealth</span>
         </div>
 
         <div className="p-4">
@@ -73,7 +72,7 @@ export default function ConsultPage() {
 
           {isError && (
             <Empty>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Couldn&apos;t load patient details.
               </p>
             </Empty>
@@ -86,10 +85,10 @@ export default function ConsultPage() {
                   {consultation.patientInitials}
                 </div>
                 <div>
-                  <p className="font-bold text-foreground">
+                  <p className="text-foreground font-bold">
                     {consultation.patientName}
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     {consultation.patientSex}, {consultation.patientAge} yrs
                   </p>
                 </div>
@@ -98,51 +97,50 @@ export default function ConsultPage() {
               <div className="space-y-10 text-sm">
                 <div>
                   <p className="text-muted-foreground">Condition</p>
-                  <p className="font-medium text-foreground">
+                  <p className="text-foreground font-medium">
                     {consultation.condition}
                   </p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Blood Type</p>
-                  <p className="font-medium text-foreground">
+                  <p className="text-foreground font-medium">
                     {consultation.bloodType}
                   </p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Allergies</p>
-                  <p className="font-medium text-foreground">
+                  <p className="text-foreground font-medium">
                     {consultation.allergies}
                   </p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Last Visit</p>
-                  <p className="font-medium text-foreground">
+                  <p className="text-foreground font-medium">
                     {consultation.lastVisit}
                   </p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Consult Type</p>
-                  <p className="font-medium text-foreground">
+                  <p className="text-foreground font-medium">
                     {consultation.consultationType}
                   </p>
                 </div>
 
                 {consultation.previousConsultations.length > 0 && (
                   <div>
-                    <p className="mb-2 text-sm font-medium text-foreground">
+                    <p className="text-foreground mb-2 text-sm font-medium">
                       Previous Consultations
                     </p>
                     <ul className="space-y-1">
                       {consultation.previousConsultations.map((c, i) => (
-                        <li key={i} className="text-sm text-muted-foreground">
-                          {c.label} — {c.date}
+                        <li key={i} className="text-muted-foreground text-sm">
+                          {c.label} – {c.date}
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
               </div>
-
             </div>
           )}
         </div>
@@ -150,13 +148,13 @@ export default function ConsultPage() {
 
       {/* Center: video feed + header */}
       <div className="flex flex-1 flex-col">
-        <div className="flex h-20 flex-col justify-center border-b border-border p-4">
+        <div className="border-border flex h-20 flex-col justify-center border-b p-4">
           {consultation ? (
             <>
-              <h1 className="truncate font-semibold text-foreground">
+              <h1 className="text-foreground truncate font-semibold">
                 {consultation.title}
               </h1>
-              <p className="truncate text-sm text-muted-foreground">
+              <p className="text-muted-foreground truncate text-sm">
                 {formatDateTimeHeader(
                   consultation.startsAt,
                   consultation.endsAt
@@ -168,7 +166,7 @@ export default function ConsultPage() {
           )}
         </div>
 
-        <div className="relative flex-1 overflow-hidden bg-muted">
+        <div className="bg-muted relative flex-1 overflow-hidden">
           {/* video feed placeholder goes here */}
 
           <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-3 bg-black/10 px-4 py-4 backdrop-blur-sm">
@@ -178,7 +176,10 @@ export default function ConsultPage() {
             <button className="flex size-11 items-center justify-center rounded-full bg-slate-700 text-white hover:bg-slate-600">
               <Video className="size-5" />
             </button>
-            <button onClick={() => setIsEndDialogOpen(true)} className="flex h-11 items-center gap-2 rounded-full bg-destructive px-4 text-white hover:bg-destructive/90">
+            <button
+              onClick={() => setIsEndDialogOpen(true)}
+              className="bg-destructive hover:bg-destructive/90 flex h-11 items-center gap-2 rounded-full px-4 text-white"
+            >
               <PhoneOff className="size-5" />
               <span className="text-sm font-medium">End</span>
             </button>
@@ -190,9 +191,9 @@ export default function ConsultPage() {
       </div>
 
       {/* Right: tabs panel */}
-      <aside className="w-80 shrink-0 overflow-y-auto border-l border-border">
+      <aside className="border-border w-80 shrink-0 overflow-y-auto border-l">
         <Tabs defaultValue="notes">
-          <div className="flex h-20 items-center border-b border-border p-4">
+          <div className="border-border flex h-20 items-center border-b p-4">
             <TabsList className="w-full justify-between gap-0 rounded-none bg-transparent p-0">
               <TabsTrigger value="notes" className={TAB_TRIGGER_CLASSES}>
                 Notes

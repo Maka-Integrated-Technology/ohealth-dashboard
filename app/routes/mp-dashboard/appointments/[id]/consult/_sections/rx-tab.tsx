@@ -39,7 +39,7 @@ export function RxTab({ onAddPrescription }: RxTabProps) {
     >
       {({ values, handleChange, handleSubmit, isSubmitting }) => (
         <Form onSubmit={handleSubmit} className="space-y-4">
-          <p className="text-sm font-medium text-foreground">Prescription</p>
+          <p className="text-foreground text-sm font-medium">Prescription</p>
 
           <div className="space-y-2">
             <Label htmlFor="medicine">Medicine</Label>
@@ -82,11 +82,15 @@ export function RxTab({ onAddPrescription }: RxTabProps) {
               onChange={handleChange}
               placeholder="Take after meals, avoid alcohol..."
               rows={3}
-              className="w-full resize-none rounded-lg border border-input bg-input-background p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/50"
+              className="border-input bg-input-background placeholder:text-muted-foreground focus:ring-ring/50 w-full resize-none rounded-lg border p-3 text-sm focus:ring-2 focus:outline-none"
             />
           </div>
 
-          <Button type="submit" isLoading={isSubmitting} className="w-full gap-1.5 p-6">
+          <Button
+            type="submit"
+            isLoading={isSubmitting}
+            className="w-full gap-1.5 p-6"
+          >
             <RxIcon className="size-3.5" />
             Add Prescription
           </Button>

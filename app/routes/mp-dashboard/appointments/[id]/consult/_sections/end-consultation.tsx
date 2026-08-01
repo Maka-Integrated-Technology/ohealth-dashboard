@@ -60,14 +60,14 @@ export function EndConsultationDialog({
           {CHECKLIST_ITEMS.map((item) => (
             <label
               key={item.key}
-              className="flex items-center justify-between gap-3 rounded-lg border border-border p-3"
+              className="border-border flex items-center justify-between gap-3 rounded-lg border p-3"
             >
               <div className="flex items-center gap-3">
                 <Checkbox
                   checked={Boolean(checked[item.key])}
                   onCheckedChange={() => toggle(item.key)}
                 />
-                <span className="text-sm text-foreground">{item.label}</span>
+                <span className="text-foreground text-sm">{item.label}</span>
               </div>
               <span
                 className={`text-xs font-medium ${item.required ? "text-destructive" : "text-muted-foreground"}`}

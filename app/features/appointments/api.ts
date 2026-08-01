@@ -1,7 +1,7 @@
 import axiosInstance from "~/lib/config/axios";
 import type {
   AppointmentRequestsResponse,
-  GetAppoinmentsParams,
+  GetAppointmentsParams,
   Appointment,
   NextAppointment,
   TodayAppointment,
@@ -48,9 +48,12 @@ export const appointmentsApi = {
   },
 
   getAppointments: async (
-    params: GetAppoinmentsParams
+    params: GetAppointmentsParams
   ): Promise<Appointment[]> => {
-    const { data } = await axiosInstance.get<Appointment[]>("/api/appointments", { params })
+    const { data } = await axiosInstance.get<Appointment[]>(
+      "/api/appointments",
+      { params }
+    );
     return data;
   },
 
@@ -62,6 +65,10 @@ export const appointmentsApi = {
   },
 
   cancelAppointment: async (id: string): Promise<void> => {
-    await axiosInstance.post(`/api/appointments/${id}/cancel`)
+    await axiosInstance.post(`/api/appointments/${id}/cancel`);
+  },
+
+  completeAppointment: async (id: string): Promise<void> => {
+    await axiosInstance.post(`/api/appointments/${id}/complete`);
   },
 };

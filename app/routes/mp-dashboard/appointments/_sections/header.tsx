@@ -36,10 +36,8 @@ export function AppointmentsHeader({
   return (
     <div className="mb-6 flex flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold text-foreground">
-          Appointments
-        </h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-foreground text-2xl font-semibold">Appointments</h1>
+        <p className="text-muted-foreground text-sm">
           Manage and review your scheduled consultations
         </p>
       </div>
@@ -53,7 +51,7 @@ export function AppointmentsHeader({
             onValueChange={(value) => onStatusChange(value as StatusFilter)}
           >
             <SelectTrigger className="w-40">
-              <FilterSearchIcon className="size-4 text-muted-foreground" />
+              <FilterSearchIcon className="text-muted-foreground size-4" />
               <SelectValue placeholder="All Status" />
             </SelectTrigger>
             <SelectContent>
@@ -66,11 +64,15 @@ export function AppointmentsHeader({
           </Select>
         </div>
 
-        <div className="flex items-center gap-1 rounded-lg border border-border p-1">
+        <div className="border-border flex items-center gap-1 rounded-lg border p-1">
           <Button
             size="sm"
             variant="ghost"
-            className={view === "calendar" ? "bg-foreground text-background hover:bg-foreground/90" : ""}
+            className={
+              view === "calendar"
+                ? "bg-foreground text-background hover:bg-foreground/90"
+                : ""
+            }
             onClick={() => onViewChange("calendar")}
           >
             <LayoutGrid className="size-4" />
@@ -79,7 +81,11 @@ export function AppointmentsHeader({
           <Button
             size="sm"
             variant="ghost"
-            className={view === "list" ? "bg-foreground text-background hover:bg-foreground/90" : ""}
+            className={
+              view === "list"
+                ? "bg-foreground text-background hover:bg-foreground/90"
+                : ""
+            }
             onClick={() => onViewChange("list")}
           >
             <List className="size-4" />

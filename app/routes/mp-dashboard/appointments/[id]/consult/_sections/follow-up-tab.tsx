@@ -34,9 +34,17 @@ export function FollowUpTab({ onSchedule }: FollowUpTabProps) {
       validationSchema={validationSchema}
       onSubmit={(values) => onSchedule(values)}
     >
-      {({ values, handleChange, setFieldValue, handleSubmit, isSubmitting }) => (
+      {({
+        values,
+        handleChange,
+        setFieldValue,
+        handleSubmit,
+        isSubmitting,
+      }) => (
         <Form onSubmit={handleSubmit} className="space-y-4">
-          <p className="text-sm font-medium text-foreground">Schedule Follow-up</p>
+          <p className="text-foreground text-sm font-medium">
+            Schedule Follow-up
+          </p>
 
           <div className="space-y-2">
             <Label htmlFor="followUpDate">Follow-up Date</Label>
@@ -64,7 +72,9 @@ export function FollowUpTab({ onSchedule }: FollowUpTabProps) {
             <Switch
               id="sendReminder"
               checked={values.sendReminder}
-              onCheckedChange={(checked) => setFieldValue("sendReminder", checked)}
+              onCheckedChange={(checked) =>
+                setFieldValue("sendReminder", checked)
+              }
             />
           </div>
 

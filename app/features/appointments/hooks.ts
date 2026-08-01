@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "~/lib/utils/query-keys";
 import { appointmentsApi } from "./api";
-import type { GetAppoinmentsParams } from "./types";
+import type { GetAppointmentsParams } from "./types";
 
 export function useNextAppointment() {
   return useQuery({
@@ -64,24 +64,24 @@ export function useRejectRequest() {
   });
 }
 
-export function useAppointments(params: GetAppoinmentsParams) {
+export function useAppointments(params: GetAppointmentsParams) {
   return useQuery({
     queryKey: QUERY_KEYS.appointments.list(params),
     queryFn: () => appointmentsApi.getAppointments(params),
     staleTime: 60 * 1000,
-  })
+  });
 }
 
 export function useCancelAppointment() {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: appointmentsApi.cancelAppointment,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.appointments.all
-      })
-    }
-  })
+        queryKey: QUERY_KEYS.appointments.all,
+      });
+    },
+  });
 }
 
 export function useConsultationDetail(id: string | undefined) {
@@ -90,5 +90,17 @@ export function useConsultationDetail(id: string | undefined) {
     queryFn: () => appointmentsApi.getConsultationById(id as string),
     enabled: Boolean(id),
     staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useCompleteAppointment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: appointmentsApi.completeAppointment,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.appointments.all,
+      });
+    },
   });
 }

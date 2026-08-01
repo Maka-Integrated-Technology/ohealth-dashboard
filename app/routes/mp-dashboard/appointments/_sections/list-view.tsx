@@ -68,7 +68,7 @@ export function ListView({
           <div
             key={appointment.id}
             onClick={() => onSelect(appointment)}
-            className="flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-muted/50"
+            className="border-border bg-card hover:bg-muted/50 flex cursor-pointer items-center justify-between gap-4 rounded-lg border p-4 transition-colors"
           >
             <div className="flex items-center gap-3">
               <Avatar>
@@ -77,13 +77,13 @@ export function ListView({
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col gap-1">
-                <p className="font-medium text-foreground">
+                <p className="text-foreground font-medium">
                   {appointment.patientName}
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {appointment.reason}
                 </p>
-                <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <div className="text-muted-foreground flex items-center gap-3 text-sm">
                   <span className="font-mono">
                     {formatTimeRange(appointment.startsAt, appointment.endsAt)}
                   </span>
@@ -115,32 +115,32 @@ export function ListView({
               )}
               {(appointment.status === "confirmed" ||
                 appointment.status === "pending") && (
-                  <>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="rounded-full"
-                      onClick={() => onReschedule(appointment)}
-                    >
-                      Reschedule
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="rounded-full text-destructive hover:text-destructive"
-                      isLoading={cancellingId === appointment.id}
-                      onClick={() => onCancel(appointment)}
-                    >
-                      Cancel
-                    </Button>
-                  </>
-                )}
+                <>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="rounded-full"
+                    onClick={() => onReschedule(appointment)}
+                  >
+                    Reschedule
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive hover:text-destructive rounded-full"
+                    isLoading={cancellingId === appointment.id}
+                    onClick={() => onCancel(appointment)}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         ))}
       </div>
 
-      <div className="mt-4 flex items-center gap-4 px-4 py-4 text-xs text-muted-foreground">
+      <div className="text-muted-foreground mt-4 flex items-center gap-4 px-4 py-4 text-xs">
         {(["confirmed", "cancelled", "pending", "completed"] as const).map(
           (status) => (
             <span key={status} className="flex items-center gap-1.5">
