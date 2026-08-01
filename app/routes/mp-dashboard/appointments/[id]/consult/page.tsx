@@ -42,7 +42,7 @@ export default function ConsultPage() {
     <div className="flex h-[calc(100vh-0px)] p-3">
       {/* Left: patient snapshot */}
       <aside className="w-72 shrink-0 overflow-y-auto border-r border-border bg-card">
-        <div className="flex items-center gap-1.5 border-b border-border p-4">
+        <div className="flex h-20 items-center gap-1.5 border-b border-border p-4">
           <OHealthMark />
           <span className="font-semibold text-foreground">OHealth</span>
         </div>
@@ -80,7 +80,7 @@ export default function ConsultPage() {
                 </div>
               </div>
 
-              <div className="space-y-3 text-sm">
+              <div className="space-y-10 text-sm">
                 <div>
                   <p className="text-muted-foreground">Condition</p>
                   <p className="font-medium text-foreground">
@@ -111,22 +111,23 @@ export default function ConsultPage() {
                     {consultation.consultationType}
                   </p>
                 </div>
+
+                {consultation.previousConsultations.length > 0 && (
+                  <div>
+                    <p className="mb-2 text-sm font-medium text-foreground">
+                      Previous Consultations
+                    </p>
+                    <ul className="space-y-1">
+                      {consultation.previousConsultations.map((c, i) => (
+                        <li key={i} className="text-sm text-muted-foreground">
+                          {c.label} — {c.date}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
 
-              {consultation.previousConsultations.length > 0 && (
-                <div>
-                  <p className="mb-2 text-sm font-medium text-foreground">
-                    Previous Consultations
-                  </p>
-                  <ul className="space-y-1">
-                    {consultation.previousConsultations.map((c, i) => (
-                      <li key={i} className="text-sm text-muted-foreground">
-                        {c.label} — {c.date}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </div>
           )}
         </div>
@@ -134,13 +135,13 @@ export default function ConsultPage() {
 
       {/* Center: video feed + header */}
       <div className="flex flex-1 flex-col">
-        <div className="border-b border-border p-4">
+        <div className="flex h-20 flex-col justify-center border-b border-border p-4">
           {consultation ? (
             <>
-              <h1 className="font-semibold text-foreground">
+              <h1 className="truncate font-semibold text-foreground">
                 {consultation.title}
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <p className="truncate text-sm text-muted-foreground">
                 {formatDateTimeHeader(
                   consultation.startsAt,
                   consultation.endsAt
@@ -176,7 +177,7 @@ export default function ConsultPage() {
       {/* Right: tabs panel */}
       <aside className="w-80 shrink-0 overflow-y-auto border-l border-border">
         <Tabs defaultValue="notes">
-          <div className="border-b border-border p-4">
+          <div className="flex h-20 items-center border-b border-border p-4">
             <TabsList className="w-full justify-between gap-0 rounded-none bg-transparent p-0">
               <TabsTrigger value="notes" className={TAB_TRIGGER_CLASSES}>
                 Notes
