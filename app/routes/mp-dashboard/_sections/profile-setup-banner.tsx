@@ -21,9 +21,9 @@ export function ProfileSetupBanner({ status }: ProfileSetupBannerProps) {
 
   return (
     <>
-      <div className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-2 text-sm">
+      <div className="border-border bg-card flex items-center justify-between rounded-lg border px-4 py-2 text-sm">
         <p className="text-foreground">
-          <span className="font-semibold text-primary">
+          <span className="text-primary font-semibold">
             {completed}/{total}
           </span>{" "}
           Complete your profile setup to start receiving patient bookings and
@@ -31,7 +31,7 @@ export function ProfileSetupBanner({ status }: ProfileSetupBannerProps) {
         </p>
         <button
           onClick={() => setModalOpen(true)}
-          className="font-medium text-primary hover:underline"
+          className="text-primary font-medium hover:underline"
         >
           Complete Setup →
         </button>
