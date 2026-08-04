@@ -74,7 +74,7 @@ export function ProfileSetupModal({
           })}
         </ul>
 
-        <Button className="w-full" disabled={!allComplete}>
+        <Button className="w-full p-5" disabled={!allComplete} onClick={() => onOpenChange(false)}>
           Preview Profile
         </Button>
       </DialogContent>
