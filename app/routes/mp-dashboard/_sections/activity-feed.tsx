@@ -79,7 +79,7 @@ export function ActivityFeed({ verified }: ActivityFeedProps) {
 
       <div className="flex flex-col gap-2 p-3">
         {/* Verification item — uses the heart-plus icon */}
-        <div className="flex gap-3 rounded-xl border-l-4 border-primary bg-muted py-3 pr-3 pl-3">
+        <div className="border-primary bg-muted flex gap-3 rounded-xl border-l-4 py-3 pr-3 pl-3">
           <div className="relative flex size-9 shrink-0 items-center justify-center">
             <HeartPlusIcon className="size-full" />
             <Plus className="absolute size-3 text-white" strokeWidth={3} />
@@ -101,10 +101,7 @@ export function ActivityFeed({ verified }: ActivityFeedProps) {
           return (
             <div
               key={item.id}
-              className={cn(
-                "flex gap-3 rounded-xl py-3 pr-3 pl-3",
-                styles.row
-              )}
+              className={cn("flex gap-3 rounded-xl py-3 pr-3 pl-3", styles.row)}
             >
               <div
                 className={cn(

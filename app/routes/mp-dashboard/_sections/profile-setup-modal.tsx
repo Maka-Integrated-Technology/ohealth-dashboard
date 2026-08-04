@@ -58,14 +58,14 @@ export function ProfileSetupModal({
                 key={item.key}
                 className="flex items-center justify-between text-sm"
               >
-                <span className="flex items-center gap-2 text-foreground">
-                  <span className="size-1.5 rounded-full bg-primary" />
+                <span className="text-foreground flex items-center gap-2">
+                  <span className="bg-primary size-1.5 rounded-full" />
                   {item.label}
                 </span>
                 {done ? (
                   <Check className="size-4 text-green-600" />
                 ) : (
-                  <button className="text-sm font-medium text-primary hover:underline">
+                  <button className="text-primary text-sm font-medium hover:underline">
                     Setup →
                   </button>
                 )}
@@ -74,7 +74,11 @@ export function ProfileSetupModal({
           })}
         </ul>
 
-        <Button className="w-full p-5" disabled={!allComplete} onClick={() => onOpenChange(false)}>
+        <Button
+          className="w-full p-5"
+          disabled={!allComplete}
+          onClick={() => onOpenChange(false)}
+        >
           Preview Profile
         </Button>
       </DialogContent>

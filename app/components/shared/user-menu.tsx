@@ -66,7 +66,7 @@ export function UserMenu({
                 </AvatarFallback>
               </Avatar>
               <span
-                className={`absolute -right-0.5 -bottom-0.5 flex size-3.5 items-center justify-center rounded-full border-2 border-background ${
+                className={`border-background absolute -right-0.5 -bottom-0.5 flex size-3.5 items-center justify-center rounded-full border-2 ${
                   verified ? "bg-green-500" : "bg-destructive"
                 }`}
               />
