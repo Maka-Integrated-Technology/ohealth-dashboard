@@ -31,7 +31,7 @@ export default function MpDashboardPage() {
 
           <div className="w-full shrink-0 space-y-6 lg:w-96">
             <NextAppointment />
-            <ActivityFeed />
+            <ActivityFeed verified={verified} />
           </div>
         </div>
       </div>
