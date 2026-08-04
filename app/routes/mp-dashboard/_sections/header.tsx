@@ -1,4 +1,5 @@
 import { Bell } from "lucide-react";
+import { VerifiedBadge } from "~/components/shared/verified-badge";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   weekday: "long",
@@ -12,7 +13,11 @@ const timeFormatter = new Intl.DateTimeFormat("en-US", {
   hour12: true,
 });
 
-export function Header() {
+interface HeaderProps {
+  verified: boolean;
+}
+
+export function Header({ verified }: HeaderProps) {
   const now = new Date();
   const greeting =
     now.getHours() < 12
@@ -22,7 +27,7 @@ export function Header() {
         : "Good evening";
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex items-start justify-between gap-4">
       <div className="flex flex-col">
         <h1 className="text-foreground text-2xl font-bold tracking-tight">
           {greeting}, Dr. Jane
@@ -32,11 +37,15 @@ export function Header() {
         </p>
       </div>
 
-      <div className="flex items-center gap-2 rounded-lg border border-orange-100/50 bg-orange-50 px-4 py-2.5 text-sm text-orange-600 shadow-sm">
-        <Bell size={16} className="fill-orange-500 text-orange-500" />
-        <span className="font-medium">
-          Your next appointment is in 38 minutes with Emeka Bello
-        </span>
+      <div className="flex flex-col items-end gap-3">
+        <VerifiedBadge verified={verified} />
+
+        <div className="flex w-fit items-center gap-2 rounded-lg border border-orange-100/50 bg-orange-50 px-4 py-2.5 text-sm text-orange-600 shadow-sm">
+          <Bell size={16} className="fill-orange-500 text-orange-500" />
+          <span className="font-medium">
+            Your next appointment is in 38 minutes with Emeka Bello
+          </span>
+        </div>
       </div>
     </div>
   );

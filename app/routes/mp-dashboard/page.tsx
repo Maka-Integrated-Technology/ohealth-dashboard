@@ -9,11 +9,12 @@ import { useProfileSetupStatus } from "~/features/profile-setup/hooks";
 
 export default function MpDashboardPage() {
   const { data: profileSetupStatus } = useProfileSetupStatus();
+  const verified = profileSetupStatus?.verified ?? false;
 
   return (
     <div className="bg-background min-h-screen p-6 lg:p-8">
       <div className="mx-auto w-full max-w-350">
-        <Header />
+        <Header verified={verified} />
 
         {profileSetupStatus && (
           <div className="mt-4">

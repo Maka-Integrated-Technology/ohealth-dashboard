@@ -24,6 +24,7 @@ interface UserMenuProps {
   role: string;
   initials: string;
   avatarSrc?: string;
+  verified?: boolean;
   onViewProfile?: () => void;
   onLogout?: () => void;
 }
@@ -33,6 +34,7 @@ export function UserMenu({
   role,
   initials,
   avatarSrc = "",
+  verified = true,
   onViewProfile,
   onLogout,
 }: UserMenuProps) {
@@ -56,12 +58,19 @@ export function UserMenu({
             type="button"
             className="hover:bg-accent flex cursor-pointer items-center gap-3 rounded-lg p-1.5 transition-colors"
           >
-            <Avatar className="size-9">
-              <AvatarImage src={avatarSrc} />
-              <AvatarFallback className="bg-blue-600 font-medium text-white">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
+            <div className="relative">
+              <Avatar className="size-9">
+                <AvatarImage src={avatarSrc} />
+                <AvatarFallback className="bg-blue-600 font-medium text-white">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              <span
+                className={`absolute -right-0.5 -bottom-0.5 flex size-3.5 items-center justify-center rounded-full border-2 border-background ${
+                  verified ? "bg-green-500" : "bg-destructive"
+                }`}
+              />
+            </div>
             <div className="hidden flex-col sm:flex">
               <span className="text-foreground text-sm leading-none font-semibold">
                 {name}
