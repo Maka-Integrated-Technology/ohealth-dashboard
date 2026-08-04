@@ -39,7 +39,7 @@ export function ProfileSetupModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="space-y-6 p-6 sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center">
             Complete Profile Setup
@@ -50,7 +50,7 @@ export function ProfileSetupModal({
           </DialogDescription>
         </DialogHeader>
 
-        <ul className="space-y-3">
+        <ul className="space-y-4">
           {CHECKLIST_ITEMS.map((item) => {
             const done = status[item.key];
             return (
