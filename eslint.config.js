@@ -61,10 +61,13 @@ export default tseslint.config(
 
   // shadcn UI primitives export variant helpers alongside components — fast-refresh
   // warnings are not actionable here since these files are not application code.
+  // prop-types is also disabled: these are TypeScript-typed generated components,
+  // and react/prop-types only understands runtime PropTypes, not TS types.
   {
     files: ["app/components/ui/**/*.{ts,tsx}"],
     rules: {
       "react-refresh/only-export-components": "off",
+      "react/prop-types": "off",
     },
   },
 
