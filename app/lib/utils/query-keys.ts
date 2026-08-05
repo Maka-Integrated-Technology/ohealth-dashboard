@@ -14,5 +14,10 @@ export const QUERY_KEYS = {
     today: () => ["appointments", "today"] as const,
     upcoming: () => ["appointments", "upcoming"] as const,
     requests: () => ["appointments", "requests"] as const,
+    list: (params: SearchParams) => ["appointments", "list", params] as const,
+    consultation: (id: string) => ["appointments", "consultation", id] as const,
+  },
+  profileSetup: {
+    status: () => ["profile-setup", "status"] as const,
   },
 };
