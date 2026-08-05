@@ -79,8 +79,8 @@ export function AppointmentRequests() {
     );
   }
 
-  const requests = data?.data ?? [];
-  const total = data?.total ?? 0;
+  const requests = Array.isArray(data?.data) ? data.data : [];
+  const total = typeof data?.total === "number" ? data.total : requests.length;
   const preview = requests.slice(0, PREVIEW_COUNT);
 
   async function handleAccept(id: string) {
