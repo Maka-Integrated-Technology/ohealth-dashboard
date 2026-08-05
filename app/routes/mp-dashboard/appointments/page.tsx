@@ -63,7 +63,7 @@ export default function AppointmentsPage() {
   const to = rawTo ? new Date(rawTo) : defaultTo;
 
   const {
-    data: appointments = [],
+    data: appointmentsData,
     isLoading,
     isError,
   } = useAppointments({
@@ -71,6 +71,8 @@ export default function AppointmentsPage() {
     to: to.toISOString(),
     status,
   });
+
+  const appointments = Array.isArray(appointmentsData) ? appointmentsData : [];
 
   const {
     mutateAsync: cancelAppointment,
