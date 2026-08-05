@@ -1,9 +1,10 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
+import { ENV_CONFIG } from "~/lib/utils/constants";
 
 const axiosInstance = axios.create({
   // When the real API is ready, set this to the actual backend URL
-  baseURL: import.meta.env.VITE_API_URL ?? "",
+  baseURL: ENV_CONFIG.apiBaseUrl ?? "",
   headers: {
     "Content-Type": "application/json",
   },
