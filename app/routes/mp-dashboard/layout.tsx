@@ -10,6 +10,7 @@ import {
 import { Outlet, useLocation } from "react-router";
 import AppShell from "~/components/shared/app-shell";
 import { UserMenu } from "~/components/shared/user-menu";
+import { useProfileSetupStatus } from "~/features/profile-setup/hooks";
 
 const MP_SIDEBAR_ITEMS = [
   { label: "Dashboard", href: "/", icon: LayoutGrid },
@@ -25,6 +26,7 @@ const HIDE_PORTAL_ROUTES = ["/appointments"];
 export default function MpDashboardLayout() {
   const location = useLocation();
   const isConsultRoute = location.pathname.includes("/consult");
+  const { data: profileSetupStatus } = useProfileSetupStatus();
 
   if (isConsultRoute) {
     return <Outlet />;
@@ -34,6 +36,8 @@ export default function MpDashboardLayout() {
     location.pathname.startsWith(path)
   );
 
+  const verified = profileSetupStatus?.verified ?? false;
+
   const rightSlotUI = (
     <div className="flex items-center gap-4">
       <button className="text-muted-foreground hover:bg-accent relative rounded-full p-2 transition-colors">
@@ -41,7 +45,12 @@ export default function MpDashboardLayout() {
         <span className="border-background absolute top-2 right-2 size-2 rounded-full border-2 bg-red-500"></span>
       </button>
 
-      <UserMenu name="Dr. Jane Marshal" role="Medical Doctor" initials="JM" />
+      <UserMenu
+        name="Dr. Jane Marshal"
+        role="Medical Doctor"
+        initials="JM"
+        verified={verified}
+      />
     </div>
   );
 
