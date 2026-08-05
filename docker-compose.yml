@@ -1,0 +1,27 @@
+services:
+  app-dev:
+    build:
+      context: .
+      target: development-dependencies-env
+    ports:
+      - "5100:5100"
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=1
+    command: >
+      sh -c "[ -d node_modules ] || npm install && npm run dev"
+
+  app-prod:
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+
+volumes:
+  node_modules:
