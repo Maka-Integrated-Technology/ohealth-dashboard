@@ -59,7 +59,7 @@ export function TodaysAppointments() {
     );
   }
 
-  const items = appointments ?? [];
+  const items = Array.isArray(appointments) ? appointments : [];
   const count = items.length;
 
   function handleRowClick(apt: TodayAppointment) {

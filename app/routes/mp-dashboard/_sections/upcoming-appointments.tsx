@@ -55,7 +55,7 @@ export function UpcomingAppointments() {
     );
   }
 
-  const items = data ?? [];
+  const items = Array.isArray(data) ? data : [];
   const count = items.length;
 
   return (
