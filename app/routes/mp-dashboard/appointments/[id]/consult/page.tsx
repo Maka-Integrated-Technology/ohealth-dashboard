@@ -212,16 +212,30 @@ export default function ConsultPage() {
 
           <div className="p-4">
             <TabsContent value="notes">
-              <NotesTab onSaveDraft={() => undefined} />
+              <NotesTab
+                onSaveDraft={(values) => console.log("save draft", values)}
+              />
             </TabsContent>
             <TabsContent value="rx">
-              <RxTab onAddPrescription={() => undefined} />
+              <RxTab
+                onAddPrescription={(values) =>
+                  console.log("add prescription", values)
+                }
+              />
             </TabsContent>
             <TabsContent value="lab">
-              <LabTab onSubmitRequest={() => undefined} />
+              <LabTab
+                onSubmitRequest={(values) =>
+                  console.log("submit lab request", values)
+                }
+              />
             </TabsContent>
             <TabsContent value="follow-up">
-              <FollowUpTab onSchedule={() => undefined} />
+              <FollowUpTab
+                onSchedule={(values) =>
+                  console.log("schedule follow-up", values)
+                }
+              />
             </TabsContent>
           </div>
         </Tabs>
