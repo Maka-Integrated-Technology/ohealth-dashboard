@@ -1,3 +1,4 @@
+// app/features/auth/types.ts
 export interface SignUpPayload {
   email: string;
   password: string;
@@ -7,6 +8,19 @@ export interface SignUpPayload {
 // account was created and where the verification code was sent. Adjust
 // once the actual /auth/signup response is confirmed in Swagger.
 export interface SignUpResponse {
+  email: string;
+}
+
+// TODO(confirm-schema): assumed login is password-based and, like signup,
+// triggers a one-time code sent to the user's email rather than returning
+// tokens directly — inferred from the "Welcome back!" -> "Check your email"
+// Figma flow. Confirm actual /auth/login response once Swagger is updated.
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
   email: string;
 }
 

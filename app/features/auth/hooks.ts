@@ -1,3 +1,4 @@
+// app/features/auth/hooks.ts
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "~/lib/utils/query-keys";
 import { handleApiError } from "~/lib/utils/error-handler";
@@ -12,9 +13,27 @@ export function useSignUp() {
   });
 }
 
+export function useLogin() {
+  return useMutation({
+    mutationFn: authApi.login,
+    onError: (error) => {
+      handleApiError(error);
+    },
+  });
+}
+
 export function useVerifyEmail() {
   return useMutation({
     mutationFn: authApi.verify,
+    onError: (error) => {
+      handleApiError(error);
+    },
+  });
+}
+
+export function useVerifyLogin() {
+  return useMutation({
+    mutationFn: authApi.verifyLogin,
     onError: (error) => {
       handleApiError(error);
     },
