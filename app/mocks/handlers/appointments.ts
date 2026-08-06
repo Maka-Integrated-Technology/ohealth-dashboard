@@ -533,10 +533,12 @@ export const appointmentHandlers = [
   }),
 
   http.post("/api/appointments/requests/:id/accept", ({ params }) => {
+    console.info(`[MSW] Accepted request ${params.id}`);
     return HttpResponse.json({ success: true });
   }),
 
   http.post("/api/appointments/requests/:id/reject", ({ params }) => {
+    console.info(`[MSW] Rejected request ${params.id}`);
     return HttpResponse.json({ success: true });
   }),
 
