@@ -68,10 +68,10 @@ export function AppointmentDetailDialog({
                 {appointment.patientInitials}
               </div>
               <div>
-                <p className="font-bold text-foreground">
+                <p className="text-foreground font-bold">
                   {appointment.patientName}
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {appointment.reason}
                 </p>
                 <span
@@ -83,52 +83,46 @@ export function AppointmentDetailDialog({
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-lg bg-muted p-3">
-                <p className="text-xs text-muted-foreground">Time</p>
-                <p className="font-bold text-foreground">
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-muted-foreground text-xs">Time</p>
+                <p className="text-foreground font-bold">
                   {formatTimeRange(appointment.startsAt, appointment.endsAt)}
                 </p>
               </div>
-              <div className="rounded-lg bg-muted p-3">
-                <p className="text-xs text-muted-foreground">Type</p>
-                <p className="font-bold text-foreground">
+              <div className="bg-muted rounded-lg p-3">
+                <p className="text-muted-foreground text-xs">Type</p>
+                <p className="text-foreground font-bold">
                   {appointment.consultationType}
                 </p>
               </div>
 
               {appointment.status === "pending" ? (
                 <>
-                  <div className="rounded-lg bg-muted p-3">
-                    <p className="text-xs text-muted-foreground">Status</p>
-                    <p className="font-bold text-foreground">
+                  <div className="bg-muted rounded-lg p-3">
+                    <p className="text-muted-foreground text-xs">Status</p>
+                    <p className="text-foreground font-bold">
                       {STATUS_LABEL[appointment.status]}
                     </p>
                   </div>
-                  <div className="rounded-lg bg-muted p-3">
-                    <p className="text-xs text-muted-foreground">Duration</p>
-                    <p className="font-bold text-foreground">
-                      {formatDuration(
-                        appointment.startsAt,
-                        appointment.endsAt
-                      )}
+                  <div className="bg-muted rounded-lg p-3">
+                    <p className="text-muted-foreground text-xs">Duration</p>
+                    <p className="text-foreground font-bold">
+                      {formatDuration(appointment.startsAt, appointment.endsAt)}
                     </p>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="rounded-lg bg-muted p-3">
-                    <p className="text-xs text-muted-foreground">Date</p>
-                    <p className="font-bold text-foreground">
+                  <div className="bg-muted rounded-lg p-3">
+                    <p className="text-muted-foreground text-xs">Date</p>
+                    <p className="text-foreground font-bold">
                       {formatFullDate(appointment.startsAt)}
                     </p>
                   </div>
-                  <div className="rounded-lg bg-muted p-3">
-                    <p className="text-xs text-muted-foreground">Duration</p>
-                    <p className="font-bold text-foreground">
-                      {formatDuration(
-                        appointment.startsAt,
-                        appointment.endsAt
-                      )}
+                  <div className="bg-muted rounded-lg p-3">
+                    <p className="text-muted-foreground text-xs">Duration</p>
+                    <p className="text-foreground font-bold">
+                      {formatDuration(appointment.startsAt, appointment.endsAt)}
                     </p>
                   </div>
                 </>
@@ -159,7 +153,7 @@ export function AppointmentDetailDialog({
               <div className="flex items-center justify-center gap-3 pt-2">
                 <Button
                   variant="ghost"
-                  className="px-6 py-5 text-destructive hover:text-destructive"
+                  className="text-destructive hover:text-destructive px-6 py-5"
                   isLoading={isCancelling}
                   onClick={() => onCancel(appointment)}
                 >

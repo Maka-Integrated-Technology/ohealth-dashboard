@@ -95,17 +95,20 @@ export const NOTIFICATION_ITEMS: NotificationItem[] = [
   },
 ];
 
-export const ACCENT_STYLES: Record<NotificationAccent, { row: string; iconWrap: string }> = {
+export const ACCENT_STYLES: Record<
+  NotificationAccent,
+  { row: string; iconWrap: string }
+> = {
   alert: {
     row: "border-l-4 border-red-400 bg-muted",
-      iconWrap: "bg-red-50 text-red-500",
+    iconWrap: "bg-red-50 text-red-500",
   },
   warning: {
     row: "border-l-4 border-orange-400 bg-muted",
-      iconWrap: "bg-orange-50 text-orange-500",
+    iconWrap: "bg-orange-50 text-orange-500",
   },
   info: {
     row: "border-l-4 border-transparent bg-card",
-      iconWrap: "bg-blue-50 text-blue-500",
+    iconWrap: "bg-blue-50 text-blue-500",
   },
 };

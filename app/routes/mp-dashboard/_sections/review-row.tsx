@@ -14,7 +14,7 @@ function StarRating({ rating }: { rating: number }) {
           className={
             i < rating
               ? "size-3.5 fill-amber-400 text-amber-400"
-              : "size-3.5 text-muted-foreground/30"
+              : "text-muted-foreground/30 size-3.5"
           }
         />
       ))}
@@ -47,9 +47,7 @@ export function ReviewRow({ review }: { review: Review }) {
             <p className="text-foreground text-sm font-semibold">
               {review.patientName}
             </p>
-            <span className="text-muted-foreground text-xs">
-              {review.date}
-            </span>
+            <span className="text-muted-foreground text-xs">{review.date}</span>
           </div>
           <StarRating rating={review.rating} />
           <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
@@ -79,7 +77,7 @@ export function ReviewRow({ review }: { review: Review }) {
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 placeholder="Write a response..."
-                className="border-input bg-input-background flex-1 rounded-lg border px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/50"
+                className="border-input bg-input-background placeholder:text-muted-foreground focus:ring-ring/50 flex-1 rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
               />
               <Button size="sm" isLoading={isPending} onClick={handleSend}>
                 Send
@@ -88,9 +86,9 @@ export function ReviewRow({ review }: { review: Review }) {
           )}
 
           {review.response && (
-            <div className="border-border mt-3 rounded-lg border-l-2 border-l-primary bg-muted p-3">
+            <div className="border-border border-l-primary bg-muted mt-3 rounded-lg border-l-2 p-3">
               <div className="mb-1 flex items-center justify-between">
-                <span className="text-xs font-semibold text-foreground">
+                <span className="text-foreground text-xs font-semibold">
                   My Response
                 </span>
                 <span className="text-muted-foreground text-xs">

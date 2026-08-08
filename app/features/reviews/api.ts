@@ -3,8 +3,8 @@ import type { ReviewsResponse } from "./types";
 
 export const reviewsApi = {
   getReviews: async (): Promise<ReviewsResponse> => {
-    const {data} = await axiosInstance.get<ReviewsResponse>("/api/reviews")
-    return data
+    const { data } = await axiosInstance.get<ReviewsResponse>("/api/reviews");
+    return data;
   },
 
   respondToReview: async (params: {
@@ -13,6 +13,6 @@ export const reviewsApi = {
   }): Promise<void> => {
     await axiosInstance.post(`/api/reviews/${params.id}/respond`, {
       text: params.text,
-    })
-  }
-}
+    });
+  },
+};
