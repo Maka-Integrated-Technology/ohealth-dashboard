@@ -39,7 +39,8 @@ function parseStatus(value: string): StatusFilter {
 export default function AppointmentsPage() {
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
-  const { mutateAsync: acceptRequest, isPending: isAccepting } = useAcceptRequest();
+  const { mutateAsync: acceptRequest, isPending: isAccepting } =
+    useAcceptRequest();
 
   const {
     view: rawView,
@@ -151,8 +152,8 @@ export default function AppointmentsPage() {
 
   const handleAccept = useCallback(
     async (appointment: Appointment) => {
-      await acceptRequest(appointment.id)
-      setSelectedAppointment(null)
+      await acceptRequest(appointment.id);
+      setSelectedAppointment(null);
     },
     [acceptRequest]
   );

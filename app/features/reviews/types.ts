@@ -10,7 +10,7 @@ export interface Review {
   response?: {
     text: string;
     date: string;
-  }
+  };
 }
 
 export interface ReviewsSummary {

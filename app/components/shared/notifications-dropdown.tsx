@@ -24,7 +24,7 @@ export function NotificationsDropdown({
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-      <PopoverContent align="end" alignOffset={-220} className="w-96 p-0 mt-5">
+      <PopoverContent align="end" alignOffset={-220} className="mt-5 w-96 p-0">
         <div className="border-border border-b px-4 py-3">
           <p className="text-center text-sm font-semibold tracking-wide">
             NOTIFICATIONS
@@ -57,9 +57,7 @@ export function NotificationsDropdown({
                       <span className="font-semibold">{item.name}</span>
                       {item.rest}
                     </p>
-                    <p className="text-muted-foreground text-xs">
-                      {item.time}
-                    </p>
+                    <p className="text-muted-foreground text-xs">{item.time}</p>
                   </div>
                 </div>
               );

@@ -61,10 +61,7 @@ export function ActivityFeed({ verified }: ActivityFeedProps) {
           return (
             <div
               key={item.id}
-              className={cn(
-                "flex gap-3 rounded-xl py-3 pr-3 pl-3",
-                styles.row
-              )}
+              className={cn("flex gap-3 rounded-xl py-3 pr-3 pl-3", styles.row)}
             >
               <div
                 className={cn(

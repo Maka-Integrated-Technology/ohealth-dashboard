@@ -11,7 +11,7 @@ export default function ReviewsPage() {
   return (
     <div className="bg-background min-h-screen p-6 lg:p-8">
       <div className="mx-auto w-full max-w-350">
-        <div className="mb-4 flex items-center gap-1 text-sm text-muted-foreground">
+        <div className="text-muted-foreground mb-4 flex items-center gap-1 text-sm">
           <Link to="/" className="hover:text-foreground hover:underline">
             Dashboard
           </Link>
@@ -41,7 +41,7 @@ export default function ReviewsPage() {
                 <h1 className="text-foreground text-lg font-semibold">
                   My Reviews
                 </h1>
-                <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                <span className="text-muted-foreground flex items-center gap-1 text-sm">
                   <Star className="size-4 fill-amber-400 text-amber-400" />
                   {data.summary.averageRating} ({data.summary.totalReviews})
                 </span>
