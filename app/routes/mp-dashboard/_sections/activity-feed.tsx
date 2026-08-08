@@ -1,52 +1,10 @@
-import { Plus, CalendarX2, CalendarClock, CalendarPlus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { cn } from "~/lib/utils/helpers";
 import { HeartPlusIcon } from "~/components/ui/icons/heart-plus-icon";
-
-// TODO: replace with real activity-log data once that endpoint exists.
-const BOOKING_ACTIVITY_ITEMS = [
-  {
-    id: 0,
-    prefix: "",
-    name: "Chidi Nwosu",
-    rest: " cancelled their 2:30 PM appointment today.",
-    time: "12 minutes ago",
-    icon: CalendarX2,
-    accent: "alert" as const,
-  },
-  {
-    id: 1,
-    prefix: "",
-    name: "Oluwaseun Taiwo",
-    rest: " has requested to move Thursday's 2:00 PM appointment to Friday, 9 May at 10:00 AM. Review and confirm.",
-    time: "52 minutes ago",
-    icon: CalendarClock,
-    accent: "warning" as const,
-  },
-  {
-    id: 2,
-    prefix: "New booking from ",
-    name: "Ngozi Adeyemi",
-    rest: " — Friday, 9 May at 11:30 AM. In-Person consultation. Payment confirmed.",
-    time: "Today • 9:12 AM",
-    icon: CalendarPlus,
-    accent: "info" as const,
-  },
-];
-
-const ACCENT_STYLES = {
-  alert: {
-    row: "border-l-4 border-red-400 bg-muted",
-    iconWrap: "bg-red-50 text-red-500",
-  },
-  warning: {
-    row: "border-l-4 border-orange-400 bg-muted",
-    iconWrap: "bg-orange-50 text-orange-500",
-  },
-  info: {
-    row: "border-l-4 border-transparent bg-card",
-    iconWrap: "bg-blue-50 text-blue-500",
-  },
-};
+import {
+  NOTIFICATION_ITEMS,
+  ACCENT_STYLES,
+} from "~/lib/utils/notifications-data";
 
 interface ActivityFeedProps {
   verified: boolean;
@@ -64,6 +22,8 @@ export function ActivityFeed({ verified }: ActivityFeedProps) {
         rest: " — Your documents have been submitted successfully. Our team is reviewing your information and will notify you once your account has been approved.",
         time: "Today • 9:12 AM",
       };
+
+  const previewItems = NOTIFICATION_ITEMS.slice(0, 3);
 
   return (
     <div className="border-border bg-card rounded-2xl border shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
@@ -95,13 +55,16 @@ export function ActivityFeed({ verified }: ActivityFeedProps) {
           </div>
         </div>
 
-        {/* Booking activity items — unchanged, original icons/accents */}
-        {BOOKING_ACTIVITY_ITEMS.map((item) => {
+        {/* Booking activity items — sourced from shared notifications data */}
+        {previewItems.map((item) => {
           const styles = ACCENT_STYLES[item.accent];
           return (
             <div
               key={item.id}
-              className={cn("flex gap-3 rounded-xl py-3 pr-3 pl-3", styles.row)}
+              className={cn(
+                "flex gap-3 rounded-xl py-3 pr-3 pl-3",
+                styles.row
+              )}
             >
               <div
                 className={cn(

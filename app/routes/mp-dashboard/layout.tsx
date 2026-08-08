@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   LayoutGrid,
   Users,
@@ -10,6 +11,7 @@ import {
 import { Outlet, useLocation } from "react-router";
 import AppShell from "~/components/shared/app-shell";
 import { UserMenu } from "~/components/shared/user-menu";
+import { NotificationsDropdown } from "~/components/shared/notifications-dropdown";
 import { useProfileSetupStatus } from "~/features/profile-setup/hooks";
 
 const MP_SIDEBAR_ITEMS = [
@@ -27,6 +29,7 @@ export default function MpDashboardLayout() {
   const location = useLocation();
   const isConsultRoute = location.pathname.includes("/consult");
   const { data: profileSetupStatus } = useProfileSetupStatus();
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   if (isConsultRoute) {
     return <Outlet />;
@@ -40,10 +43,16 @@ export default function MpDashboardLayout() {
 
   const rightSlotUI = (
     <div className="flex items-center gap-4">
-      <button className="text-muted-foreground hover:bg-accent relative rounded-full p-2 transition-colors">
-        <Bell className="size-5" />
-        <span className="border-background absolute top-2 right-2 size-2 rounded-full border-2 bg-red-500"></span>
-      </button>
+      <NotificationsDropdown
+        open={notificationsOpen}
+        onOpenChange={setNotificationsOpen}
+        trigger={
+          <button className="text-muted-foreground hover:bg-accent relative rounded-full p-2 transition-colors">
+            <Bell className="size-5" />
+            <span className="border-background absolute top-2 right-2 size-2 rounded-full border-2 bg-red-500"></span>
+          </button>
+        }
+      />
 
       <UserMenu
         name="Dr. Jane Marshal"
