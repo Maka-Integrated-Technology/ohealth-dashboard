@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { ThumbsUp, Star } from "lucide-react";
-import { Link } from "react-router";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
-import { Skeleton } from "~/components/ui/skeleton";
-import { useReviews, useRespondToReview } from "~/features/reviews/hook";
+import { useRespondToReview } from "~/features/reviews/hook";
 import type { Review } from "~/features/reviews/types";
 
 function StarRating({ rating }: { rating: number }) {
@@ -24,7 +22,7 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-function ReviewRow({ review }: { review: Review }) {
+export function ReviewRow({ review }: { review: Review }) {
   const [responding, setResponding] = useState(false);
   const [draft, setDraft] = useState("");
   const { mutateAsync: respond, isPending } = useRespondToReview();
@@ -105,62 +103,6 @@ function ReviewRow({ review }: { review: Review }) {
             </div>
           )}
         </div>
-      </div>
-    </div>
-  );
-}
-
-export function ReviewsCard() {
-  const { data, isLoading, isError } = useReviews();
-
-  if (isLoading) {
-    return (
-      <div className="border-border bg-card rounded-[20px] border p-6 shadow-sm">
-        <Skeleton className="mb-4 h-4 w-40" />
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="mb-3 h-20 w-full" />
-        ))}
-      </div>
-    );
-  }
-
-  if (isError || !data) {
-    return (
-      <div className="border-border bg-card rounded-[20px] border p-6 shadow-sm">
-        <p className="text-muted-foreground text-sm">
-          Failed to load reviews.
-        </p>
-      </div>
-    );
-  }
-
-  const preview = data.data.slice(0, 3);
-
-  return (
-    <div className="border-border bg-card rounded-[20px] border p-6 shadow-sm">
-      <div className="mb-2 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h2 className="text-foreground text-sm font-semibold">
-            My Reviews
-          </h2>
-          <span className="flex items-center gap-1 text-sm text-muted-foreground">
-            <Star className="size-3.5 fill-amber-400 text-amber-400" />
-            {data.summary.averageRating} ({data.summary.totalReviews})
-          </span>
-        </div>
-
-        <Link
-          to="/reviews"
-          className="text-sm font-medium text-blue-600 hover:underline"
-        >
-          See all reviews
-        </Link>
-      </div>
-
-      <div>
-        {preview.map((review) => (
-          <ReviewRow key={review.id} review={review} />
-        ))}
       </div>
     </div>
   );
