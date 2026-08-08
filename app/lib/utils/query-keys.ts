@@ -20,4 +20,7 @@ export const QUERY_KEYS = {
   profileSetup: {
     status: () => ["profile-setup", "status"] as const,
   },
+  reviews: {
+    all: () => ["reviews"] as const,
+  },
 };
