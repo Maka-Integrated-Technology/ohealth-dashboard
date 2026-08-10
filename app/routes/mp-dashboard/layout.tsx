@@ -24,14 +24,18 @@ const MP_SIDEBAR_ITEMS = [
 ];
 
 const HIDE_PORTAL_ROUTES = ["/appointments"];
+const AUTH_ROUTES = ["/sign-up", "/verify-email", "/login", "/verify-login"];
 
 export default function MpDashboardLayout() {
   const location = useLocation();
   const isConsultRoute = location.pathname.includes("/consult");
+  const isAuthRoute = AUTH_ROUTES.some((path) =>
+    location.pathname.startsWith(path)
+  );
   const { data: profileSetupStatus } = useProfileSetupStatus();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
-  if (isConsultRoute) {
+  if (isConsultRoute || isAuthRoute) {
     return <Outlet />;
   }
 
