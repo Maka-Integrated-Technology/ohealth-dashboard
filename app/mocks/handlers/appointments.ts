@@ -528,7 +528,7 @@ export const appointmentHandlers = [
     await delay(MOCK_NETWORK_DELAY_MS);
     return HttpResponse.json<AppointmentRequestsResponse>({
       data: appointmentRequests,
-      total: 23,
+      total: appointmentRequests.length,
     });
   }),
 

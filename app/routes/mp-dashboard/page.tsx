@@ -5,6 +5,7 @@ import { NextAppointment } from "./_sections/next-appointment";
 import { StatsCards } from "./_sections/stats-cards";
 import { TodaysAppointments } from "./_sections/todays-appointments";
 import { ProfileSetupBanner } from "./_sections/profile-setup-banner";
+import { ReviewsCard } from "./_sections/reviews-card";
 import { useProfileSetupStatus } from "~/features/profile-setup/hooks";
 
 export default function MpDashboardPage() {
@@ -27,6 +28,7 @@ export default function MpDashboardPage() {
             <StatsCards />
             <TodaysAppointments />
             <AppointmentRequests />
+            <ReviewsCard />
           </div>
 
           <div className="w-full shrink-0 space-y-6 lg:w-96">
