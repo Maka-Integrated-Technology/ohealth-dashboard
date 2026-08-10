@@ -19,9 +19,10 @@ export const PasswordInput = forwardRef<
       />
       <button
         type="button"
-        onClick={() => setVisible(v => !v)}
+        onClick={() => setVisible((v) => !v)}
         aria-label={visible ? "Hide password" : "Show password"}
-        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2">
+        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2"
+      >
         {visible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
       </button>
     </div>

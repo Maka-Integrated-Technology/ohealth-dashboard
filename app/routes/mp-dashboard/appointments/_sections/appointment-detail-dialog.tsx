@@ -5,7 +5,7 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Check } from "lucide-react";
 import type { Appointment } from "~/features/appointments/types";
 import { STATUS_BADGE_CLASSES, STATUS_LABEL } from "./_primitives";
 
@@ -14,13 +14,15 @@ interface AppointmentDetailDialogProps {
   onOpenChange: (open: boolean) => void;
   onStart: (appointment: Appointment) => void;
   onCancel: (appointment: Appointment) => void;
+  onAccept: (appointment: Appointment) => void;
   isCancelling: boolean;
+  isAccepting: boolean;
 }
 
 function formatDuration(startsAt: string, endsAt: string) {
   const minutes =
     (new Date(endsAt).getTime() - new Date(startsAt).getTime()) / 60000;
-  return `${minutes} minutes`;
+  return `${minutes} min`;
 }
 
 function formatFullDate(date: string) {
@@ -46,7 +48,9 @@ export function AppointmentDetailDialog({
   onOpenChange,
   onStart,
   onCancel,
+  onAccept,
   isCancelling,
+  isAccepting,
 }: AppointmentDetailDialogProps) {
   return (
     <Dialog open={!!appointment} onOpenChange={onOpenChange}>
@@ -91,43 +95,77 @@ export function AppointmentDetailDialog({
                   {appointment.consultationType}
                 </p>
               </div>
-              <div className="bg-muted rounded-lg p-3">
-                <p className="text-muted-foreground text-xs">Date</p>
-                <p className="text-foreground font-bold">
-                  {formatFullDate(appointment.startsAt)}
-                </p>
-              </div>
-              <div className="bg-muted rounded-lg p-3">
-                <p className="text-muted-foreground text-xs">Duration</p>
-                <p className="text-foreground font-bold">
-                  {formatDuration(appointment.startsAt, appointment.endsAt)}
-                </p>
-              </div>
+
+              {appointment.status === "pending" ? (
+                <>
+                  <div className="bg-muted rounded-lg p-3">
+                    <p className="text-muted-foreground text-xs">Status</p>
+                    <p className="text-foreground font-bold">
+                      {STATUS_LABEL[appointment.status]}
+                    </p>
+                  </div>
+                  <div className="bg-muted rounded-lg p-3">
+                    <p className="text-muted-foreground text-xs">Duration</p>
+                    <p className="text-foreground font-bold">
+                      {formatDuration(appointment.startsAt, appointment.endsAt)}
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="bg-muted rounded-lg p-3">
+                    <p className="text-muted-foreground text-xs">Date</p>
+                    <p className="text-foreground font-bold">
+                      {formatFullDate(appointment.startsAt)}
+                    </p>
+                  </div>
+                  <div className="bg-muted rounded-lg p-3">
+                    <p className="text-muted-foreground text-xs">Duration</p>
+                    <p className="text-foreground font-bold">
+                      {formatDuration(appointment.startsAt, appointment.endsAt)}
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
 
-            {(appointment.status === "confirmed" ||
-              appointment.status === "pending") && (
+            {appointment.status === "pending" && (
               <div className="flex items-center justify-center gap-3 pt-2">
-                {appointment.status === "pending" ||
-                appointment.status === "confirmed" ? (
-                  <Button
-                    variant="ghost"
-                    className="text-destructive hover:text-destructive px-6 py-5"
-                    isLoading={isCancelling}
-                    onClick={() => onCancel(appointment)}
-                  >
-                    Cancel Consultation
-                  </Button>
-                ) : null}
-                {appointment.status === "confirmed" && (
-                  <Button
-                    className="gap-1 px-6 py-5"
-                    onClick={() => onStart(appointment)}
-                  >
-                    Start Consultation
-                    <ChevronRight className="size-4" />
-                  </Button>
-                )}
+                <Button
+                  className="flex-1 gap-1.5 px-6 py-5"
+                  isLoading={isAccepting}
+                  onClick={() => onAccept(appointment)}
+                >
+                  <Check className="size-4" />
+                  Accept
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1 px-6 py-5"
+                  onClick={() => onOpenChange(false)}
+                >
+                  Close
+                </Button>
+              </div>
+            )}
+
+            {appointment.status === "confirmed" && (
+              <div className="flex items-center justify-center gap-3 pt-2">
+                <Button
+                  variant="ghost"
+                  className="text-destructive hover:text-destructive px-6 py-5"
+                  isLoading={isCancelling}
+                  onClick={() => onCancel(appointment)}
+                >
+                  Cancel Consultation
+                </Button>
+                <Button
+                  className="gap-1 px-6 py-5"
+                  onClick={() => onStart(appointment)}
+                >
+                  Start Consultation
+                  <ChevronRight className="size-4" />
+                </Button>
               </div>
             )}
           </>
