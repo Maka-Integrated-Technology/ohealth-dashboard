@@ -23,4 +23,7 @@ export const QUERY_KEYS = {
   reviews: {
     all: () => ["reviews"] as const,
   },
+  auth: {
+    me: () => ["auth", "me"] as const,
+  },
 };
