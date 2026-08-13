@@ -26,4 +26,7 @@ export const QUERY_KEYS = {
   auth: {
     me: () => ["auth", "me"] as const,
   },
+  earnings: {
+    summary: () => ["earnings", "summary"] as const,
+  },
 };
