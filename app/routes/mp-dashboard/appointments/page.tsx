@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useCustomSearchParams } from "~/hooks/use-custom-search-params";
 import {
+  useAcceptRequest,
   useAppointments,
   useCancelAppointment,
 } from "~/features/appointments/hooks";
@@ -38,6 +39,8 @@ function parseStatus(value: string): StatusFilter {
 export default function AppointmentsPage() {
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
+  const { mutateAsync: acceptRequest, isPending: isAccepting } =
+    useAcceptRequest();
 
   const {
     view: rawView,
@@ -147,6 +150,14 @@ export default function AppointmentsPage() {
     [handleCancel]
   );
 
+  const handleAccept = useCallback(
+    async (appointment: Appointment) => {
+      await acceptRequest(appointment.id);
+      setSelectedAppointment(null);
+    },
+    [acceptRequest]
+  );
+
   return (
     <div className="p-6">
       <AppointmentsHeader
@@ -186,7 +197,9 @@ export default function AppointmentsPage() {
         onOpenChange={(open) => !open && setSelectedAppointment(null)}
         onStart={handleStart}
         onCancel={handleCancelFromDialog}
+        onAccept={handleAccept}
         isCancelling={isCancelling}
+        isAccepting={isAccepting}
       />
     </div>
   );
