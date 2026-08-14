@@ -118,7 +118,7 @@ const appointments: Appointment[] = [
     consultationType: "Chat",
     startsAt: new Date("2026-05-30T09:00:00").toISOString(),
     endsAt: new Date("2026-05-30T09:45:00").toISOString(),
-    status: "cancelled",
+    status: "confirmed",
     lastAppointment: "First Timer",
     dateRegistered: "15th March, 2026",
   },
