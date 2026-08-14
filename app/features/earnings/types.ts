@@ -26,7 +26,7 @@ export interface EarningsTransaction {
   patientName: string;
   patientInitials: string;
   date: string;
-  type: EarningConsultationType;
+  type: string;
   amount: number;
   status: PayoutStatus;
 }

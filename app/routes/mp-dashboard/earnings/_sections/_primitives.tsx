@@ -7,34 +7,33 @@ export const PAYOUT_STATUS_LABEL: Record<PayoutStatus, string> = {
 };
 
 export const PAYOUT_STATUS_BADGE_CLASSES: Record<PayoutStatus, string> = {
-  paid: "bg-green-50 text-green-700 border-green-200",
-  processed: "bg-blue-50 text-blue-700 border-blue-200",
-  pending: "bg-orange-50 text-orange-600 border-orange-200",
+  paid: "border-[#9debc7] bg-[#ecfdf5] text-[#00965a]",
+  processed: "border-[#bdd8ff] bg-[#eff6ff] text-primary",
+  pending: "border-[#f8d66d] bg-[#fff9e7] text-[#e56b00]",
 };
 
 export function formatNaira(amount: number): string {
   return new Intl.NumberFormat("en-NG", {
-    style: "currency",
     currency: "NGN",
     maximumFractionDigits: 0,
+    style: "currency",
   }).format(amount);
 }
 
-export function formatCompactNaira(amount: number): string {
-  return `₦${Math.round(amount / 1000)}k`;
+export function formatNairaParts(amount: number): {
+  whole: string;
+  fraction: string;
+} {
+  return {
+    whole: formatNaira(amount),
+    fraction: ".00",
+  };
 }
 
 export function formatTransactionDate(value: string): string {
-  return new Date(value).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
-export function formatCurrentMonthYear(): string {
   return new Intl.DateTimeFormat("en-US", {
-    month: "long",
+    day: "numeric",
+    month: "short",
     year: "numeric",
-  }).format(new Date());
+  }).format(new Date(value));
 }

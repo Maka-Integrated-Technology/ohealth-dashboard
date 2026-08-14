@@ -15,73 +15,84 @@ const summary: EarningsResponse["summary"] = {
   pendingTransactions: 2,
 };
 
-const revenueTrend: RevenueTrendPoint[] = [
-  { month: "Dec 2025", amount: 120000 },
-  { month: "Jan 2026", amount: 135000 },
-  { month: "Feb 2026", amount: 148000 },
-  { month: "Mar 2026", amount: 162000 },
-  { month: "Apr 2026", amount: 180000 },
-  { month: "May 2026", amount: 200000 },
-];
+function generateRevenueTrend(): RevenueTrendPoint[] {
+  const now = new Date();
+  const months = [];
+
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const label = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      year: "numeric",
+    }).format(date);
+
+    months.push({ month: label, amount: 0 });
+  }
+
+  const amounts = [75_000, 115_000, 100_000, 170_000, 195_000, 160_000];
+  return months.map((m, i) => ({ ...m, amount: amounts[i] }));
+}
+
+const revenueTrend: RevenueTrendPoint[] = generateRevenueTrend();
 
 const byConsultationType: ConsultationTypeRevenue[] = [
-  { type: "Video", amount: 125000, consultations: 5 },
-  { type: "Chat", amount: 75000, consultations: 5 },
+  { type: "Video", amount: 200_000, consultations: 10 },
+  { type: "Chat", amount: 50_000, consultations: 5 },
 ];
 
 const transactions: EarningsTransaction[] = [
   {
     id: "tx-001",
-    patientName: "Emeka Bello",
-    patientInitials: "EB",
-    date: "2026-05-28T10:30:00.000Z",
-    type: "Video",
-    amount: 25000,
+    patientName: "Amara Okafor",
+    patientInitials: "AO",
+    date: "2026-05-20T12:00:00.000Z",
+    type: "Video Consultation",
+    amount: 20_000,
     status: "paid",
   },
   {
     id: "tx-002",
-    patientName: "Fatima Al-Hassan",
-    patientInitials: "FA",
-    date: "2026-05-25T13:00:00.000Z",
-    type: "Chat",
-    amount: 15000,
-    status: "processed",
+    patientName: "Priya Nair",
+    patientInitials: "PN",
+    date: "2026-05-19T12:00:00.000Z",
+    type: "Video Consultation",
+    amount: 20_000,
+    status: "paid",
   },
   {
     id: "tx-003",
-    patientName: "Priya Nair",
-    patientInitials: "PN",
-    date: "2026-05-20T11:00:00.000Z",
-    type: "Video",
-    amount: 25000,
-    status: "paid",
+    patientName: "Marcus Reid",
+    patientInitials: "MR",
+    date: "2026-05-18T12:00:00.000Z",
+    type: "Video Consultation",
+    amount: 20_000,
+    status: "processed",
   },
   {
     id: "tx-004",
     patientName: "David Chen",
     patientInitials: "DC",
-    date: "2026-05-18T14:00:00.000Z",
-    type: "Video",
-    amount: 25000,
+    date: "2026-05-17T12:00:00.000Z",
+    type: "Follow-up Chat",
+    amount: 20_000,
     status: "pending",
   },
   {
     id: "tx-005",
-    patientName: "Raj Patel",
-    patientInitials: "RP",
-    date: "2026-05-15T09:00:00.000Z",
-    type: "Chat",
-    amount: 15000,
+    patientName: "James Whitfield",
+    patientInitials: "JW",
+    date: "2026-05-15T12:00:00.000Z",
+    type: "Chat Consultation",
+    amount: 20_000,
     status: "paid",
   },
   {
     id: "tx-006",
-    patientName: "Sarah Morgan",
-    patientInitials: "SM",
-    date: "2026-05-10T15:15:00.000Z",
-    type: "Chat",
-    amount: 15000,
+    patientName: "Layla Osman",
+    patientInitials: "LO",
+    date: "2026-05-14T12:00:00.000Z",
+    type: "Video Consultation",
+    amount: 20_000,
     status: "pending",
   },
 ];
