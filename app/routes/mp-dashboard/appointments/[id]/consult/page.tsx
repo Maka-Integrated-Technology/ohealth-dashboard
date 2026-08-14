@@ -6,12 +6,7 @@ import {
   useConsultationDetail,
   useCompleteAppointment,
 } from "~/features/appointments/hooks";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "~/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { NotesTab } from "./_sections/notes-tab";
 import { RxTab } from "./_sections/rx-tab";
 import { LabTab } from "./_sections/lab-tab";
@@ -174,7 +169,7 @@ export default function ConsultPage() {
               {isChat && (
                 <button
                   onClick={() => setIsEndDialogOpen(true)}
-                  className="shrink-0 rounded-full bg-destructive/10 px-4 py-2 text-sm font-medium text-destructive hover:bg-destructive/20"
+                  className="bg-destructive/10 text-destructive hover:bg-destructive/20 shrink-0 rounded-full px-4 py-2 text-sm font-medium"
                 >
                   End Chat
                 </button>
