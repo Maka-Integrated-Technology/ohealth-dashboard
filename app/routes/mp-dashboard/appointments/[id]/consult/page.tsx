@@ -13,6 +13,7 @@ import { LabTab } from "./_sections/lab-tab";
 import { FollowUpTab } from "./_sections/follow-up-tab";
 import { OHealthMark } from "~/components/ui/icons/ohealth-mark";
 import { EndConsultationDialog } from "./_sections/end-consultation";
+import { ChatArea } from "./_sections/chat-area";
 import { useState } from "react";
 
 const TAB_TRIGGER_CLASSES =
@@ -43,6 +44,8 @@ export default function ConsultPage() {
 
   const { mutateAsync: completeAppointment, isPending: isEnding } =
     useCompleteAppointment();
+
+  const isChat = consultation?.consultationType === "Chat";
 
   async function handleMarkCompleted() {
     if (id) {
@@ -146,48 +149,66 @@ export default function ConsultPage() {
         </div>
       </aside>
 
-      {/* Center: video feed + header */}
+      {/* Center: video/chat area + header */}
       <div className="flex flex-1 flex-col">
-        <div className="border-border flex h-20 flex-col justify-center border-b p-4">
+        <div className="border-border flex h-20 items-center justify-between border-b p-4">
           {consultation ? (
             <>
-              <h1 className="text-foreground truncate font-semibold">
-                {consultation.title}
-              </h1>
-              <p className="text-muted-foreground truncate text-sm">
-                {formatDateTimeHeader(
-                  consultation.startsAt,
-                  consultation.endsAt
-                )}
-              </p>
+              <div className="min-w-0">
+                <h1 className="text-foreground truncate font-semibold">
+                  {consultation.title}
+                </h1>
+                <p className="text-muted-foreground truncate text-sm">
+                  {formatDateTimeHeader(
+                    consultation.startsAt,
+                    consultation.endsAt
+                  )}
+                </p>
+              </div>
+
+              {isChat && (
+                <button
+                  onClick={() => setIsEndDialogOpen(true)}
+                  className="bg-destructive/10 text-destructive hover:bg-destructive/20 shrink-0 rounded-full px-4 py-2 text-sm font-medium"
+                >
+                  End Chat
+                </button>
+              )}
             </>
           ) : (
             <Skeleton className="h-5 w-48" />
           )}
         </div>
 
-        <div className="bg-muted relative flex-1 overflow-hidden">
-          {/* video feed placeholder goes here */}
+        {isChat && id ? (
+          <ChatArea
+            consultationId={id}
+            patientInitials={consultation?.patientInitials ?? ""}
+          />
+        ) : (
+          <div className="bg-muted relative flex-1 overflow-hidden">
+            {/* video feed placeholder goes here */}
 
-          <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-3 bg-black/10 px-4 py-4 backdrop-blur-sm">
-            <button className="flex size-11 items-center justify-center rounded-full bg-slate-700 text-white hover:bg-slate-600">
-              <Mic className="size-5" />
-            </button>
-            <button className="flex size-11 items-center justify-center rounded-full bg-slate-700 text-white hover:bg-slate-600">
-              <Video className="size-5" />
-            </button>
-            <button
-              onClick={() => setIsEndDialogOpen(true)}
-              className="bg-destructive hover:bg-destructive/90 flex h-11 items-center gap-2 rounded-full px-4 text-white"
-            >
-              <PhoneOff className="size-5" />
-              <span className="text-sm font-medium">End</span>
-            </button>
-            <button className="flex size-11 items-center justify-center rounded-full bg-slate-700 text-white hover:bg-slate-600">
-              <Maximize2 className="size-5" />
-            </button>
+            <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-3 bg-black/10 px-4 py-4 backdrop-blur-sm">
+              <button className="flex size-11 items-center justify-center rounded-full bg-slate-700 text-white hover:bg-slate-600">
+                <Mic className="size-5" />
+              </button>
+              <button className="flex size-11 items-center justify-center rounded-full bg-slate-700 text-white hover:bg-slate-600">
+                <Video className="size-5" />
+              </button>
+              <button
+                onClick={() => setIsEndDialogOpen(true)}
+                className="bg-destructive hover:bg-destructive/90 flex h-11 items-center gap-2 rounded-full px-4 text-white"
+              >
+                <PhoneOff className="size-5" />
+                <span className="text-sm font-medium">End</span>
+              </button>
+              <button className="flex size-11 items-center justify-center rounded-full bg-slate-700 text-white hover:bg-slate-600">
+                <Maximize2 className="size-5" />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Right: tabs panel */}
