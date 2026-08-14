@@ -118,7 +118,7 @@ const appointments: Appointment[] = [
     consultationType: "Chat",
     startsAt: new Date("2026-05-30T09:00:00").toISOString(),
     endsAt: new Date("2026-05-30T09:45:00").toISOString(),
-    status: "cancelled",
+    status: "confirmed",
     lastAppointment: "First Timer",
     dateRegistered: "15th March, 2026",
   },
@@ -528,7 +528,7 @@ export const appointmentHandlers = [
     await delay(MOCK_NETWORK_DELAY_MS);
     return HttpResponse.json<AppointmentRequestsResponse>({
       data: appointmentRequests,
-      total: 23,
+      total: appointmentRequests.length,
     });
   }),
 
