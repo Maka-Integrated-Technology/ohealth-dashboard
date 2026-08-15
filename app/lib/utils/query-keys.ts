@@ -26,6 +26,10 @@ export const QUERY_KEYS = {
   auth: {
     me: () => ["auth", "me"] as const,
   },
+  chat: {
+    messages: (consultationId: string) =>
+      ["chat", "messages", consultationId] as const,
+  },
   earnings: {
     summary: () => ["earnings", "summary"] as const,
   },
