@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "~/lib/utils/helpers";
 
 interface PaginationProps {
@@ -31,16 +31,32 @@ function getPageNumbers(page: number, totalPages: number): (number | "…")[] {
   return [1, "…", page - 1, page, page + 1, "…", totalPages];
 }
 
-export function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
+export function Pagination({
+  page,
+  totalPages,
+  onPageChange,
+}: PaginationProps) {
   if (totalPages <= 1) return null;
 
   const pages = getPageNumbers(page, totalPages);
 
   return (
     <div className="mt-4 flex items-center justify-center gap-1">
+      <button
+        onClick={() => onPageChange(Math.max(page - 1, 1))}
+        disabled={page === 1}
+        className="text-primary mr-2 flex items-center gap-1 text-sm font-medium disabled:opacity-40"
+      >
+        <ChevronLeft className="size-4" />
+        Previous
+      </button>
+
       {pages.map((p, i) =>
         p === "…" ? (
-          <span key={`ellipsis-${i}`} className="text-muted-foreground px-2 text-sm">
+          <span
+            key={`ellipsis-${i}`}
+            className="text-muted-foreground px-2 text-sm"
+          >
             …
           </span>
         ) : (
