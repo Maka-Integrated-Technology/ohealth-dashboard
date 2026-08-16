@@ -66,7 +66,10 @@ export function PatientsTable({
       </thead>
       <tbody>
         {patients.map((patient) => (
-          <tr key={patient.id} className="border-border border-b last:border-b-0">
+          <tr
+            key={patient.id}
+            className="border-border border-b last:border-b-0"
+          >
             <td className="text-foreground px-4 py-3 font-medium">
               {patient.name}
             </td>

@@ -20,7 +20,7 @@ export function ConsultationHistoryCard({
     <div className="border-border bg-card rounded-lg border p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FileText className="size-4 text-primary" />
+          <FileText className="text-primary size-4" />
           <h2 className="text-foreground text-xs font-semibold tracking-wide uppercase">
             Consultation History
           </h2>
@@ -47,7 +47,7 @@ export function ConsultationHistoryCard({
           {preview.map((c) => (
             <div key={c.id} className="flex gap-4 py-4 first:pt-0">
               <div className="w-14 shrink-0 text-center">
-                <p className="text-foreground text-lg font-bold leading-none">
+                <p className="text-foreground text-lg leading-none font-bold">
                   {c.date.split(" ")[0]}
                 </p>
                 <p className="text-muted-foreground text-xs uppercase">

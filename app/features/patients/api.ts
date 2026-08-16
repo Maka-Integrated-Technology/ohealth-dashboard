@@ -8,9 +8,7 @@ import type {
 } from "./types";
 
 export const patientsApi = {
-  getPatients: async (
-    params: GetPatientsParams
-  ): Promise<PatientsResponse> => {
+  getPatients: async (params: GetPatientsParams): Promise<PatientsResponse> => {
     const { data } = await axiosInstance.get<PatientsResponse>(
       "/api/patients",
       { params }

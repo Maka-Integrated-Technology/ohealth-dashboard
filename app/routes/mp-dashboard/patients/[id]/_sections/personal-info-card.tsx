@@ -18,7 +18,7 @@ export function PersonalInfoCard({ patient }: PersonalInfoCardProps) {
   return (
     <div className="border-border bg-card rounded-lg border p-5">
       <div className="mb-4 flex items-center gap-2">
-        <User className="size-4 text-primary" />
+        <User className="text-primary size-4" />
         <h2 className="text-foreground text-xs font-semibold tracking-wide uppercase">
           Personal Information
         </h2>
@@ -26,7 +26,10 @@ export function PersonalInfoCard({ patient }: PersonalInfoCardProps) {
 
       <div className="space-y-3">
         {rows.map((row) => (
-          <div key={row.label} className="flex items-center justify-between text-sm">
+          <div
+            key={row.label}
+            className="flex items-center justify-between text-sm"
+          >
             <span className="text-muted-foreground">{row.label}</span>
             <span className="text-foreground font-medium">{row.value}</span>
           </div>
