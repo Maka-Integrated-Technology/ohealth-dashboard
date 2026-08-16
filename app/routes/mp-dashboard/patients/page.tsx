@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router";
 import { useCustomSearchParams } from "~/hooks/use-custom-search-params";
 import { useDebouncedCallback } from "~/hooks/use-debounce";
 import { usePatients } from "~/features/patients/hooks";
+import { Breadcrumb } from "~/components/shared/breadcrumb";
 import { PatientsHeader } from "./_sections/patients-header";
 import { PatientsTable } from "./_sections/patients-table";
 import { Pagination } from "./_sections/pagination";
@@ -72,6 +73,10 @@ export default function PatientsPage() {
 
   return (
     <div className="p-6">
+      <Breadcrumb
+        items={[{ label: "Dashboard", to: "/" }, { label: "Patients" }]}
+      />
+
       <div className="mb-6">
         <h1 className="text-foreground text-2xl font-bold">
           Patients&apos; Records
