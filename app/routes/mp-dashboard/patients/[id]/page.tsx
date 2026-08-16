@@ -1,6 +1,7 @@
 import { useParams } from "react-router";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Empty } from "~/components/ui/empty";
+import { Breadcrumb } from "~/components/shared/breadcrumb";
 import {
   usePatientDetail,
   usePatientConsultations,
@@ -44,6 +45,14 @@ export default function PatientDetailPage() {
 
   return (
     <div className="p-6">
+      <Breadcrumb
+        items={[
+          { label: "Dashboard", to: "/" },
+          { label: "Patients", to: "/patients" },
+          { label: patient.name },
+        ]}
+      />
+
       <PatientHeader patient={patient} />
 
       <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
