@@ -2,6 +2,7 @@ import { useParams } from "react-router";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Empty } from "~/components/ui/empty";
 import { Video, MessageSquare, FileText } from "lucide-react";
+import { Breadcrumb } from "~/components/shared/breadcrumb";
 import {
   usePatientDetail,
   usePatientConsultations,
@@ -37,6 +38,15 @@ export default function PatientConsultationsPage() {
 
   return (
     <div className="p-6">
+      <Breadcrumb
+        items={[
+          { label: "Dashboard", to: "/" },
+          { label: "Patients", to: "/patients" },
+          { label: patient.name, to: `/patients/${patient.id}` },
+          { label: "Consultations" },
+        ]}
+      />
+
       <PatientHeader patient={patient} />
 
       <div className="border-border bg-card mt-6 rounded-lg border p-5">
