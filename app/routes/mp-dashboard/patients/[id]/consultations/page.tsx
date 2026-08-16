@@ -52,7 +52,7 @@ export default function PatientConsultationsPage() {
       <div className="border-border bg-card mt-6 rounded-lg border p-5">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <FileText className="size-4 text-primary" />
+            <FileText className="text-primary size-4" />
             <h2 className="text-foreground text-xs font-semibold tracking-wide uppercase">
               Consultation History
             </h2>

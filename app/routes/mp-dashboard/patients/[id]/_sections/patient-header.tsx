@@ -37,7 +37,7 @@ export function PatientHeader({ patient }: PatientHeaderProps) {
       </div>
 
       {patient.allergy && (
-        <div className="mt-3 flex w-fit items-center gap-1.5 rounded-full border border-destructive/20 bg-destructive/10 px-3 py-1 text-xs font-medium text-destructive">
+        <div className="border-destructive/20 bg-destructive/10 text-destructive mt-3 flex w-fit items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium">
           <AlertTriangle className="size-3.5" />
           ALLERGY • {patient.allergy}
         </div>

@@ -17,7 +17,7 @@ export function NotesCard({ patientId, notes }: NotesCardProps) {
     <div className="border-border bg-card rounded-lg border p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <NotebookPen className="size-4 text-primary" />
+          <NotebookPen className="text-primary size-4" />
           <h2 className="text-foreground text-xs font-semibold tracking-wide uppercase">
             Notes
           </h2>
@@ -42,7 +42,10 @@ export function NotesCard({ patientId, notes }: NotesCardProps) {
       ) : (
         <div className="divide-border divide-y">
           {preview.map((note) => (
-            <div key={note.id} className="flex items-start justify-between gap-3 py-3 first:pt-0">
+            <div
+              key={note.id}
+              className="flex items-start justify-between gap-3 py-3 first:pt-0"
+            >
               <div>
                 <p className="text-muted-foreground text-xs">{note.date}</p>
                 <p className="text-foreground mt-1 text-sm leading-relaxed">
