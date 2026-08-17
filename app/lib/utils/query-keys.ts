@@ -37,4 +37,7 @@ export const QUERY_KEYS = {
     consultations: (id: string) => ["patients", id, "consultations"] as const,
     notes: (id: string) => ["patients", id, "notes"] as const,
   },
+  earnings: {
+    summary: () => ["earnings", "summary"] as const,
+  },
 };
