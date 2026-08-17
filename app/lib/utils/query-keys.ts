@@ -30,4 +30,7 @@ export const QUERY_KEYS = {
     messages: (consultationId: string) =>
       ["chat", "messages", consultationId] as const,
   },
+  earnings: {
+    summary: () => ["earnings", "summary"] as const,
+  },
 };
