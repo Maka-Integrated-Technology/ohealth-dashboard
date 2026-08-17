@@ -30,6 +30,13 @@ export const QUERY_KEYS = {
     messages: (consultationId: string) =>
       ["chat", "messages", consultationId] as const,
   },
+  patients: {
+    all: () => ["patients"] as const,
+    list: (params: SearchParams) => ["patients", "list", params] as const,
+    byId: (id: string) => ["patients", id] as const,
+    consultations: (id: string) => ["patients", id, "consultations"] as const,
+    notes: (id: string) => ["patients", id, "notes"] as const,
+  },
   earnings: {
     summary: () => ["earnings", "summary"] as const,
   },
