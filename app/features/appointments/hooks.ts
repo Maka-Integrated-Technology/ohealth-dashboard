@@ -39,14 +39,12 @@ export function useAppointmentRequests() {
 
 export function useAcceptRequest() {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: appointmentsApi.acceptRequest,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.appointments.requests(),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.appointments.upcoming(),
+        queryKey: QUERY_KEYS.appointments.all,
       });
     },
   });
