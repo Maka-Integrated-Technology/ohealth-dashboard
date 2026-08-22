@@ -15,6 +15,7 @@ import { ListView } from "./_sections/list-view";
 import { getWeekRange } from "./_sections/_primitives";
 import { CalendarView } from "./_sections/calendar-view";
 import { AppointmentDetailDialog } from "./_sections/appointment-detail-dialog";
+import { CancelAppointmentDialog } from "./_sections/cancel-appointment-dialog";
 
 type ViewMode = "calendar" | "list";
 type StatusFilter = AppointmentStatus | "all";
@@ -86,6 +87,9 @@ export default function AppointmentsPage() {
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
 
+  const [appointmentToCancel, setAppointmentToCancel] =
+    useState<Appointment | null>(null);
+
   const handleViewChange = useCallback(
     (nextView: ViewMode) => {
       setSearchParams((prev) => {
@@ -135,20 +139,17 @@ export default function AppointmentsPage() {
     // No design yet for reschedule flow — stubbed for now.
   }, []);
 
-  const handleCancel = useCallback(
-    async (appointment: Appointment) => {
-      await cancelAppointment(appointment.id);
-    },
-    [cancelAppointment]
-  );
+  const handleCancelRequest = useCallback((appointment: Appointment) => {
+    setAppointmentToCancel(appointment);
+  }, []);
 
-  const handleCancelFromDialog = useCallback(
-    async (appointment: Appointment) => {
-      await handleCancel(appointment);
-      setSelectedAppointment(null);
-    },
-    [handleCancel]
-  );
+  const handleConfirmCancel = useCallback(async () => {
+    if (!appointmentToCancel) return;
+
+    await cancelAppointment(appointmentToCancel.id);
+    setAppointmentToCancel(null);
+    setSelectedAppointment(null);
+  }, [appointmentToCancel, cancelAppointment]);
 
   const handleAccept = useCallback(
     async (appointment: Appointment) => {
@@ -178,7 +179,7 @@ export default function AppointmentsPage() {
           onSelect={setSelectedAppointment}
           onStart={handleStart}
           onReschedule={handleReschedule}
-          onCancel={handleCancel}
+          onCancel={handleCancelRequest}
           cancellingId={isCancelling ? (cancellingId as string) : undefined}
         />
       ) : (
@@ -196,10 +197,17 @@ export default function AppointmentsPage() {
         appointment={selectedAppointment}
         onOpenChange={(open) => !open && setSelectedAppointment(null)}
         onStart={handleStart}
-        onCancel={handleCancelFromDialog}
+        onCancel={handleCancelRequest}
         onAccept={handleAccept}
         isCancelling={isCancelling}
         isAccepting={isAccepting}
+      />
+
+      <CancelAppointmentDialog
+        appointment={appointmentToCancel}
+        onOpenChange={(open) => !open && setAppointmentToCancel(null)}
+        onConfirm={() => void handleConfirmCancel()}
+        isCancelling={isCancelling}
       />
     </div>
   );
