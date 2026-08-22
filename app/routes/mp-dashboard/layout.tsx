@@ -24,7 +24,7 @@ const MP_SIDEBAR_ITEMS = [
 ];
 
 const HIDE_PORTAL_ROUTES = ["/appointments"];
-const AUTH_ROUTES = ["/sign-up", "/verify-email", "/login", "/verify-login"];
+const AUTH_ROUTES = ["/sign-up", "/verify-email", "/login", "/verify-login", "/onboarding"];
 
 export default function MpDashboardLayout() {
   const location = useLocation();

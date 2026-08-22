@@ -1,0 +1,131 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { ChevronDown, ChevronUp, Check } from 'lucide-react';
+import type { ConsultationType } from "~/features/professional-onboarding/types"
+
+interface ConsultationTypeSelectProps {
+  id: string;
+  label?: string;
+  value: ConsultationType | '';
+  onChange: (val: ConsultationType) => void;
+  onBlur?: () => void;
+  error?: string;
+  placeholder?: string;
+}
+
+const CONSULTATION_TYPES: ConsultationType[] = [
+  'Chat Consultation',
+  'Video Consultation',
+  'Both',
+];
+
+export const ConsultationTypeSelect: React.FC<ConsultationTypeSelectProps> = ({
+  id,
+  label = 'Consultation Type',
+  value,
+  onChange,
+  onBlur,
+  error,
+  placeholder = 'Select consultation type..',
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        if (isOpen) {
+          setIsOpen(false);
+          onBlur?.();
+        }
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen, onBlur]);
+
+  const handleSelect = (type: ConsultationType) => {
+    onChange(type);
+    setIsOpen(false);
+    onBlur?.();
+  };
+
+  return (
+    <div className="w-full flex flex-col space-y-1.5 text-left" ref={dropdownRef} id={`group-${id}`}>
+      {label && (
+        <label
+          htmlFor={id}
+          className="block text-sm font-medium text-slate-800"
+          id={`label-${id}`}
+        >
+          {label}
+        </label>
+      )}
+
+      <div className="relative">
+        <button
+          type="button"
+          id={id}
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen(!isOpen)}
+          className={`w-full h-12 px-4 bg-white border rounded-xl flex items-center justify-between text-left transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${
+            error
+              ? 'border-red-400 focus:border-red-500'
+              : isOpen
+              ? 'border-blue-500 ring-2 ring-blue-500/10'
+              : 'border-slate-200 hover:border-slate-300'
+          }`}
+        >
+          <span
+            className={`text-sm truncate ${
+              value ? 'text-slate-900 font-normal' : 'text-slate-400'
+            }`}
+          >
+            {value || placeholder}
+          </span>
+          {isOpen ? (
+            <ChevronUp className="w-4 h-4 text-slate-400 shrink-0 stroke-2" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-slate-400 shrink-0 stroke-2" />
+          )}
+        </button>
+
+        {isOpen && (
+          <div
+            id={`${id}-listbox`}
+            role="listbox"
+            className="absolute z-30 w-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-lg py-1 max-h-60 overflow-auto animate-in fade-in-50 duration-100"
+          >
+            {CONSULTATION_TYPES.map((type) => {
+              const isSelected = value === type;
+              return (
+                <button
+                  key={type}
+                  type="button"
+                  role="option"
+                  aria-selected={isSelected}
+                  id={`consult-opt-${type.toLowerCase().replace(/\s+/g, '-')}`}
+                  onClick={() => handleSelect(type)}
+                  className={`w-full px-4 py-2.5 text-sm text-left flex items-center justify-between transition-colors ${
+                    isSelected
+                      ? 'bg-blue-50/60 text-blue-700 font-medium'
+                      : 'text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  <span>{type}</span>
+                  {isSelected && <Check className="w-4 h-4 text-blue-600 shrink-0" />}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {error && (
+        <p className="text-xs text-red-600 font-medium mt-1" id={`error-${id}`}>
+          {error}
+        </p>
+      )}
+    </div>
+  );
+};
