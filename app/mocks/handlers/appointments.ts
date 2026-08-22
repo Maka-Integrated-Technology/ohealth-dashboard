@@ -532,8 +532,17 @@ export const appointmentHandlers = [
     });
   }),
 
-  http.post("/api/appointments/requests/:id/accept", ({ params }) => {
-    console.info(`[MSW] Accepted request ${params.id}`);
+  http.post("/api/appointments/requests/:id/accept", async ({ params }) => {
+    await delay(MOCK_NETWORK_DELAY_MS);
+
+    const appointment = appointments.find((apt) => apt.id === params.id);
+
+    if (!appointment) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    appointment.status = "confirmed";
+
     return HttpResponse.json({ success: true });
   }),
 
