@@ -40,4 +40,9 @@ export const QUERY_KEYS = {
   earnings: {
     summary: () => ["earnings", "summary"] as const,
   },
+  availability: {
+  schedule: () => ["availability", "schedule"] as const,
+  appointments: (params: SearchParams) =>
+    ["availability", "appointments", params] as const,
+},
 };
