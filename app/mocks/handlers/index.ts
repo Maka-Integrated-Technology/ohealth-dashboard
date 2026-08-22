@@ -4,6 +4,7 @@ import { profileSetupHandlers } from "./profile-setup";
 import { reviewsHandlers } from "./reviews";
 import { chatHandlers } from "./chat";
 import { patientsHandlers } from "./patients";
+import { availabilityHandlers } from "./availability";
 
 export const handlers = [
   ...appointmentHandlers,
@@ -12,4 +13,5 @@ export const handlers = [
   ...reviewsHandlers,
   ...chatHandlers,
   ...patientsHandlers,
+  ...availabilityHandlers,
 ];
