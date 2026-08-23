@@ -20,6 +20,7 @@ import {
 } from "./_sections/_primitives";
 
 type ScheduleMode = "weekly" | "monthly";
+type RangeMode = "weekly" | "monthly";
 
 function hasAnySchedule(schedule?: { days: DaySchedule[] }) {
   return Boolean(schedule?.days.some((d) => d.available));
@@ -27,8 +28,8 @@ function hasAnySchedule(schedule?: { days: DaySchedule[] }) {
 
 export default function AvailabilityPage() {
   const [mode, setMode] = useState<ScheduleMode>("weekly");
+  const [range, setRange] = useState<RangeMode>("weekly");
   const [weekAnchor, setWeekAnchor] = useState(() => new Date());
-  const [monthAnchor, setMonthAnchor] = useState(() => new Date());
   const [editingDay, setEditingDay] = useState<DaySchedule | null>(null);
 
   const { data: schedule, isLoading, isError } = useWeeklySchedule();
@@ -36,7 +37,7 @@ export default function AvailabilityPage() {
     useUpdateDaySchedule();
 
   const weekStart = useMemo(() => getWeekStart(weekAnchor), [weekAnchor]);
-  const monthStart = useMemo(() => getMonthStart(monthAnchor), [monthAnchor]);
+  const monthStart = useMemo(() => getMonthStart(weekStart), [weekStart]);
 
   const isEmpty = !isLoading && !hasAnySchedule(schedule);
 
@@ -50,18 +51,6 @@ export default function AvailabilityPage() {
     const d = new Date(weekAnchor);
     d.setDate(d.getDate() + 7);
     setWeekAnchor(d);
-  }
-
-  function handlePrevMonth() {
-    const d = new Date(monthAnchor);
-    d.setMonth(d.getMonth() - 1);
-    setMonthAnchor(d);
-  }
-
-  function handleNextMonth() {
-    const d = new Date(monthAnchor);
-    d.setMonth(d.getMonth() + 1);
-    setMonthAnchor(d);
   }
 
   async function handleToggleDay(day: WeekDay, available: boolean) {
@@ -118,9 +107,9 @@ export default function AvailabilityPage() {
 
       <div className="flex items-center justify-between">
         <ScheduleToggle mode={mode} onModeChange={setMode} />
-        {!isLoading && !isError && !isEmpty && (
+        {!isLoading && !isError && !isEmpty && range === "weekly" && (
           <h2 className="text-foreground hidden w-full text-sm font-semibold lg:block lg:w-80">
-            {mode === "weekly" ? "Weekly schedule" : "Monthly schedule"}
+            Weekly schedule
           </h2>
         )}
       </div>
@@ -153,62 +142,37 @@ export default function AvailabilityPage() {
           <div className="flex flex-col gap-6 lg:flex-row">
             <div className="flex-1">
               <div className="mb-4 flex items-center justify-between">
-                {mode === "weekly" ? (
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={handlePrevWeek}
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      <ChevronLeft className="size-4" />
-                    </button>
-                    <span className="text-foreground text-sm font-medium">
-                      {formatWeekLabel(weekStart)}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={handleNextWeek}
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      <ChevronRight className="size-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={handlePrevMonth}
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      <ChevronLeft className="size-4" />
-                    </button>
-                    <span className="text-foreground text-sm font-medium">
-                      {monthStart.toLocaleDateString("en-US", {
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={handleNextMonth}
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      <ChevronRight className="size-4" />
-                    </button>
-                  </div>
-                )}
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handlePrevWeek}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <ChevronLeft className="size-4" />
+                  </button>
+                  <span className="text-foreground text-sm font-medium">
+                    {formatWeekLabel(weekStart)}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleNextWeek}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <ChevronRight className="size-4" />
+                  </button>
+                </div>
 
-                <RangeToggle mode={mode} onModeChange={setMode} />
+                <RangeToggle mode={range} onModeChange={setRange} />
               </div>
 
-              {mode === "weekly" ? (
+              {range === "weekly" ? (
                 <WeeklyCalendar weekStart={weekStart} />
               ) : (
                 <MonthlyCalendar monthStart={monthStart} />
               )}
             </div>
 
-            {mode === "weekly" && (
+            {range === "weekly" && (
               <WeeklySchedulePanel
                 days={schedule.days}
                 onToggleDay={handleToggleDay}
