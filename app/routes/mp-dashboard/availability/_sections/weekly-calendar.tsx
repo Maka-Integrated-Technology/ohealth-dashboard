@@ -7,12 +7,13 @@ const ROW_HEIGHT_PX = 64;
 const START_HOUR = 9;
 const END_HOUR = 17;
 
-const STATUS_CARD_CLASSES: Record<AvailabilityAppointment["status"], string> = {
-  confirmed: "bg-blue-50 border-blue-200 text-blue-900",
-  pending: "bg-amber-50 border-amber-200 text-amber-900",
-  cancelled: "bg-red-50 border-red-200 text-red-900",
-  completed: "bg-gray-50 border-gray-200 text-gray-600",
-};
+const STATUS_CARD_CLASSES: Record<AvailabilityAppointment["status"], string> =
+  {
+    confirmed: "bg-blue-50 border-blue-200 text-blue-900",
+    pending: "bg-amber-50 border-amber-200 text-amber-900",
+    cancelled: "bg-red-50 border-red-200 text-red-900",
+    completed: "bg-gray-50 border-gray-200 text-gray-600",
+  };
 
 function isSameDay(a: Date, b: Date) {
   return (
@@ -38,9 +39,10 @@ function getCardPosition(apt: AvailabilityAppointment) {
   const startMinutes =
     (start.getHours() - START_HOUR) * 60 + start.getMinutes();
   const durationMinutes = (end.getTime() - start.getTime()) / 60000;
-  const top = (startMinutes / 60) * ROW_HEIGHT_PX + 4;
-  const height = (durationMinutes / 60) * ROW_HEIGHT_PX - 8;
-  return { top, height: Math.max(height, 48) };
+  const CARD_GAP = 6;
+  const top = (startMinutes / 60) * ROW_HEIGHT_PX + CARD_GAP;
+  const height = (durationMinutes / 60) * ROW_HEIGHT_PX - CARD_GAP * 2;
+  return { top, height: Math.max(height, 52) };
 }
 
 interface WeeklyCalendarProps {
@@ -76,11 +78,11 @@ export function WeeklyCalendar({ weekStart }: WeeklyCalendarProps) {
         className="grid min-w-[600px]"
         style={{ gridTemplateColumns: `70px repeat(7, 1fr)` }}
       >
-        <div className="border-border border-b p-2" />
+        <div className="border-border border-b p-3" />
         {days.map((day) => (
           <div
             key={day.toISOString()}
-            className="border-border border-b border-l p-2 text-center"
+            className="border-border border-b border-l p-3 text-center"
           >
             <p className="text-muted-foreground text-xs">
               {day.toLocaleDateString("en-US", { weekday: "short" })}
@@ -94,7 +96,7 @@ export function WeeklyCalendar({ weekStart }: WeeklyCalendarProps) {
         {hours.map((hour) => (
           <div key={hour} className="contents">
             <div
-              className="border-border text-muted-foreground border-b p-2 text-right text-xs"
+              className="border-border text-muted-foreground border-b p-3 text-right text-xs"
               style={{ height: ROW_HEIGHT_PX }}
             >
               {hour.toString().padStart(2, "0")}:00
@@ -113,10 +115,10 @@ export function WeeklyCalendar({ weekStart }: WeeklyCalendarProps) {
                       return (
                         <div
                           key={apt.id}
-                          className={`absolute inset-x-1 z-10 flex flex-col items-center justify-center gap-0.5 overflow-hidden rounded-md border p-1 text-center text-xs ${STATUS_CARD_CLASSES[apt.status]}`}
+                          className={`absolute inset-x-1.5 z-10 flex flex-col items-center justify-center gap-1 overflow-hidden rounded-md border p-2.5 text-center text-xs ${STATUS_CARD_CLASSES[apt.status]}`}
                           style={{ top, height }}
                         >
-                          <p className="truncate leading-none font-medium">
+                          <p className="truncate font-medium leading-none">
                             {apt.patientName}
                           </p>
                           <p className="truncate text-[10px] leading-none opacity-80">
@@ -129,11 +131,14 @@ export function WeeklyCalendar({ weekStart }: WeeklyCalendarProps) {
                               }
                             )}
                             {" - "}
-                            {new Date(apt.endsAt).toLocaleTimeString("en-US", {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              hour12: false,
-                            })}
+                            {new Date(apt.endsAt).toLocaleTimeString(
+                              "en-US",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: false,
+                              }
+                            )}
                           </p>
                         </div>
                       );
