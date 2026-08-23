@@ -106,7 +106,7 @@ export default function AvailabilityPage() {
   }
 
   return (
-    <div className="p-6">
+    <div className="h-[calc(100vh-4.0625rem)] overflow-hidden p-6">
       <div className="mb-6">
         <h1 className="text-foreground text-2xl font-bold">Availability</h1>
         <p className="text-muted-foreground text-sm">
