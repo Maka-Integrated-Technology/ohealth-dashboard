@@ -8,6 +8,7 @@ import {
 } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 import { Switch } from "~/components/ui/switch";
+import { TimePicker } from "~/components/ui/time-picker";
 import type { DaySchedule, WeekDay } from "~/features/availability/types";
 
 const ALL_DAYS: WeekDay[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -48,6 +49,12 @@ export function EditScheduleDialog({
 
   function removePeriod(index: number) {
     setPeriods((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function updatePeriod(index: number, field: "from" | "to", value: string) {
+    setPeriods((prev) =>
+      prev.map((p, i) => (i === index ? { ...p, [field]: value } : p))
+    );
   }
 
   function toggleCopyDay(targetDay: WeekDay) {
@@ -111,22 +118,18 @@ export function EditScheduleDialog({
                         <label className="text-muted-foreground text-xs">
                           From
                         </label>
-                        <input
-                          type="text"
-                          readOnly
-                          value={formatTime(period.from)}
-                          className="border-input bg-input-background w-full rounded-lg border px-3 py-2 text-sm"
+                        <TimePicker
+                          value={period.from}
+                          onChange={(v) => updatePeriod(index, "from", v)}
                         />
                       </div>
                       <div className="flex-1 space-y-1">
                         <label className="text-muted-foreground text-xs">
                           To
                         </label>
-                        <input
-                          type="text"
-                          readOnly
-                          value={formatTime(period.to)}
-                          className="border-input bg-input-background w-full rounded-lg border px-3 py-2 text-sm"
+                        <TimePicker
+                          value={period.to}
+                          onChange={(v) => updatePeriod(index, "to", v)}
                         />
                       </div>
                       {periods.length > 1 && (
@@ -196,12 +199,4 @@ function fullDayName(day: WeekDay): string {
     Sun: "Sunday",
   };
   return map[day];
-}
-
-function formatTime(time: string) {
-  const [hourStr, minuteStr] = time.split(":");
-  const hour = Number(hourStr);
-  const period = hour >= 12 ? "PM" : "AM";
-  const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-  return `${displayHour}:${minuteStr} ${period}`;
 }
