@@ -7,13 +7,12 @@ const ROW_HEIGHT_PX = 64;
 const START_HOUR = 9;
 const END_HOUR = 17;
 
-const STATUS_CARD_CLASSES: Record<AvailabilityAppointment["status"], string> =
-  {
-    confirmed: "bg-blue-50 border-blue-200 text-blue-900",
-    pending: "bg-amber-50 border-amber-200 text-amber-900",
-    cancelled: "bg-red-50 border-red-200 text-red-900",
-    completed: "bg-gray-50 border-gray-200 text-gray-600",
-  };
+const STATUS_CARD_CLASSES: Record<AvailabilityAppointment["status"], string> = {
+  confirmed: "bg-blue-50 border-blue-200 text-blue-900",
+  pending: "bg-amber-50 border-amber-200 text-amber-900",
+  cancelled: "bg-red-50 border-red-200 text-red-900",
+  completed: "bg-gray-50 border-gray-200 text-gray-600",
+};
 
 function isSameDay(a: Date, b: Date) {
   return (
@@ -117,13 +116,17 @@ export function WeeklyCalendar({ weekStart }: WeeklyCalendarProps) {
                           className={`absolute inset-x-1 z-10 flex flex-col items-center justify-center gap-0.5 overflow-hidden rounded-md border p-1 text-center text-xs ${STATUS_CARD_CLASSES[apt.status]}`}
                           style={{ top, height }}
                         >
-                          <p className="truncate font-medium leading-none">
+                          <p className="truncate leading-none font-medium">
                             {apt.patientName}
                           </p>
                           <p className="truncate text-[10px] leading-none opacity-80">
                             {new Date(apt.startsAt).toLocaleTimeString(
                               "en-US",
-                              { hour: "2-digit", minute: "2-digit", hour12: false }
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: false,
+                              }
                             )}
                             {" - "}
                             {new Date(apt.endsAt).toLocaleTimeString("en-US", {

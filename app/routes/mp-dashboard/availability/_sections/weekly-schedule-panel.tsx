@@ -71,7 +71,7 @@ export function WeeklySchedulePanel({
             <button
               type="button"
               onClick={() => onEditDay(d.day)}
-              className="text-primary ml-11 mt-2 flex items-center gap-1 text-xs font-medium hover:underline"
+              className="text-primary mt-2 ml-11 flex items-center gap-1 text-xs font-medium hover:underline"
             >
               <Pencil className="size-3" />
               Edit Schedule

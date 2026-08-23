@@ -58,7 +58,7 @@ export function MonthlyCalendar({ monthStart }: MonthlyCalendarProps) {
 
   return (
     <div className="border-border overflow-hidden rounded-lg border">
-      <div className="grid grid-cols-7 border-b border-border">
+      <div className="border-border grid grid-cols-7 border-b">
         {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((label) => (
           <div
             key={label}
@@ -72,7 +72,7 @@ export function MonthlyCalendar({ monthStart }: MonthlyCalendarProps) {
       {weeks.map((week, weekIndex) => (
         <div
           key={weekIndex}
-          className="grid grid-cols-7 border-b border-border last:border-b-0"
+          className="border-border grid grid-cols-7 border-b last:border-b-0"
         >
           {week.map((day) => {
             const inMonth = day.getMonth() === monthStart.getMonth();
@@ -83,7 +83,7 @@ export function MonthlyCalendar({ monthStart }: MonthlyCalendarProps) {
             return (
               <div
                 key={day.toISOString()}
-                className="border-l border-border p-2 first:border-l-0"
+                className="border-border border-l p-2 first:border-l-0"
                 style={{ minHeight: 90 }}
               >
                 <p
@@ -101,9 +101,7 @@ export function MonthlyCalendar({ monthStart }: MonthlyCalendarProps) {
                       key={apt.id}
                       className={`truncate rounded px-1.5 py-1 text-xs ${STATUS_CLASSES[apt.status]}`}
                     >
-                      <p className="truncate font-medium">
-                        {apt.patientName}
-                      </p>
+                      <p className="truncate font-medium">{apt.patientName}</p>
                       <p className="truncate text-[10px] opacity-80">
                         {formatTimeRange(apt.startsAt, apt.endsAt)}
                       </p>

@@ -43,10 +43,7 @@ export function TimePicker({ value, onChange }: TimePickerProps) {
   const [open, setOpen] = useState(false);
   const { hour12, minute, period } = from24Hour(value);
 
-  function handleSelect(
-    field: "hour" | "minute" | "period",
-    val: string
-  ) {
+  function handleSelect(field: "hour" | "minute" | "period", val: string) {
     const current = from24Hour(value);
     const next = {
       hour12: field === "hour" ? val : current.hour12,
@@ -68,7 +65,7 @@ export function TimePicker({ value, onChange }: TimePickerProps) {
         </button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-auto p-0">
-        <div className="flex divide-x divide-border">
+        <div className="divide-border flex divide-x">
           <TimeColumn
             items={HOURS}
             selected={hour12}

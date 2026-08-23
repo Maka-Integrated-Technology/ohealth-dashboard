@@ -13,13 +13,8 @@ export const availabilityApi = {
     return data;
   },
 
-  updateDaySchedule: async (
-    params: UpdateDayScheduleParams
-  ): Promise<void> => {
-    await axiosInstance.put(
-      `/api/availability/schedule/${params.day}`,
-      params
-    );
+  updateDaySchedule: async (params: UpdateDayScheduleParams): Promise<void> => {
+    await axiosInstance.put(`/api/availability/schedule/${params.day}`, params);
   },
 
   getAppointmentsInRange: async (params: {
