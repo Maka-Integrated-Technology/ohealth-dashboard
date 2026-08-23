@@ -25,10 +25,6 @@ export function WeeklySchedulePanel({
 }: WeeklySchedulePanelProps) {
   return (
     <div className="w-full lg:w-80">
-      <h2 className="text-foreground mb-3 text-sm font-semibold">
-        Weekly schedule
-      </h2>
-
       <div
         className="max-h-[600px] divide-y divide-border overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         onWheel={(e) => e.stopPropagation()}
