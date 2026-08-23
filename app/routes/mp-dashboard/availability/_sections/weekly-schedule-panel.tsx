@@ -29,7 +29,10 @@ export function WeeklySchedulePanel({
         Weekly schedule
       </h2>
 
-      <div className="divide-border divide-y">
+      <div
+        className="max-h-[600px] divide-y divide-border overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        onWheel={(e) => e.stopPropagation()}
+      >
         {days.map((d) => (
           <div key={d.day} className="py-3 first:pt-0">
             <div className="mb-2 flex items-center justify-between">
