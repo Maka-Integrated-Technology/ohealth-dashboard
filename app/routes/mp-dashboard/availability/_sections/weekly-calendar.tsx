@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Video, MessageSquare, MapPin } from "lucide-react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useAvailabilityAppointments } from "~/features/availability/hooks";
 import type { AvailabilityAppointment } from "~/features/availability/types";
@@ -14,6 +15,12 @@ const STATUS_CARD_CLASSES: Record<AvailabilityAppointment["status"], string> =
     cancelled: "bg-red-50 border-red-200 text-red-900",
     completed: "bg-gray-50 border-gray-200 text-gray-600",
   };
+
+const CONSULT_ICON = {
+  Video: Video,
+  Chat: MessageSquare,
+  "In-Person": MapPin,
+} as const;
 
 function isSameDay(a: Date, b: Date) {
   return (
@@ -112,6 +119,7 @@ export function WeeklyCalendar({ weekStart }: WeeklyCalendarProps) {
                     .filter((apt) => isSameDay(new Date(apt.startsAt), day))
                     .map((apt) => {
                       const { top, height } = getCardPosition(apt);
+                      const Icon = CONSULT_ICON[apt.consultationType];
                       return (
                         <div
                           key={apt.id}
@@ -121,7 +129,8 @@ export function WeeklyCalendar({ weekStart }: WeeklyCalendarProps) {
                           <p className="truncate font-medium leading-none">
                             {apt.patientName}
                           </p>
-                          <p className="truncate text-[10px] leading-none opacity-80">
+                          <p className="flex items-center justify-center gap-1 truncate text-[10px] leading-none opacity-80">
+                            <Icon className="size-3 shrink-0" />
                             {new Date(apt.startsAt).toLocaleTimeString(
                               "en-US",
                               {
