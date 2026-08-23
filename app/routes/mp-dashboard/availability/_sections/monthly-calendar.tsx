@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Video, MessageSquare, MapPin } from "lucide-react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useAvailabilityAppointments } from "~/features/availability/hooks";
 import type { AvailabilityAppointment } from "~/features/availability/types";
@@ -10,6 +11,12 @@ const STATUS_CLASSES: Record<AvailabilityAppointment["status"], string> = {
   cancelled: "bg-red-50 text-red-700",
   completed: "bg-gray-50 text-gray-600",
 };
+
+const CONSULT_ICON = {
+  Video: Video,
+  Chat: MessageSquare,
+  "In-Person": MapPin,
+} as const;
 
 function isSameDay(a: Date, b: Date) {
   return (
@@ -58,11 +65,11 @@ export function MonthlyCalendar({ monthStart }: MonthlyCalendarProps) {
 
   return (
     <div className="border-border overflow-hidden rounded-lg border">
-      <div className="border-border grid grid-cols-7 border-b">
+      <div className="grid grid-cols-7 border-b border-border">
         {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((label) => (
           <div
             key={label}
-            className="text-muted-foreground p-2 text-center text-xs font-medium"
+            className="text-muted-foreground p-3 text-center text-xs font-medium"
           >
             {label}
           </div>
@@ -72,7 +79,7 @@ export function MonthlyCalendar({ monthStart }: MonthlyCalendarProps) {
       {weeks.map((week, weekIndex) => (
         <div
           key={weekIndex}
-          className="border-border grid grid-cols-7 border-b last:border-b-0"
+          className="grid grid-cols-7 border-b border-border last:border-b-0"
         >
           {week.map((day) => {
             const inMonth = day.getMonth() === monthStart.getMonth();
@@ -83,8 +90,8 @@ export function MonthlyCalendar({ monthStart }: MonthlyCalendarProps) {
             return (
               <div
                 key={day.toISOString()}
-                className="border-border border-l p-2 first:border-l-0"
-                style={{ minHeight: 90 }}
+                className="border-l border-border p-3 first:border-l-0"
+                style={{ minHeight: 100 }}
               >
                 <p
                   className={
@@ -95,18 +102,24 @@ export function MonthlyCalendar({ monthStart }: MonthlyCalendarProps) {
                 >
                   {day.getDate()}
                 </p>
-                <div className="mt-1 space-y-1">
-                  {dayAppointments.map((apt) => (
-                    <div
-                      key={apt.id}
-                      className={`truncate rounded px-1.5 py-1 text-xs ${STATUS_CLASSES[apt.status]}`}
-                    >
-                      <p className="truncate font-medium">{apt.patientName}</p>
-                      <p className="truncate text-[10px] opacity-80">
-                        {formatTimeRange(apt.startsAt, apt.endsAt)}
-                      </p>
-                    </div>
-                  ))}
+                <div className="mt-2 space-y-1.5">
+                  {dayAppointments.map((apt) => {
+                    const Icon = CONSULT_ICON[apt.consultationType];
+                    return (
+                      <div
+                        key={apt.id}
+                        className={`truncate rounded-md px-2 py-2 text-xs ${STATUS_CLASSES[apt.status]}`}
+                      >
+                        <p className="truncate font-medium">
+                          {apt.patientName}
+                        </p>
+                        <p className="mt-0.5 flex items-center gap-1 truncate text-[10px] opacity-80">
+                          <Icon className="size-3 shrink-0" />
+                          {formatTimeRange(apt.startsAt, apt.endsAt)}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             );
