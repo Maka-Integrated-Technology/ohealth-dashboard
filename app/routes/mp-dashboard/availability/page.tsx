@@ -10,6 +10,7 @@ import type { DaySchedule, WeekDay } from "~/features/availability/types";
 import { ScheduleToggle } from "./_sections/schedule-toggle";
 import { WeeklyCalendar } from "./_sections/weekly-calendar";
 import { WeeklySchedulePanel } from "./_sections/weekly-schedule-panel";
+import { EditScheduleDialog } from "./_sections/edit-schedule-dialog";
 import { getWeekStart, formatWeekLabel } from "./_sections/_primitives";
 
 type ScheduleMode = "weekly" | "monthly";
@@ -21,8 +22,11 @@ function hasAnySchedule(schedule?: { days: DaySchedule[] }) {
 export default function AvailabilityPage() {
   const [mode, setMode] = useState<ScheduleMode>("weekly");
   const [weekAnchor, setWeekAnchor] = useState(() => new Date());
+  const [editingDay, setEditingDay] = useState<DaySchedule | null>(null);
+
   const { data: schedule, isLoading, isError } = useWeeklySchedule();
-  const { mutateAsync: updateDaySchedule } = useUpdateDaySchedule();
+  const { mutateAsync: updateDaySchedule, isPending: isSaving } =
+    useUpdateDaySchedule();
 
   const weekStart = useMemo(() => getWeekStart(weekAnchor), [weekAnchor]);
 
@@ -45,7 +49,8 @@ export default function AvailabilityPage() {
     await updateDaySchedule({
       day,
       available,
-      periods: current?.periods.map((p) => ({ from: p.from, to: p.to })) ?? [],
+      periods:
+        current?.periods.map((p) => ({ from: p.from, to: p.to })) ?? [],
     });
   }
 
@@ -63,8 +68,23 @@ export default function AvailabilityPage() {
   }
 
   function handleEditDay(day: WeekDay) {
-    // Opens the Edit Schedule modal — built in the next step.
-    console.log("edit day", day);
+    const target = schedule?.days.find((d) => d.day === day);
+    if (target) setEditingDay(target);
+  }
+
+  async function handleSaveSchedule(params: {
+    available: boolean;
+    periods: { from: string; to: string }[];
+    copyToDays: WeekDay[];
+  }) {
+    if (!editingDay) return;
+    await updateDaySchedule({
+      day: editingDay.day,
+      available: params.available,
+      periods: params.periods,
+      copyToDays: params.copyToDays,
+    });
+    setEditingDay(null);
   }
 
   return (
@@ -148,6 +168,14 @@ export default function AvailabilityPage() {
           </>
         )}
       </div>
+
+      <EditScheduleDialog
+        key={editingDay?.day ?? "none"}
+        day={editingDay}
+        onOpenChange={(open) => !open && setEditingDay(null)}
+        onSave={handleSaveSchedule}
+        isSaving={isSaving}
+      />
     </div>
   );
 }
