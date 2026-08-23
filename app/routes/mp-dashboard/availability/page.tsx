@@ -11,7 +11,12 @@ import { ScheduleToggle } from "./_sections/schedule-toggle";
 import { WeeklyCalendar } from "./_sections/weekly-calendar";
 import { WeeklySchedulePanel } from "./_sections/weekly-schedule-panel";
 import { EditScheduleDialog } from "./_sections/edit-schedule-dialog";
-import { getWeekStart, formatWeekLabel } from "./_sections/_primitives";
+import { MonthlyCalendar } from "./_sections/monthly-calendar";
+import {
+  getWeekStart,
+  formatWeekLabel,
+  getMonthStart,
+} from "./_sections/_primitives";
 
 type ScheduleMode = "weekly" | "monthly";
 
@@ -22,6 +27,7 @@ function hasAnySchedule(schedule?: { days: DaySchedule[] }) {
 export default function AvailabilityPage() {
   const [mode, setMode] = useState<ScheduleMode>("weekly");
   const [weekAnchor, setWeekAnchor] = useState(() => new Date());
+  const [monthAnchor, setMonthAnchor] = useState(() => new Date());
   const [editingDay, setEditingDay] = useState<DaySchedule | null>(null);
 
   const { data: schedule, isLoading, isError } = useWeeklySchedule();
@@ -29,6 +35,7 @@ export default function AvailabilityPage() {
     useUpdateDaySchedule();
 
   const weekStart = useMemo(() => getWeekStart(weekAnchor), [weekAnchor]);
+  const monthStart = useMemo(() => getMonthStart(monthAnchor), [monthAnchor]);
 
   const isEmpty = !isLoading && !hasAnySchedule(schedule);
 
@@ -42,6 +49,18 @@ export default function AvailabilityPage() {
     const d = new Date(weekAnchor);
     d.setDate(d.getDate() + 7);
     setWeekAnchor(d);
+  }
+
+  function handlePrevMonth() {
+    const d = new Date(monthAnchor);
+    d.setMonth(d.getMonth() - 1);
+    setMonthAnchor(d);
+  }
+
+  function handleNextMonth() {
+    const d = new Date(monthAnchor);
+    d.setMonth(d.getMonth() + 1);
+    setMonthAnchor(d);
   }
 
   async function handleToggleDay(day: WeekDay, available: boolean) {
@@ -161,9 +180,32 @@ export default function AvailabilityPage() {
             )}
 
             {mode === "monthly" && (
-              <p className="text-muted-foreground text-sm">
-                Monthly view coming next.
-              </p>
+              <>
+                <div className="mb-4 flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handlePrevMonth}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <ChevronLeft className="size-4" />
+                  </button>
+                  <span className="text-foreground text-sm font-medium">
+                    {monthStart.toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleNextMonth}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <ChevronRight className="size-4" />
+                  </button>
+                </div>
+
+                <MonthlyCalendar monthStart={monthStart} />
+              </>
             )}
           </>
         )}
