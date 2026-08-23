@@ -157,11 +157,10 @@ export function EditScheduleDialog({
                     key={d}
                     type="button"
                     onClick={() => toggleCopyDay(d)}
-                    className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
-                      copyToDays.includes(d)
+                    className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${copyToDays.includes(d)
                         ? "border-primary bg-primary/10 text-primary"
                         : "border-border text-foreground hover:bg-muted"
-                    }`}
+                      }`}
                   >
                     {fullDayName(d)}
                   </button>
@@ -171,13 +170,17 @@ export function EditScheduleDialog({
 
             <div className="flex items-center gap-3 pt-2">
               <Button
-                className="flex-1"
+                className="h-11 flex-1 text-base"
                 isLoading={isSaving}
                 onClick={handleSave}
               >
                 Save Schedule
               </Button>
-              <Button variant="ghost" onClick={() => onOpenChange(false)}>
+              <Button
+                variant="ghost"
+                className="h-11 px-6 text-base"
+                onClick={() => onOpenChange(false)}
+              >
                 Cancel
               </Button>
             </div>
