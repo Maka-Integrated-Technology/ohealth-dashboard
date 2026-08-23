@@ -80,7 +80,7 @@ export function EditScheduleDialog({
               <DialogTitle>Edit Schedule - {fullDayName(day.day)}</DialogTitle>
             </DialogHeader>
 
-            <div className="flex items-center justify-between rounded-lg bg-muted p-3">
+            <div className="bg-muted flex items-center justify-between rounded-lg p-3">
               <div>
                 <p className="text-foreground text-sm font-medium">
                   Available to Book

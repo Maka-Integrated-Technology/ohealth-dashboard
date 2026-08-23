@@ -4,14 +4,7 @@ export interface TimePeriod {
   to: string;
 }
 
-export type WeekDay =
-  | "Mon"
-  | "Tue"
-  | "Wed"
-  | "Thu"
-  | "Fri"
-  | "Sat"
-  | "Sun";
+export type WeekDay = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
 
 export interface DaySchedule {
   day: WeekDay;

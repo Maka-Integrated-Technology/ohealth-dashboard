@@ -41,8 +41,8 @@ export const QUERY_KEYS = {
     summary: () => ["earnings", "summary"] as const,
   },
   availability: {
-  schedule: () => ["availability", "schedule"] as const,
-  appointments: (params: SearchParams) =>
-    ["availability", "appointments", params] as const,
-},
+    schedule: () => ["availability", "schedule"] as const,
+    appointments: (params: SearchParams) =>
+      ["availability", "appointments", params] as const,
+  },
 };
