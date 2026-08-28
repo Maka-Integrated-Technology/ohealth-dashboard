@@ -32,7 +32,7 @@ export const stepOneSchema = Yup.object().shape({
 export const stepTwoSchema = Yup.object().shape({
   specialization: Yup.string()
     .oneOf(
-      ["General Doctor", "Nurse", "Nutritionist", "Counselor"],
+      ["General Doctor", "Nurse", "Nutritionist", "Counsellor"],
       "Please select a valid specialization"
     )
     .required("Specialization is required"),

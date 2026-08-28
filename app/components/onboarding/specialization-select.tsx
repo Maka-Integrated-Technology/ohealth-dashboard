@@ -16,7 +16,7 @@ const SPECIALIZATIONS: Specialization[] = [
   "General Doctor",
   "Nurse",
   "Nutritionist",
-  "Counselor",
+  "Counsellor",
 ];
 
 export const SpecializationSelect: React.FC<SpecializationSelectProps> = ({
