@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface OnboardingProgressProps {
   currentStep: number; // 1, 2, or 3
@@ -13,7 +13,7 @@ export const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
 
   return (
     <div
-      className="flex items-center justify-center my-6 sm:my-8"
+      className="my-6 flex items-center justify-center sm:my-8"
       id="onboarding-progress-indicator"
       role="progressbar"
       aria-valuenow={currentStep}
@@ -31,10 +31,10 @@ export const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
               {/* Step Circle */}
               <div
                 id={`progress-step-circle-${stepNumber}`}
-                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-200 ${
+                className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-all duration-200 sm:h-10 sm:w-10 ${
                   isActiveOrDone
-                    ? 'bg-blue-600 text-white shadow-sm ring-4 ring-blue-50'
-                    : 'bg-slate-100 text-slate-400 border border-slate-200'
+                    ? "bg-blue-600 text-white shadow-sm ring-4 ring-blue-50"
+                    : "border border-slate-200 bg-slate-100 text-slate-400"
                 }`}
               >
                 {stepNumber}
@@ -44,8 +44,8 @@ export const OnboardingProgress: React.FC<OnboardingProgressProps> = ({
               {index < steps.length - 1 && (
                 <div
                   id={`progress-line-${stepNumber}-to-${stepNumber + 1}`}
-                  className={`w-12 sm:w-20 h-0.5 mx-1 sm:mx-2 transition-colors duration-200 ${
-                    currentStep > stepNumber ? 'bg-blue-600' : 'bg-slate-200'
+                  className={`mx-1 h-0.5 w-12 transition-colors duration-200 sm:mx-2 sm:w-20 ${
+                    currentStep > stepNumber ? "bg-blue-600" : "bg-slate-200"
                   }`}
                 />
               )}

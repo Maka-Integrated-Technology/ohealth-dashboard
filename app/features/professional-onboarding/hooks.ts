@@ -1,26 +1,26 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 import type {
-    OnboardingFormValues,
-    OnboardingStep,
-    UploadedDocument,
-    SubmissionResponse,
-} from './types.js';
-import { submitProfessionalOnboarding } from './api.js';
+  OnboardingFormValues,
+  OnboardingStep,
+  UploadedDocument,
+  SubmissionResponse,
+} from "./types.js";
+import { submitProfessionalOnboarding } from "./api.js";
 
-const STORAGE_KEY = 'ohealth_professional_onboarding_state';
+const STORAGE_KEY = "ohealth_professional_onboarding_state";
 
 const initialValues: OnboardingFormValues = {
-  accountType: 'healthcare_professional',
-  firstName: '',
-  lastName: '',
-  email: '',
-  phoneNumber: '',
-  country: '',
-  specialization: '',
-  licenseNumber: '',
-  yearsOfExperience: '',
-  consultationType: '',
-  shortBio: '',
+  accountType: "healthcare_professional",
+  firstName: "",
+  lastName: "",
+  email: "",
+  phoneNumber: "",
+  country: "",
+  specialization: "",
+  licenseNumber: "",
+  yearsOfExperience: "",
+  consultationType: "",
+  shortBio: "",
   professionalLicense: null,
   governmentId: null,
 };
@@ -50,7 +50,8 @@ export function useProfessionalOnboarding() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submissionResult, setSubmissionResult] = useState<SubmissionResponse | null>(null);
+  const [submissionResult, setSubmissionResult] =
+    useState<SubmissionResponse | null>(null);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [isVerified, setIsVerified] = useState(false);
   const [showVerifiedModal, setShowVerifiedModal] = useState(false);
@@ -81,12 +82,18 @@ export function useProfessionalOnboarding() {
     }
   }, [formValues]);
 
-  const updateFormValues = useCallback((updates: Partial<OnboardingFormValues>) => {
-    setFormValues((prev) => ({ ...prev, ...updates }));
-  }, []);
+  const updateFormValues = useCallback(
+    (updates: Partial<OnboardingFormValues>) => {
+      setFormValues((prev) => ({ ...prev, ...updates }));
+    },
+    []
+  );
 
   const setDocument = useCallback(
-    (field: 'professionalLicense' | 'governmentId', doc: UploadedDocument | null) => {
+    (
+      field: "professionalLicense" | "governmentId",
+      doc: UploadedDocument | null
+    ) => {
       setFormValues((prev) => ({ ...prev, [field]: doc }));
     },
     []
@@ -121,13 +128,17 @@ export function useProfessionalOnboarding() {
     try {
       const result = await submitProfessionalOnboarding({ values: formValues });
       setSubmissionResult(result);
-      setCurrentStep('success');
+      setCurrentStep("success");
       try {
         sessionStorage.removeItem(STORAGE_KEY);
-      } catch { /* empty */ }
+      } catch {
+        /* empty */
+      }
     } catch (err) {
       setSubmissionError(
-        err instanceof Error ? err.message : 'An error occurred during submission. Please retry.'
+        err instanceof Error
+          ? err.message
+          : "An error occurred during submission. Please retry."
       );
     } finally {
       setIsSubmitting(false);
@@ -143,7 +154,9 @@ export function useProfessionalOnboarding() {
     setShowVerifiedModal(false);
     try {
       sessionStorage.removeItem(STORAGE_KEY);
-    } catch { /* empty */ }
+    } catch {
+      /* empty */
+    }
   }, []);
 
   return {
