@@ -1,5 +1,5 @@
-import React from 'react';
-import { UserCheck, Building2, Check } from 'lucide-react';
+import React from "react";
+import { UserCheck, Building2, Check } from "lucide-react";
 import type { AccountType } from "~/features/professional-onboarding/types.js";
 
 interface StepZeroAccountTypeProps {
