@@ -1,8 +1,8 @@
-import React from 'react';
-import { useFormik } from 'formik';
+import React from "react";
+import { useFormik } from "formik";
 import { OnboardingProgress } from "./onboarding-progress";
 import { SpecializationSelect } from "~/components/onboarding/specialization-select";
-import { ConsultationTypeSelect } from './consultation-type-select';
+import { ConsultationTypeSelect } from "./consultation-type-select";
 import { stepTwoSchema } from "~/features/professional-onboarding/schemas.js";
 import type {
   OnboardingFormValues,
@@ -21,11 +21,11 @@ export const StepTwoPractice: React.FC<StepTwoPracticeProps> = ({
 }) => {
   const formik = useFormik({
     initialValues: {
-      specialization: initialValues.specialization || '',
-      licenseNumber: initialValues.licenseNumber || '',
-      yearsOfExperience: initialValues.yearsOfExperience || '',
-      consultationType: initialValues.consultationType || '',
-      shortBio: initialValues.shortBio || '',
+      specialization: initialValues.specialization || "",
+      licenseNumber: initialValues.licenseNumber || "",
+      yearsOfExperience: initialValues.yearsOfExperience || "",
+      consultationType: initialValues.consultationType || "",
+      shortBio: initialValues.shortBio || "",
     },
     validationSchema: stepTwoSchema,
     validateOnBlur: true,
@@ -50,19 +50,27 @@ export const StepTwoPractice: React.FC<StepTwoPracticeProps> = ({
     Object.keys(formik.errors).length === 0;
 
   return (
-    <div className="w-full flex flex-col items-center animate-in fade-in-50 duration-200" id="step-2-practice-info">
+    <div
+      className="animate-in fade-in-50 flex w-full flex-col items-center duration-200"
+      id="step-2-practice-info"
+    >
       <OnboardingProgress currentStep={2} />
 
       <div className="mb-6 text-center">
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
           Tell Us About Your Practice
         </h1>
-        <p className="mt-1.5 text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
-          Help us build your professional profile so patients can learn more about you.
+        <p className="mx-auto mt-1.5 max-w-sm text-xs text-slate-500 sm:text-sm">
+          Help us build your professional profile so patients can learn more
+          about you.
         </p>
       </div>
 
-      <form onSubmit={formik.handleSubmit} className="w-full space-y-4 text-left" noValidate>
+      <form
+        onSubmit={formik.handleSubmit}
+        className="w-full space-y-4 text-left"
+        noValidate
+      >
         {/* Specialization */}
         <SpecializationSelect
           id="specialization"
@@ -70,16 +78,18 @@ export const StepTwoPractice: React.FC<StepTwoPracticeProps> = ({
           value={formik.values.specialization as Specialization}
           placeholder="Select specialization"
           onChange={(val) => {
-            formik.setFieldValue('specialization', val);
+            formik.setFieldValue("specialization", val);
           }}
-          onBlur={() => formik.setFieldTouched('specialization', true)}
+          onBlur={() => formik.setFieldTouched("specialization", true)}
           error={
-            formik.touched.specialization ? formik.errors.specialization : undefined
+            formik.touched.specialization
+              ? formik.errors.specialization
+              : undefined
           }
         />
 
         {/* License Number & Years of Experience */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
           <div className="flex flex-col space-y-1.5">
             <label
               htmlFor="licenseNumber"
@@ -96,14 +106,17 @@ export const StepTwoPractice: React.FC<StepTwoPracticeProps> = ({
               value={formik.values.licenseNumber}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full h-12 px-4 bg-white border rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors ${
+              className={`h-12 w-full rounded-xl border bg-white px-4 text-sm text-slate-900 transition-colors placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500/20 focus:outline-none ${
                 formik.touched.licenseNumber && formik.errors.licenseNumber
-                  ? 'border-red-400 focus:border-red-500'
-                  : 'border-slate-200 focus:border-blue-500 hover:border-slate-300'
+                  ? "border-red-400 focus:border-red-500"
+                  : "border-slate-200 hover:border-slate-300 focus:border-blue-500"
               }`}
             />
             {formik.touched.licenseNumber && formik.errors.licenseNumber && (
-              <p className="text-xs text-red-600 font-medium" id="error-licenseNumber">
+              <p
+                className="text-xs font-medium text-red-600"
+                id="error-licenseNumber"
+              >
                 {formik.errors.licenseNumber}
               </p>
             )}
@@ -126,17 +139,22 @@ export const StepTwoPractice: React.FC<StepTwoPracticeProps> = ({
               value={formik.values.yearsOfExperience}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full h-12 px-4 bg-white border rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors ${
-                formik.touched.yearsOfExperience && formik.errors.yearsOfExperience
-                  ? 'border-red-400 focus:border-red-500'
-                  : 'border-slate-200 focus:border-blue-500 hover:border-slate-300'
+              className={`h-12 w-full rounded-xl border bg-white px-4 text-sm text-slate-900 transition-colors placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500/20 focus:outline-none ${
+                formik.touched.yearsOfExperience &&
+                formik.errors.yearsOfExperience
+                  ? "border-red-400 focus:border-red-500"
+                  : "border-slate-200 hover:border-slate-300 focus:border-blue-500"
               }`}
             />
-            {formik.touched.yearsOfExperience && formik.errors.yearsOfExperience && (
-              <p className="text-xs text-red-600 font-medium" id="error-yearsOfExperience">
-                {formik.errors.yearsOfExperience}
-              </p>
-            )}
+            {formik.touched.yearsOfExperience &&
+              formik.errors.yearsOfExperience && (
+                <p
+                  className="text-xs font-medium text-red-600"
+                  id="error-yearsOfExperience"
+                >
+                  {formik.errors.yearsOfExperience}
+                </p>
+              )}
           </div>
         </div>
 
@@ -147,11 +165,13 @@ export const StepTwoPractice: React.FC<StepTwoPracticeProps> = ({
           value={formik.values.consultationType as ConsultationType}
           placeholder="Select consultation type.."
           onChange={(val) => {
-            formik.setFieldValue('consultationType', val);
+            formik.setFieldValue("consultationType", val);
           }}
-          onBlur={() => formik.setFieldTouched('consultationType', true)}
+          onBlur={() => formik.setFieldTouched("consultationType", true)}
           error={
-            formik.touched.consultationType ? formik.errors.consultationType : undefined
+            formik.touched.consultationType
+              ? formik.errors.consultationType
+              : undefined
           }
         />
 
@@ -172,14 +192,14 @@ export const StepTwoPractice: React.FC<StepTwoPracticeProps> = ({
             value={formik.values.shortBio}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className={`w-full p-3.5 bg-white border rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors resize-none ${
+            className={`w-full resize-none rounded-xl border bg-white p-3.5 text-sm text-slate-900 transition-colors placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500/20 focus:outline-none ${
               formik.touched.shortBio && formik.errors.shortBio
-                ? 'border-red-400 focus:border-red-500'
-                : 'border-slate-200 focus:border-blue-500 hover:border-slate-300'
+                ? "border-red-400 focus:border-red-500"
+                : "border-slate-200 hover:border-slate-300 focus:border-blue-500"
             }`}
           />
           {formik.touched.shortBio && formik.errors.shortBio && (
-            <p className="text-xs text-red-600 font-medium" id="error-shortBio">
+            <p className="text-xs font-medium text-red-600" id="error-shortBio">
               {formik.errors.shortBio}
             </p>
           )}
@@ -190,10 +210,10 @@ export const StepTwoPractice: React.FC<StepTwoPracticeProps> = ({
             type="submit"
             id="btn-continue-step-2"
             disabled={!isFormValid}
-            className={`w-full h-12 rounded-xl font-medium text-sm sm:text-base transition-all duration-150 focus:outline-none ${
+            className={`h-12 w-full rounded-xl text-sm font-medium transition-all duration-150 focus:outline-none sm:text-base ${
               isFormValid
-                ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-500/10 active:scale-[0.99] cursor-pointer'
-                : 'bg-slate-400 text-white opacity-80 cursor-not-allowed'
+                ? "cursor-pointer bg-blue-600 text-white shadow-sm shadow-blue-500/10 hover:bg-blue-700 active:scale-[0.99]"
+                : "cursor-not-allowed bg-slate-400 text-white opacity-80"
             }`}
           >
             Continue
