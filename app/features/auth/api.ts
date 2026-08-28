@@ -1,60 +1,96 @@
 // app/features/auth/api.ts
 import axiosInstance from "~/lib/config/axios";
+import { unwrapApiData, type ApiEnvelope } from "~/lib/utils/api-response";
 import type {
-  SignUpPayload,
-  SignUpResponse,
-  LoginPayload,
-  LoginResponse,
-  VerifyEmailPayload,
-  ResendCodePayload,
-  GoogleLoginPayload,
-  AuthTokens,
+  AuthSession,
   AuthUser,
+  GoogleLoginPayload,
+  LoginPayload,
+  ResendCodePayload,
+  SignUpPayload,
+  VerifyEmailPayload,
 } from "./types";
 
+// The legacy `/auth/signup` endpoint requires a role and a name; this build
+// only ever registers healthcare professionals, and the Figma sign-up screen
+// deliberately asks for just email + password — first/last name are
+// collected properly in Profile Setup step 1 and overwrite this via
+// `PATCH /auth/me`. Mirrors the server's own Google-login fallback naming.
+function deriveNameFromEmail(email: string): {
+  first_name: string;
+  last_name: string;
+} {
+  const localPart = email.split("@")[0]?.replace(/\+.*$/, "") ?? "";
+  const parts = localPart
+    .split(/[._-]+/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  const titleCase = (value: string) =>
+    value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+
+  if (!parts.length) {
+    return { first_name: "OHealth", last_name: "User" };
+  }
+
+  return {
+    first_name: titleCase(parts[0]),
+    last_name: parts.length > 1 ? titleCase(parts.slice(1).join(" ")) : "User",
+  };
+}
+
 export const authApi = {
-  signUp: async (payload: SignUpPayload): Promise<SignUpResponse> => {
-    const { data } = await axiosInstance.post("api/v1/auth/signup", payload);
-    return data;
+  signUp: async (payload: SignUpPayload): Promise<AuthSession> => {
+    const { data } = await axiosInstance.post<ApiEnvelope<AuthSession>>(
+      "/api/v1/auth/signup",
+      {
+        first_name: payload.first_name,
+        last_name: payload.last_name,
+        email: payload.email,
+        password: payload.password,
+        role: ["DOCTOR"],
+      }
+    );
+    return unwrapApiData(data);
   },
 
-  // TODO(confirm-schema): endpoint path assumed as /auth/login, mirroring
-  // /auth/signup. Confirm once Swagger is updated.
-  login: async (payload: LoginPayload): Promise<LoginResponse> => {
-    const { data } = await axiosInstance.post("api/v1/auth/login", payload);
-    return data;
-  },
-
-  verify: async (payload: VerifyEmailPayload): Promise<AuthTokens> => {
-    const { data } = await axiosInstance.post("/api/v1/auth/verify", payload);
-    return data;
-  },
-
-  // TODO(confirm-schema): assumed a separate verify endpoint for the login
-  // flow's code (as opposed to signup's /auth/verify). Confirm whether the
-  // backend actually reuses /auth/verify for both flows instead.
-  verifyLogin: async (payload: VerifyEmailPayload): Promise<AuthTokens> => {
-    const { data } = await axiosInstance.post(
-      "api/v1/auth/login/verify",
+  login: async (payload: LoginPayload): Promise<AuthSession> => {
+    const { data } = await axiosInstance.post<ApiEnvelope<AuthSession>>(
+      "/api/v1/auth/login",
       payload
     );
-    return data;
+    return unwrapApiData(data);
+  },
+
+  verify: async (payload: VerifyEmailPayload): Promise<{ message: string }> => {
+    const { data } = await axiosInstance.post<ApiEnvelope<{ message: string }>>(
+      "/api/v1/auth/verify",
+      payload
+    );
+    return unwrapApiData(data);
   },
 
   resendCode: async (payload: ResendCodePayload): Promise<void> => {
-    await axiosInstance.post("api/v1/auth/verify/resend", payload);
+    await axiosInstance.post("/api/v1/auth/verify/resend", payload);
   },
 
-  googleLogin: async (payload: GoogleLoginPayload): Promise<AuthTokens> => {
-    const { data } = await axiosInstance.post(
-      "api/v1/auth/google-login",
+  googleLogin: async (payload: GoogleLoginPayload): Promise<AuthSession> => {
+    const { data } = await axiosInstance.post<ApiEnvelope<AuthSession>>(
+      "/api/v1/auth/google-login",
       payload
     );
-    return data;
+    return unwrapApiData(data);
   },
 
   me: async (): Promise<AuthUser> => {
-    const { data } = await axiosInstance.get("/api/v1/auth/me");
-    return data;
+    const { data } =
+      await axiosInstance.get<ApiEnvelope<AuthUser>>("/api/v1/auth/me");
+    return unwrapApiData(data);
+  },
+
+  logout: async (sessionId: string): Promise<void> => {
+    await axiosInstance.post("/api/v1/auth/logout", { session_id: sessionId });
   },
 };
+
+export { deriveNameFromEmail };
