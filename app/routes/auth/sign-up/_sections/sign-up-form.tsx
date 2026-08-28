@@ -5,6 +5,7 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { PasswordInput } from "~/components/shared/password-input";
 import { useSignUp } from "~/features/auth/hooks";
+import { notifySuccess } from "~/lib/utils/toast";
 
 export function SignUpForm() {
   const navigate = useNavigate();
@@ -18,6 +19,10 @@ export function SignUpForm() {
       { email, password },
       {
         onSuccess: () => {
+          notifySuccess({
+            message: "Account created",
+            description: "Check your email for the verification code.",
+          });
           navigate("/verify-email", { state: { email } });
         },
       }
