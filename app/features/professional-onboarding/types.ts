@@ -4,7 +4,7 @@ export type Specialization =
   | "General Doctor"
   | "Nurse"
   | "Nutritionist"
-  | "Counselor";
+  | "Counsellor";
 
 export type ConsultationType =
   | "Chat Consultation"

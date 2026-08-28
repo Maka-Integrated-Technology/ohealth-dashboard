@@ -21,7 +21,7 @@ export function LoginForm() {
       { email, password },
       {
         onSuccess: () => {
-          navigate("/verify-login", { state: { email } });
+          navigate("/", { replace: true });
         },
       }
     );

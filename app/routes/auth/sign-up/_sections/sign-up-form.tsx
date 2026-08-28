@@ -43,7 +43,7 @@ export function SignUpForm() {
         />
         <PasswordInput
           required
-          minLength={8}
+          minLength={12}
           placeholder="Enter your password..."
           value={password}
           onChange={(e) => setPassword(e.target.value)}

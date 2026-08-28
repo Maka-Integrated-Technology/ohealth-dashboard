@@ -24,7 +24,7 @@ const MP_SIDEBAR_ITEMS = [
 ];
 
 const HIDE_PORTAL_ROUTES = ["/appointments"];
-const AUTH_ROUTES = ["/sign-up", "/verify-email", "/login", "/verify-login", "/onboarding"];
+const AUTH_ROUTES = ["/sign-up", "/verify-email", "/login", "/onboarding"];
 
 export default function MpDashboardLayout() {
   const location = useLocation();
@@ -32,7 +32,9 @@ export default function MpDashboardLayout() {
   const isAuthRoute = AUTH_ROUTES.some((path) =>
     location.pathname.startsWith(path)
   );
-  const { data: profileSetupStatus } = useProfileSetupStatus();
+  const { data: profileSetupStatus } = useProfileSetupStatus(
+    !isAuthRoute && !isConsultRoute
+  );
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   if (isConsultRoute || isAuthRoute) {
