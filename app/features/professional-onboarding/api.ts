@@ -28,7 +28,11 @@ async function findSpecialityId(name: Specialization): Promise<string> {
     "/api/v1/specialities"
   );
   const specialities = unwrapApiData(data);
-  const match = specialities.find((speciality) => speciality.name === name);
+  const normalizedName = name.trim().toLocaleLowerCase();
+  const match = specialities.find(
+    (speciality) =>
+      speciality.name.trim().toLocaleLowerCase() === normalizedName
+  );
   if (!match) {
     throw new Error(`Unrecognized specialization: ${name}`);
   }
