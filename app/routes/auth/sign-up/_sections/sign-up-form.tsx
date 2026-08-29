@@ -62,7 +62,7 @@ export function SignUpForm() {
       </form>
 
       <div className="mt-3 flex justify-center">
-        <GoogleSignInButton onSuccess={() => navigate("/", { replace: true })} />
+        <GoogleSignInButton />
       </div>
 
       <p className="mt-4 text-center text-xs text-gray-500">
