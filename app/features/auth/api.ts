@@ -51,7 +51,15 @@ export const authApi = {
         role: ["DOCTOR"],
       }
     );
-    return unwrapApiData(data);
+    const session = unwrapApiData(data);
+    if (
+      !session ||
+      typeof session.access_token !== "string" ||
+      typeof session.refresh_token !== "string"
+    ) {
+      throw new Error("Signup response was incomplete. Please try again.");
+    }
+    return session;
   },
 
   login: async (payload: LoginPayload): Promise<AuthSession> => {

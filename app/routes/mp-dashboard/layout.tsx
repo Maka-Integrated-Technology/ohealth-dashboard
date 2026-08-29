@@ -12,6 +12,7 @@ import { Outlet, useLocation } from "react-router";
 import AppShell from "~/components/shared/app-shell";
 import { UserMenu } from "~/components/shared/user-menu";
 import { NotificationsDropdown } from "~/components/shared/notifications-dropdown";
+import { useMe } from "~/features/auth/hooks";
 import { useProfileSetupStatus } from "~/features/profile-setup/hooks";
 
 const MP_SIDEBAR_ITEMS = [
@@ -26,6 +27,28 @@ const MP_SIDEBAR_ITEMS = [
 const HIDE_PORTAL_ROUTES = ["/appointments"];
 const AUTH_ROUTES = ["/sign-up", "/verify-email", "/login", "/onboarding"];
 
+function getDisplayName(
+  user?: { first_name?: string | null; last_name?: string | null } | null
+) {
+  const name = [user?.first_name, user?.last_name]
+    .map((part) => part?.trim())
+    .filter(Boolean)
+    .join(" ");
+
+  return name || "Healthcare Professional";
+}
+
+function getInitials(displayName: string) {
+  const initials = displayName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join("");
+
+  return initials || "HP";
+}
+
 export default function MpDashboardLayout() {
   const location = useLocation();
   const isConsultRoute = location.pathname.includes("/consult");
@@ -35,6 +58,7 @@ export default function MpDashboardLayout() {
   const { data: profileSetupStatus } = useProfileSetupStatus(
     !isAuthRoute && !isConsultRoute
   );
+  const { data: user } = useMe(!isAuthRoute && !isConsultRoute);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   if (isConsultRoute || isAuthRoute) {
@@ -46,6 +70,7 @@ export default function MpDashboardLayout() {
   );
 
   const verified = profileSetupStatus?.verified ?? false;
+  const displayName = getDisplayName(user);
 
   const rightSlotUI = (
     <div className="flex items-center gap-4">
@@ -61,9 +86,9 @@ export default function MpDashboardLayout() {
       />
 
       <UserMenu
-        name="Dr. Jane Marshal"
-        role="Medical Doctor"
-        initials="JM"
+        name={displayName}
+        role="Healthcare Professional"
+        initials={getInitials(displayName)}
         verified={verified}
       />
     </div>
