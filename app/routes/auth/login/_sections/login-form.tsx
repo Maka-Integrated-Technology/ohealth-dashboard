@@ -5,7 +5,7 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { PasswordInput } from "~/components/shared/password-input";
 import { useLogin } from "~/features/auth/hooks";
-import { ENV_CONFIG } from "~/lib/utils/constants";
+import { GoogleSignInButton } from "~/features/auth/google-sign-in-button";
 
 const PILL_STYLE = { borderRadius: 9999 };
 
@@ -25,12 +25,6 @@ export function LoginForm() {
         },
       }
     );
-  }
-
-  function handleGoogleContinue() {
-    window.location.href = `${ENV_CONFIG.apiBaseUrl}
-api/v1/auth/google-login
-`;
   }
 
   return (
@@ -66,16 +60,9 @@ api/v1/auth/google-login
         </Button>
       </form>
 
-      <Button
-        type="button"
-        variant="outline"
-        onClick={handleGoogleContinue}
-        style={PILL_STYLE}
-        className="mt-3 h-11 w-full border-gray-200 bg-gray-50 text-sm font-medium"
-      >
-        <img src="/icons/google.svg" alt="" className="mr-2 size-5" />
-        Continue with Google
-      </Button>
+      <div className="mt-3 flex justify-center">
+        <GoogleSignInButton onSuccess={() => navigate("/", { replace: true })} />
+      </div>
 
       <p className="mt-4 text-center text-xs text-gray-500">
         Don&apos;t have an account yet?{" "}

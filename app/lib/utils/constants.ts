@@ -1,5 +1,6 @@
 export const ENV_CONFIG = {
   apiBaseUrl: import.meta.env.VITE_API_BASE_URL,
+  googleClientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
 };
 
 export const BREAKPOINT_1024 = 1024;
