@@ -1,9 +1,7 @@
 export type ConsultationType = "Video" | "Chat" | "In-Person";
 export type AppointmentStatus =
-  | "completed"
-  | "pending"
-  | "confirmed"
-  | "cancelled";
+  "completed" | "pending" | "confirmed" | "cancelled";
+export type PatientSex = "Male" | "Female" | "Unknown";
 
 export interface Appointment {
   id: string;
@@ -11,8 +9,8 @@ export interface Appointment {
   patientName: string;
   patientInitials: string;
   patientEmail: string;
-  patientAge: number;
-  patientSex: "Male" | "Female";
+  patientAge: number | null;
+  patientSex: PatientSex;
   consultationType: ConsultationType;
   reason: string;
   startsAt: string;
@@ -41,8 +39,8 @@ export interface NextAppointment {
   patientName: string;
   patientInitials: string;
   patientEmail: string;
-  patientAge: number;
-  patientSex: "Male" | "Female";
+  patientAge: number | null;
+  patientSex: PatientSex;
   consultationType: ConsultationType;
   startsAt: string;
   endsAt: string;
@@ -54,8 +52,8 @@ export interface TodayAppointment {
   id: string;
   patientName: string;
   patientInitials: string;
-  patientAge: number;
-  patientSex: "Male" | "Female";
+  patientAge: number | null;
+  patientSex: PatientSex;
   consultationType: ConsultationType;
   startsAt: string;
   endsAt: string;
@@ -79,8 +77,8 @@ export interface AppointmentRequest {
   id: string;
   patientName: string;
   patientInitials: string;
-  patientAge: number;
-  patientSex: "Male" | "Female";
+  patientAge: number | null;
+  patientSex: PatientSex;
   consultationType: ConsultationType;
   durationMinutes: number;
   scheduledAt: string;
@@ -104,8 +102,8 @@ export interface ConsultationDetail {
   patientId: string;
   patientName: string;
   patientInitials: string;
-  patientSex: "Male" | "Female";
-  patientAge: number;
+  patientSex: PatientSex;
+  patientAge: number | null;
   condition: string;
   bloodType: string;
   allergies: string;

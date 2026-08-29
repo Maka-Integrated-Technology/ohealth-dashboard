@@ -108,8 +108,8 @@ function ReviewRow({ review }: { review: Review }) {
   );
 }
 
-export function ReviewsCard() {
-  const { data, isLoading, isError } = useReviews();
+export function ReviewsCard({ professionalId }: { professionalId?: string }) {
+  const { data, isLoading, isError } = useReviews(professionalId);
 
   if (isLoading) {
     return (
@@ -125,7 +125,7 @@ export function ReviewsCard() {
   if (isError || !data) {
     return (
       <div className="border-border bg-card rounded-[20px] border p-6 shadow-sm">
-        <p className="text-muted-foreground text-sm">Failed to load reviews.</p>
+        <p className="text-muted-foreground text-sm">No reviews yet.</p>
       </div>
     );
   }

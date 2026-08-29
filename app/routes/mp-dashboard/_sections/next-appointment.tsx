@@ -5,6 +5,7 @@ import { CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
 import { cn } from "~/lib/utils/helpers";
 import { useNextAppointment } from "~/features/appointments/hooks";
+import type { NextAppointment as NextAppointmentItem } from "~/features/appointments/types";
 import { avatarColorClass } from "./_primitives";
 import { NextAppointmentDialog } from "./dialogs";
 
@@ -44,9 +45,27 @@ function NextAppointmentEmpty() {
   );
 }
 
-export function NextAppointment() {
-  const { data: apt, isLoading, isError } = useNextAppointment();
+export function NextAppointment({
+  appointment: dashboardAppointment,
+  isLoading: dashboardLoading,
+  isError: dashboardError,
+}: {
+  appointment?: NextAppointmentItem | null;
+  isLoading?: boolean;
+  isError?: boolean;
+} = {}) {
+  const shouldUseDashboardData = dashboardAppointment !== undefined;
+  const {
+    data,
+    isLoading: appointmentLoading,
+    isError: appointmentError,
+  } = useNextAppointment({ enabled: !shouldUseDashboardData });
   const [dialogOpen, setDialogOpen] = useState(false);
+  const apt = shouldUseDashboardData ? dashboardAppointment : data;
+  const isLoading = shouldUseDashboardData
+    ? dashboardLoading
+    : appointmentLoading;
+  const isError = shouldUseDashboardData ? dashboardError : appointmentError;
 
   if (isLoading) return <NextAppointmentSkeleton />;
 
@@ -128,11 +147,11 @@ export function NextAppointment() {
           </button>
 
           <a
-            href={`mailto:${apt.patientEmail}`}
+            href={apt.patientEmail ? `mailto:${apt.patientEmail}` : undefined}
             className="border-border bg-card hover:bg-accent flex items-center justify-center gap-2 rounded-lg border p-2.5 text-sm transition-colors"
           >
             <Mail size={16} />
-            <span>{apt.patientEmail}</span>
+            <span>{apt.patientEmail || "Email unavailable"}</span>
           </a>
         </CardContent>
       </div>

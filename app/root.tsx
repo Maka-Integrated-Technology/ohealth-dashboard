@@ -8,12 +8,14 @@ import {
 } from "react-router";
 import type { Route } from "./+types/root";
 import { AlertCircle } from "lucide-react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import "~/styles/global.css";
 import TanstackQueryProvider from "./components/providers/tanstack-query";
 import { ThemeProvider } from "./components/providers/theme-provider";
 import { Toaster } from "./components/ui/sonner";
 import { Card, CardContent } from "./components/ui/card";
 import { TooltipProvider } from "./components/ui/tooltip";
+import { ENV_CONFIG } from "~/lib/utils/constants";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -41,12 +43,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <TanstackQueryProvider>
-      <TooltipProvider>
-        <Outlet />
-      </TooltipProvider>
-      <Toaster />
-    </TanstackQueryProvider>
+    <GoogleOAuthProvider clientId={ENV_CONFIG.googleClientId}>
+      <TanstackQueryProvider>
+        <TooltipProvider>
+          <Outlet />
+        </TooltipProvider>
+        <Toaster />
+      </TanstackQueryProvider>
+    </GoogleOAuthProvider>
   );
 }
 
