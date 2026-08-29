@@ -1,6 +1,6 @@
 // app/routes/auth/login/_sections/login-form.tsx
 import { useState, type SyntheticEvent } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { PasswordInput } from "~/components/shared/password-input";
@@ -10,21 +10,13 @@ import { GoogleSignInButton } from "~/features/auth/google-sign-in-button";
 const PILL_STYLE = { borderRadius: 9999 };
 
 export function LoginForm() {
-  const navigate = useNavigate();
   const login = useLogin();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   function handleSubmit(e: SyntheticEvent<HTMLFormElement, SubmitEvent>) {
     e.preventDefault();
-    login.mutate(
-      { email, password },
-      {
-        onSuccess: () => {
-          navigate("/", { replace: true });
-        },
-      }
-    );
+    login.mutate({ email, password });
   }
 
   return (
@@ -61,7 +53,7 @@ export function LoginForm() {
       </form>
 
       <div className="mt-3 flex justify-center">
-        <GoogleSignInButton onSuccess={() => navigate("/", { replace: true })} />
+        <GoogleSignInButton />
       </div>
 
       <p className="mt-4 text-center text-xs text-gray-500">

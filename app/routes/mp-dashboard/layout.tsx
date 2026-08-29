@@ -12,7 +12,7 @@ import { Outlet, useLocation } from "react-router";
 import AppShell from "~/components/shared/app-shell";
 import { UserMenu } from "~/components/shared/user-menu";
 import { NotificationsDropdown } from "~/components/shared/notifications-dropdown";
-import { useMe } from "~/features/auth/hooks";
+import { useLogout, useMe } from "~/features/auth/hooks";
 import { useProfileSetupStatus } from "~/features/profile-setup/hooks";
 
 const MP_SIDEBAR_ITEMS = [
@@ -59,6 +59,7 @@ export default function MpDashboardLayout() {
     !isAuthRoute && !isConsultRoute
   );
   const { data: user } = useMe(!isAuthRoute && !isConsultRoute);
+  const { mutate: logout } = useLogout();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   if (isConsultRoute || isAuthRoute) {
@@ -90,6 +91,7 @@ export default function MpDashboardLayout() {
         role="Healthcare Professional"
         initials={getInitials(displayName)}
         verified={verified}
+        onLogout={logout}
       />
     </div>
   );
