@@ -5,6 +5,7 @@ import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { PasswordInput } from "~/components/shared/password-input";
 import { useSignUp } from "~/features/auth/hooks";
+import { GoogleSignInButton } from "~/features/auth/google-sign-in-button";
 import { notifySuccess } from "~/lib/utils/toast";
 
 export function SignUpForm() {
@@ -27,10 +28,6 @@ export function SignUpForm() {
         },
       }
     );
-  }
-
-  function handleGoogleContinue() {
-    console.warn("Google OAuth not yet wired up");
   }
 
   return (
@@ -64,15 +61,9 @@ export function SignUpForm() {
         </Button>
       </form>
 
-      <Button
-        type="button"
-        variant="outline"
-        onClick={handleGoogleContinue}
-        className="mt-3 h-11 w-full rounded-full! border-gray-200 bg-gray-50 text-sm font-medium"
-      >
-        <img src="/icons/google.svg" alt="" className="mr-2 size-5" />
-        Continue with Google
-      </Button>
+      <div className="mt-3 flex justify-center">
+        <GoogleSignInButton onSuccess={() => navigate("/", { replace: true })} />
+      </div>
 
       <p className="mt-4 text-center text-xs text-gray-500">
         By signing up, you agree to our{" "}
