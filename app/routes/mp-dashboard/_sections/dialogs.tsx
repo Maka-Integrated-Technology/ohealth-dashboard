@@ -7,6 +7,7 @@ import { cn } from "~/lib/utils/helpers";
 import type {
   AppointmentRequest,
   NextAppointment,
+  PatientSex,
   TodayAppointment,
 } from "~/features/appointments/types";
 import {
@@ -22,8 +23,8 @@ function PatientDetailsGrid({
   lastAppointment,
   dateRegistered,
 }: {
-  age: number;
-  sex: "Male" | "Female";
+  age: number | null;
+  sex: PatientSex;
   lastAppointment: string;
   dateRegistered: string;
 }) {
@@ -35,11 +36,13 @@ function PatientDetailsGrid({
       <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
         <div>
           <p className="text-muted-foreground text-xs">Age</p>
-          <p className="text-foreground font-medium">{age}</p>
+          <p className="text-foreground font-medium">{age ?? "—"}</p>
         </div>
         <div>
           <p className="text-muted-foreground text-xs">Sex</p>
-          <p className="text-foreground font-medium">{sex}</p>
+          <p className="text-foreground font-medium">
+            {sex === "Unknown" ? "—" : sex}
+          </p>
         </div>
         <div>
           <p className="text-muted-foreground text-xs">Last Appointment</p>

@@ -42,10 +42,32 @@ function TodayAppointmentsSkeleton() {
   );
 }
 
-export function TodaysAppointments() {
-  const { data: appointments, isLoading, isError } = useTodayAppointments();
+export function TodaysAppointments({
+  appointments: dashboardAppointments,
+  isLoading: dashboardLoading,
+  isError: dashboardError,
+}: {
+  appointments?: TodayAppointment[];
+  isLoading?: boolean;
+  isError?: boolean;
+} = {}) {
+  const shouldUseDashboardData = dashboardAppointments !== undefined;
+  const {
+    data: appointments,
+    isLoading: appointmentsLoading,
+    isError: appointmentsError,
+  } = useTodayAppointments({ enabled: !shouldUseDashboardData });
   const [selected, setSelected] = useState<TodayAppointment | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const isLoading = shouldUseDashboardData
+    ? dashboardLoading
+    : appointmentsLoading;
+  const isError = shouldUseDashboardData ? dashboardError : appointmentsError;
+  const items = shouldUseDashboardData
+    ? dashboardAppointments
+    : Array.isArray(appointments)
+      ? appointments
+      : [];
 
   if (isLoading) return <TodayAppointmentsSkeleton />;
 
@@ -59,7 +81,6 @@ export function TodaysAppointments() {
     );
   }
 
-  const items = Array.isArray(appointments) ? appointments : [];
   const count = items.length;
 
   function handleRowClick(apt: TodayAppointment) {

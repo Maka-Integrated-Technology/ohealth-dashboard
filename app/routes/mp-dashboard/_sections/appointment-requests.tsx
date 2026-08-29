@@ -49,8 +49,23 @@ function AppointmentRequestsSkeleton() {
   );
 }
 
-export function AppointmentRequests() {
-  const { data, isLoading, isError } = useAppointmentRequests();
+export function AppointmentRequests({
+  requests: dashboardRequests,
+  total: dashboardTotal,
+  isLoading: dashboardLoading,
+  isError: dashboardError,
+}: {
+  requests?: AppointmentRequest[];
+  total?: number;
+  isLoading?: boolean;
+  isError?: boolean;
+} = {}) {
+  const shouldUseDashboardData = dashboardRequests !== undefined;
+  const {
+    data,
+    isLoading: requestsLoading,
+    isError: requestsError,
+  } = useAppointmentRequests({ enabled: !shouldUseDashboardData });
   const {
     mutateAsync: acceptRequest,
     isPending: isAccepting,
@@ -66,6 +81,8 @@ export function AppointmentRequests() {
     useState<AppointmentRequest | null>(null);
   const [requestDialogOpen, setRequestDialogOpen] = useState(false);
   const [seeAllOpen, setSeeAllOpen] = useState(false);
+  const isLoading = shouldUseDashboardData ? dashboardLoading : requestsLoading;
+  const isError = shouldUseDashboardData ? dashboardError : requestsError;
 
   if (isLoading) return <AppointmentRequestsSkeleton />;
 
@@ -79,8 +96,17 @@ export function AppointmentRequests() {
     );
   }
 
-  const requests = Array.isArray(data?.data) ? data.data : [];
-  const total = typeof data?.total === "number" ? data.total : requests.length;
+  const requests = shouldUseDashboardData
+    ? dashboardRequests
+    : Array.isArray(data?.data)
+      ? data.data
+      : [];
+  const total =
+    typeof dashboardTotal === "number"
+      ? dashboardTotal
+      : typeof data?.total === "number"
+        ? data.total
+        : requests.length;
   const preview = requests.slice(0, PREVIEW_COUNT);
 
   async function handleAccept(id: string) {

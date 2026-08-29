@@ -20,8 +20,12 @@ export const QUERY_KEYS = {
   profileSetup: {
     status: () => ["profile-setup", "status"] as const,
   },
+  professionalDashboard: {
+    byDate: (date: string) => ["professional-dashboard", date] as const,
+  },
   reviews: {
-    all: () => ["reviews"] as const,
+    all: ["reviews"] as const,
+    byProfessional: (id: string) => ["reviews", "professional", id] as const,
   },
   auth: {
     me: () => ["auth", "me"] as const,

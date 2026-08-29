@@ -3,19 +3,21 @@ import { QUERY_KEYS } from "~/lib/utils/query-keys";
 import { appointmentsApi } from "./api";
 import type { GetAppointmentsParams } from "./types";
 
-export function useNextAppointment() {
+export function useNextAppointment(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: QUERY_KEYS.appointments.next(),
     queryFn: appointmentsApi.getNext,
+    enabled: options?.enabled ?? true,
     staleTime: 60 * 1000,
     refetchInterval: 60 * 1000,
   });
 }
 
-export function useTodayAppointments() {
+export function useTodayAppointments(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: QUERY_KEYS.appointments.today(),
     queryFn: appointmentsApi.getToday,
+    enabled: options?.enabled ?? true,
     staleTime: 60 * 1000,
     refetchInterval: 60 * 1000,
   });
@@ -29,10 +31,11 @@ export function useUpcomingAppointments() {
   });
 }
 
-export function useAppointmentRequests() {
+export function useAppointmentRequests(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: QUERY_KEYS.appointments.requests(),
     queryFn: appointmentsApi.getRequests,
+    enabled: options?.enabled ?? true,
     staleTime: 60 * 1000,
   });
 }
