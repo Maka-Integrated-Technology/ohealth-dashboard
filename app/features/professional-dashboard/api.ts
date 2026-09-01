@@ -38,7 +38,7 @@ export const professionalDashboardApi = {
   getDashboard: async (date: string): Promise<ProfessionalDashboard> => {
     const { data } = await axiosInstance.get<
       ApiEnvelope<ProfessionalDashboard>
-    >("/api/v1/professionals/me/dashboard", { params: { date } });
+    >("/api/professionals/me/dashboard", { params: { date } });
 
     const dashboard = unwrapApiData(data);
 

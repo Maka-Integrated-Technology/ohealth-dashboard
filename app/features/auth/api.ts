@@ -42,7 +42,7 @@ function deriveNameFromEmail(email: string): {
 export const authApi = {
   signUp: async (payload: SignUpPayload): Promise<AuthSession> => {
     const { data } = await axiosInstance.post<ApiEnvelope<AuthSession>>(
-      "/api/v1/auth/signup",
+      "/api/auth/signup",
       {
         first_name: payload.first_name,
         last_name: payload.last_name,
@@ -64,7 +64,7 @@ export const authApi = {
 
   login: async (payload: LoginPayload): Promise<AuthSession> => {
     const { data } = await axiosInstance.post<ApiEnvelope<AuthSession>>(
-      "/api/v1/auth/login",
+      "/api/auth/login",
       payload
     );
     return unwrapApiData(data);
@@ -72,19 +72,19 @@ export const authApi = {
 
   verify: async (payload: VerifyEmailPayload): Promise<{ message: string }> => {
     const { data } = await axiosInstance.post<ApiEnvelope<{ message: string }>>(
-      "/api/v1/auth/verify",
+      "/api/auth/verify",
       payload
     );
     return unwrapApiData(data);
   },
 
   resendCode: async (payload: ResendCodePayload): Promise<void> => {
-    await axiosInstance.post("/api/v1/auth/verify/resend", payload);
+    await axiosInstance.post("/api/auth/verify/resend", payload);
   },
 
   googleLogin: async (payload: GoogleLoginPayload): Promise<AuthSession> => {
     const { data } = await axiosInstance.post<ApiEnvelope<AuthSession>>(
-      "/api/v1/auth/google-login",
+      "/api/auth/google-login",
       payload
     );
     return unwrapApiData(data);
@@ -92,12 +92,12 @@ export const authApi = {
 
   me: async (): Promise<AuthUser> => {
     const { data } =
-      await axiosInstance.get<ApiEnvelope<AuthUser>>("/api/v1/auth/me");
+      await axiosInstance.get<ApiEnvelope<AuthUser>>("/api/auth/me");
     return unwrapApiData(data);
   },
 
   logout: async (sessionId: string): Promise<void> => {
-    await axiosInstance.post("/api/v1/auth/logout", { session_id: sessionId });
+    await axiosInstance.post("/api/auth/logout", { session_id: sessionId });
   },
 };
 
