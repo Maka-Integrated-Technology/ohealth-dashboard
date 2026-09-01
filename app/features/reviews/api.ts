@@ -1,4 +1,5 @@
 import axiosInstance from "~/lib/config/axios";
+import { unwrapApiData, type ApiEnvelope } from "~/lib/utils/api-response";
 import type { Review, ReviewsResponse } from "./types";
 
 type ProfessionalReviewResponse = {
@@ -45,10 +46,11 @@ function toReview(review: ProfessionalReviewResponse): Review {
 
 export const reviewsApi = {
   getReviews: async (professionalId: string): Promise<ReviewsResponse> => {
-    const { data } = await axiosInstance.get<ProfessionalReviewResponse[]>(
-      `/api/v1/professionals/${professionalId}/reviews`
-    );
-    const reviews = Array.isArray(data) ? data.map(toReview) : [];
+    const { data } = await axiosInstance.get<
+      ApiEnvelope<ProfessionalReviewResponse[]>
+    >(`/api/professionals/${professionalId}/reviews`);
+    const payload = unwrapApiData(data);
+    const reviews = Array.isArray(payload) ? payload.map(toReview) : [];
     const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
 
     return {
