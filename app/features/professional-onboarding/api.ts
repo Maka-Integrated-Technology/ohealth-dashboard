@@ -24,9 +24,8 @@ const CONSULTATION_TYPE_TO_SERVER: Record<ConsultationType, string> = {
 };
 
 async function findSpecialityId(name: Specialization): Promise<string> {
-  const { data } = await axiosInstance.get<ApiEnvelope<ISpeciality[]>>(
-    "/api/v1/specialities"
-  );
+  const { data } =
+    await axiosInstance.get<ApiEnvelope<ISpeciality[]>>("/api/specialities");
   const specialities = unwrapApiData(data);
   const normalizedName = name.trim().toLocaleLowerCase();
   const match = specialities.find(
@@ -53,7 +52,7 @@ async function uploadVerificationDocument(
   formData.append("file", document.file, document.name);
 
   await axiosInstance.post(
-    `/api/v1/professionals/me/verification-documents/${documentType}`,
+    `/api/professionals/me/verification-documents/${documentType}`,
     formData,
     { headers: { "Content-Type": "multipart/form-data" } }
   );
@@ -79,7 +78,7 @@ export async function submitProfessionalOnboarding(
     );
   }
 
-  await axiosInstance.patch("/api/v1/auth/me", {
+  await axiosInstance.patch("/api/auth/me", {
     first_name: values.firstName,
     last_name: values.lastName,
     phone: values.phoneNumber,
@@ -92,7 +91,7 @@ export async function submitProfessionalOnboarding(
 
   const { data: profileEnvelope } = await axiosInstance.put<
     ApiEnvelope<{ profile: IProfessionalProfile }>
-  >("/api/v1/professionals/me/profile", {
+  >("/api/professionals/me/profile", {
     speciality_id: specialityId,
     license_number: values.licenseNumber,
     years_of_experience: Number(values.yearsOfExperience),

@@ -19,7 +19,7 @@ export function PatientHeader({ patient }: PatientHeaderProps) {
               {patient.name}
             </h1>
             <p className="text-muted-foreground text-sm">
-              ID {patient.patientCode} • {patient.age} years old •{" "}
+              ID {patient.patientCode} • {patient.age ?? "—"} years old •{" "}
               {patient.gender}
             </p>
           </div>
