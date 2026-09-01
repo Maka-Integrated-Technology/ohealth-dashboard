@@ -498,13 +498,13 @@ const notesByPatient: Record<string, PatientNote[]> = {
 const MOCK_NETWORK_DELAY_MS = 500;
 
 export const patientsHandlers = [
-  http.get("/api/patients", async ({ request }) => {
+  http.get("/api/professionals/me/patients", async ({ request }) => {
     await delay(MOCK_NETWORK_DELAY_MS);
 
     const url = new URL(request.url);
     const search = url.searchParams.get("search")?.toLowerCase() ?? "";
     const page = Number(url.searchParams.get("page") ?? "1");
-    const pageSize = Number(url.searchParams.get("pageSize") ?? "9");
+    const pageSize = Number(url.searchParams.get("limit") ?? "9");
 
     let filtered = patients;
     if (search) {
@@ -527,7 +527,7 @@ export const patientsHandlers = [
     });
   }),
 
-  http.get("/api/patients/:id", async ({ params }) => {
+  http.get("/api/professionals/me/patients/:id", async ({ params }) => {
     await delay(MOCK_NETWORK_DELAY_MS);
     const detail = patientDetails[params.id as string];
     if (!detail) {
@@ -536,13 +536,16 @@ export const patientsHandlers = [
     return HttpResponse.json(detail);
   }),
 
-  http.get("/api/patients/:id/consultations", async ({ params }) => {
-    await delay(MOCK_NETWORK_DELAY_MS);
-    const consultations = consultationsByPatient[params.id as string] ?? [];
-    return HttpResponse.json(consultations);
-  }),
+  http.get(
+    "/api/professionals/me/patients/:id/consultations",
+    async ({ params }) => {
+      await delay(MOCK_NETWORK_DELAY_MS);
+      const consultations = consultationsByPatient[params.id as string] ?? [];
+      return HttpResponse.json(consultations);
+    }
+  ),
 
-  http.get("/api/patients/:id/notes", async ({ params }) => {
+  http.get("/api/professionals/me/patients/:id/notes", async ({ params }) => {
     await delay(MOCK_NETWORK_DELAY_MS);
     const notes = notesByPatient[params.id as string] ?? [];
     return HttpResponse.json(notes);

@@ -9,10 +9,10 @@ export function MedicalInfoCard({ patient }: MedicalInfoCardProps) {
   const rows: { label: string; value: string }[] = [
     {
       label: "General",
-      value: `H ${patient.heightCm}cm  W ${patient.weightKg}kg`,
+      value: `H ${patient.heightCm ?? "—"}cm  W ${patient.weightKg ?? "—"}kg`,
     },
-    { label: "Blood Group", value: patient.bloodGroup },
-    { label: "Genotype", value: patient.genotype },
+    { label: "Blood Group", value: patient.bloodGroup ?? "—" },
+    { label: "Genotype", value: patient.genotype ?? "—" },
     { label: "Conditions", value: patient.conditions },
     { label: "Allergies", value: patient.allergies },
   ];

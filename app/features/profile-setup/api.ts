@@ -23,7 +23,7 @@ export const profileSetupApi = {
   getStatus: async (): Promise<ProfileSetupStatus> => {
     const { data } = await axiosInstance.get<
       ApiEnvelope<IProfessionalMeResponse>
-    >("/api/v1/professionals/me");
+    >("/api/professionals/me");
     const { profile, setup } = unwrapApiData(data);
 
     return {

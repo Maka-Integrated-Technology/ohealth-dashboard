@@ -45,7 +45,7 @@ async function refreshAccessToken(): Promise<string | null> {
     // attach the (expired) access token and the response interceptor below
     // would try to refresh again on a 401, looping.
     const { data } = await axios.post(
-      `${ENV_CONFIG.apiBaseUrl ?? ""}/api/v1/auth/refresh`,
+      `${ENV_CONFIG.apiBaseUrl ?? ""}/api/auth/refresh`,
       { refresh_token }
     );
     const payload = data?.data ?? data;
@@ -73,8 +73,7 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const original = error.config as
-      | (InternalAxiosRequestConfig & { _retry?: boolean })
-      | undefined;
+      (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined;
     const status = error.response?.status;
 
     if (status !== 401 || !original) {
