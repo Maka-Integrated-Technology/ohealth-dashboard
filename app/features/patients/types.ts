@@ -3,8 +3,8 @@ export interface Patient {
   patientCode: string;
   name: string;
   initials: string;
-  age: number;
-  gender: "Male" | "Female";
+  age: number | null;
+  gender: "Male" | "Female" | "Unknown";
   condition: string;
   lastVisit: string;
   registered: string;
@@ -15,10 +15,10 @@ export interface PatientDetail extends Patient {
   fullName: string;
   dateOfBirth: string;
   email: string;
-  heightCm: number;
-  weightKg: number;
-  bloodGroup: string;
-  genotype: string;
+  heightCm: number | null;
+  weightKg: number | null;
+  bloodGroup: string | null;
+  genotype: string | null;
   conditions: string;
   allergies: string;
 }

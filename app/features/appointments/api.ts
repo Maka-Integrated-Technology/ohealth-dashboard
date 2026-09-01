@@ -64,11 +64,11 @@ export const appointmentsApi = {
   },
 
   acceptRequest: async (id: string): Promise<void> => {
-    await axiosInstance.patch(`/api/v1/professionals/me/bookings/${id}/accept`);
+    await axiosInstance.patch(`/api/professionals/me/bookings/${id}/accept`);
   },
 
   rejectRequest: async (id: string): Promise<void> => {
-    await axiosInstance.patch(`/api/v1/professionals/me/bookings/${id}/reject`);
+    await axiosInstance.patch(`/api/professionals/me/bookings/${id}/reject`);
   },
 
   getAppointments: async (
