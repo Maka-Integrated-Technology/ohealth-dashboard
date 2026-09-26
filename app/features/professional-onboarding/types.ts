@@ -1,15 +1,10 @@
 export type AccountType = "healthcare_professional" | "facility";
 
 export type Specialization =
-  | "General Doctor"
-  | "Nurse"
-  | "Nutritionist"
-  | "Counsellor";
+  "General Doctor" | "Nurse" | "Nutritionist" | "Counsellor";
 
 export type ConsultationType =
-  | "Chat Consultation"
-  | "Video Consultation"
-  | "Both";
+  "Chat Consultation" | "Video Consultation" | "Both";
 
 export interface UploadedDocument {
   file?: File;

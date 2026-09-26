@@ -157,10 +157,11 @@ export function EditScheduleDialog({
                     key={d}
                     type="button"
                     onClick={() => toggleCopyDay(d)}
-                    className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${copyToDays.includes(d)
+                    className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
+                      copyToDays.includes(d)
                         ? "border-primary bg-primary/10 text-primary"
                         : "border-border text-foreground hover:bg-muted"
-                      }`}
+                    }`}
                   >
                     {fullDayName(d)}
                   </button>
