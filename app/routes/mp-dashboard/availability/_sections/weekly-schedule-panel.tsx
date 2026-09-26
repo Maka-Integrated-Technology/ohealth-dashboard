@@ -26,7 +26,7 @@ export function WeeklySchedulePanel({
   return (
     <div className="w-full lg:w-80">
       <div
-        className="max-h-[600px] divide-y divide-border overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        className="divide-border max-h-[600px] [scrollbar-width:none] divide-y overflow-y-auto [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         onWheel={(e) => e.stopPropagation()}
       >
         {days.map((d) => (
