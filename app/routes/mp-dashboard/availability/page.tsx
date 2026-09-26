@@ -58,8 +58,7 @@ export default function AvailabilityPage() {
     await updateDaySchedule({
       day,
       available,
-      periods:
-        current?.periods.map((p) => ({ from: p.from, to: p.to })) ?? [],
+      periods: current?.periods.map((p) => ({ from: p.from, to: p.to })) ?? [],
     });
   }
 
