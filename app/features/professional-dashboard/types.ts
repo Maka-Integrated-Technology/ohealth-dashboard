@@ -1,8 +1,5 @@
 export type ProfessionalDashboardAppointmentStatus =
-  | "pending"
-  | "confirmed"
-  | "completed"
-  | "cancelled";
+  "pending" | "confirmed" | "completed" | "cancelled";
 
 export type ProfessionalDashboardConsultationType = "chat" | "video";
 

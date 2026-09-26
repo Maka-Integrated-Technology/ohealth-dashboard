@@ -67,7 +67,8 @@ export function TimePicker({ value, onChange }: TimePickerProps) {
       <PopoverContent
         align="start"
         className="w-auto p-0"
-        onWheel={(e) => e.stopPropagation()}>
+        onWheel={(e) => e.stopPropagation()}
+      >
         <div className="divide-border flex divide-x">
           <TimeColumn
             items={HOURS}
@@ -100,7 +101,7 @@ function TimeColumn({
   onSelect: (value: string) => void;
 }) {
   return (
-    <div className="max-h-52 w-16 overflow-y-auto py-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+    <div className="max-h-52 w-16 [scrollbar-width:none] overflow-y-auto py-1 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
       {items.map((item) => (
         <button
           key={item}
