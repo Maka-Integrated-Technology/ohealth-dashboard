@@ -115,17 +115,38 @@ if ! jq -e '
   .lockfileVersion == 3 and
   (.packages | type == "object") and
   (.packages | has("")) and
-  all(
-    .packages | to_entries[];
-    if .key == "" then
-      (.value | type == "object")
-    else
-      (.value | type == "object") and
-      (.value.resolved | type == "string") and
-      (.value.resolved | startswith("https://registry.npmjs.org/")) and
-      (.value.integrity | type == "string") and
-      (.value.integrity | length > 0)
-    end
+  (
+    .packages as $packages |
+    all(
+      $packages | to_entries[];
+      . as $entry |
+      if $entry.key == "" then
+        ($entry.value | type == "object")
+      else
+        ($entry.value | type == "object") and
+        (
+          (
+            ($entry.value.resolved | type == "string") and
+            ($entry.value.resolved | startswith("https://registry.npmjs.org/")) and
+            ($entry.value.integrity | type == "string") and
+            ($entry.value.integrity | length > 0)
+          ) or
+          (
+            ($entry.value.inBundle? == true) and
+            ($entry.value.optional? == true) and
+            ($entry.value.version | type == "string") and
+            ($entry.value.version | length > 0) and
+            ($entry.key | contains("/node_modules/")) and
+            (($entry.key | sub("/node_modules/.*$"; "")) as $parent |
+              ($packages[$parent] | type == "object") and
+              ($packages[$parent].resolved | type == "string") and
+              ($packages[$parent].resolved | startswith("https://registry.npmjs.org/")) and
+              ($packages[$parent].integrity | type == "string") and
+              ($packages[$parent].integrity | length > 0))
+          )
+        )
+      end
+    )
   )
 ' package-lock.json >/dev/null; then
   fail 'package-lock.json is malformed or contains untrusted or incomplete dependency metadata.'

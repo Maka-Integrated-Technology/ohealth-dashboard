@@ -168,6 +168,25 @@ update_json \
   "$untrusted_source_fixture/package-lock.json" \
   '.packages["node_modules/example"].resolved = "https://example.invalid/package.tgz"'
 expect_fail "$untrusted_source_fixture" 'untrusted dependency source'
+bundled_dependency_fixture=$(create_fixture bundled-dependency)
+update_json \
+  "$bundled_dependency_fixture/package-lock.json" \
+  '.packages["node_modules/example/node_modules/bundled"] = {
+    "version": "1.0.0",
+    "inBundle": true,
+    "optional": true
+  }'
+expect_pass "$bundled_dependency_fixture" 'trusted nested bundled dependency'
+
+untrusted_bundle_fixture=$(create_fixture untrusted-bundle)
+update_json \
+  "$untrusted_bundle_fixture/package-lock.json" \
+  '.packages["node_modules/bundled"] = {
+    "version": "1.0.0",
+    "inBundle": true,
+    "optional": true
+  }'
+expect_fail "$untrusted_bundle_fixture" 'top-level bundled metadata bypass'
 
 missing_packages_fixture=$(create_fixture missing-packages)
 update_json "$missing_packages_fixture/package-lock.json" 'del(.packages)'
