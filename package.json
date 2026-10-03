@@ -16,7 +16,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "audit:dependencies": "node scripts/security/dependency-audit-policy.mjs",
+    "test:audit-policy": "node --test scripts/security/dependency-audit-policy.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.2.8",
