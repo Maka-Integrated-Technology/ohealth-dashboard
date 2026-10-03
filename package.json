@@ -16,7 +16,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "audit:dependencies": "node scripts/security/dependency-audit-policy.mjs",
+    "test:audit-policy": "node --test scripts/security/dependency-audit-policy.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.2.8",
@@ -27,7 +29,7 @@
     "@react-router/serve": "^7.18.1",
     "@tanstack/react-query": "^5.99.2",
     "@tanstack/react-query-devtools": "^5.99.2",
-    "axios": "^1.12.2",
+    "axios": "^1.20.0",
     "axios-retry": "^4.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -65,19 +67,22 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "rr-next-routes": "^0.0.10",
     "serve": "14.2.6",
-    "shadcn": "^4.13.1",
+    "shadcn": "^4.21.1",
     "tailwindcss": "^4.1.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.61.1",
-    "vite": "^8.0.3",
-    "vite-tsconfig-paths": "^6.1.1"
+    "vite": "^8.0.3"
   },
   "overrides": {
+    "brace-expansion@1": "1.1.21",
+    "brace-expansion@5": "5.0.12",
     "fast-uri": "^3.1.6",
     "hono": "^4.13.5",
+    "ip-address": "10.7.3",
     "js-yaml": "^4.3.2",
     "qs": "^6.16.0",
-    "morgan": "^1.12.0"
+    "morgan": "^1.12.0",
+    "undici": "7.29.1"
   },
   "msw": {
     "workerDirectory": [
