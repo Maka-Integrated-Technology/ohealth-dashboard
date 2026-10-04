@@ -10,18 +10,20 @@ front to map each container to a subdomain (e.g. `mp.`/`ph.`/`lb.<domain>`).
 | Environment | Branch    | Server directory              | Compose project      |
 | ----------- | --------- | ----------------------------- | -------------------- |
 | Staging     | `staging` | `/var/www/ohealth/fe/staging` | `ohealth-fe-staging` |
-| Production  | `prod`    | `/var/www/ohealth/fe/prod`    | `ohealth-fe-prod`    |
+| Production  | `main`    | `/var/www/ohealth/fe/prod`    | `ohealth-fe-prod`    |
 
-A push to `staging` deploys staging; a push to `prod` deploys production.
-Nothing else triggers a deploy. (Pull requests still run `ci.yml` against
-`main` — see [setup.md](./setup.md#ci).)
+A push to `staging` deploys staging; a push to `main` deploys production when
+the `SSH_DEPLOY_ENABLED` repository variable is set to `true`. When it is not
+enabled, deployment jobs are explicitly skipped. (Pull requests still run
+`ci.yml` — see [setup.md](./setup.md#ci).)
 
 ## Workflow
 
-`.github/workflows/deploy.yml` runs on `push` to `staging` or `prod`. The two
-jobs are guarded by `github.ref`, so only the matching environment deploys. A
-`concurrency` group keyed on the branch prevents overlapping deploys of the same
-environment (`cancel-in-progress: false` lets an in-flight deploy finish).
+`.github/workflows/deploy.yml` runs on `push` to `staging` or `main`. The two
+jobs are guarded by `github.ref` and the `SSH_DEPLOY_ENABLED` repository
+variable, so only the matching configured environment deploys. A `concurrency`
+group keyed on the branch prevents overlapping deploys of the same environment
+(`cancel-in-progress: false` lets an in-flight deploy finish).
 
 Each job SSHes into the server (via `appleboy/ssh-action`) and runs:
 
@@ -42,7 +44,11 @@ removes the now-dangling previous images.
 By default the containers publish to host ports **3000** (mp), **3001** (ph), and
 **3002** (lb); override with `MP_PORT` / `PH_PORT` / `LB_PORT` in `.env.prod`.
 
-## Required GitHub secrets
+## Required GitHub configuration
+
+Set the `SSH_DEPLOY_ENABLED` repository variable to `true` only after the target
+servers and all three secrets below have been configured. Leave it unset or set
+it to `false` while SSH deployment is not provisioned.
 
 Set these in **Settings → Secrets and variables → Actions**:
 
