@@ -81,7 +81,7 @@ ohealth-dashboard/
 │   └── workflow.md
 ├── .github/workflows/
 │   ├── ci.yml                  # Format / lint / typecheck / build on PRs
-│   └── deploy.yml              # Deploy staging (staging) + production (prod)
+│   └── deploy.yml              # Deploy staging (staging) + production (main)
 ├── .dockerignore
 ├── .env.example
 ├── AGENTS.md                   # Workflow conventions for AI coding agents
