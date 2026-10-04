@@ -14,7 +14,7 @@ permissions:
 jobs:
   deploy-staging:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/staging'
+    if: github.ref == 'refs/heads/staging' && vars.SSH_DEPLOY_ENABLED == 'true'
     timeout-minutes: 15
 
     steps:
@@ -33,7 +33,7 @@ jobs:
 
   deploy-production:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && vars.SSH_DEPLOY_ENABLED == 'true'
     timeout-minutes: 15
 
     steps:

@@ -69,7 +69,8 @@ you and run each dashboard on its own port so they can run side by side:
 | Build      | `npm run build`        | ✓   |
 
 CI runs on every pull request to `main` via `.github/workflows/ci.yml`.
-Deploys run on pushes to `staging` and `prod` via `.github/workflows/deploy.yml`.
+Opt-in SSH deploys run on pushes to `staging` and `main` via
+`.github/workflows/deploy.yml`.
 
 ## Documentation
 
