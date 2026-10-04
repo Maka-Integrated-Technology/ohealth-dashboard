@@ -38,7 +38,13 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts --no-audit
+
+      - name: Verify dependency audit policy
+        run: npm run test:audit-policy
+
+      - name: Audit dependencies
+        run: npm run audit:dependencies
 
       - name: Check formatting
         run: npm run format:check
