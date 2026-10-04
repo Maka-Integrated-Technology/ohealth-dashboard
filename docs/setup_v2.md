@@ -169,8 +169,9 @@ surface (`mp-dashboard`); to also verify the others, add build steps with
 ## Deployment
 
 `.github/workflows/deploy.yml` deploys over SSH on pushes to `staging` and
-`prod`. See [deployment.md](./deployment.md) for the full flow, required
-secrets, and server layout.
+`main` when the `SSH_DEPLOY_ENABLED` repository variable is `true`. See
+[deployment.md](./deployment.md) for the full flow, required secrets, and
+server layout.
 
 ## Docker Compose
 
