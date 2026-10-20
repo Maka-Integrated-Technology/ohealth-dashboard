@@ -152,7 +152,10 @@ function Field({
 
 function StepProgress({ activeStep }: { activeStep: number }) {
   return (
-    <ol className="mb-7 grid grid-cols-5 gap-1.5" aria-label="Registration progress">
+    <ol
+      className="mb-7 grid grid-cols-5 gap-1.5"
+      aria-label="Registration progress"
+    >
       {WIZARD_STEPS.map((label, index) => {
         const stepNumber = index + 1;
         const isComplete = stepNumber < activeStep;
@@ -188,8 +191,7 @@ function StepProgress({ activeStep }: { activeStep: number }) {
 
 export default function HospitalAuthPage() {
   const [screen, setScreen] = useState<AuthScreen>("sign-in");
-  const [registrationStep, setRegistrationStep] =
-    useState<RegistrationStep>(1);
+  const [registrationStep, setRegistrationStep] = useState<RegistrationStep>(1);
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [showLoginPassword, setShowLoginPassword] = useState(false);
@@ -206,18 +208,15 @@ export default function HospitalAuthPage() {
     phone: "",
     email: "",
   });
-  const [administrator, setAdministrator] =
-    useState<AdministratorDetails>({
-      fullName: "",
-      email: "",
-      phone: "",
-      password: "",
-      confirmPassword: "",
-    });
+  const [administrator, setAdministrator] = useState<AdministratorDetails>({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
   const [showAdminPassword, setShowAdminPassword] = useState(false);
-  const [documents, setDocuments] = useState<
-    Record<DocumentKey, File | null>
-  >({
+  const [documents, setDocuments] = useState<Record<DocumentKey, File | null>>({
     license: null,
     registration: null,
     accreditation: null,
@@ -272,9 +271,7 @@ export default function HospitalAuthPage() {
     setRegistrationStep(2);
   };
 
-  const handleAdministratorDetails = (
-    event: FormEvent<HTMLFormElement>
-  ) => {
+  const handleAdministratorDetails = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (administrator.password.length < 8) {
       setAdminError("Use at least 8 characters for the password.");
@@ -326,11 +323,11 @@ export default function HospitalAuthPage() {
     <div className="min-h-screen bg-slate-50 lg:grid lg:grid-cols-[minmax(350px,0.92fr)_minmax(500px,1.08fr)]">
       <aside className="relative isolate overflow-hidden bg-gradient-to-br from-[#061a49] via-[#083b8f] to-[#0a57d5] px-6 py-7 text-white sm:px-10 sm:py-10 lg:flex lg:min-h-screen lg:flex-col lg:justify-between lg:px-12 lg:py-12">
         <div
-          className="pointer-events-none absolute -right-28 -top-28 size-80 rounded-full border border-white/10"
+          className="pointer-events-none absolute -top-28 -right-28 size-80 rounded-full border border-white/10"
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute -right-10 top-4 size-44 rounded-full border border-white/10"
+          className="pointer-events-none absolute top-4 -right-10 size-44 rounded-full border border-white/10"
           aria-hidden="true"
         />
         <div className="relative z-10 flex items-center gap-3">
@@ -347,12 +344,12 @@ export default function HospitalAuthPage() {
             <Activity className="size-3.5" />
             Hospital workspace
           </div>
-          <h1 className="max-w-lg text-3xl font-bold leading-tight tracking-tight sm:text-4xl xl:text-5xl">
+          <h1 className="max-w-lg text-3xl leading-tight font-bold tracking-tight sm:text-4xl xl:text-5xl">
             Your hospital, connected.
           </h1>
           <p className="mt-4 max-w-md text-sm leading-6 text-blue-100 sm:text-base sm:leading-7">
-            Coordinate appointments, patient workflows, laboratory requests,
-            and day-to-day hospital operations from one workspace.
+            Coordinate appointments, patient workflows, laboratory requests, and
+            day-to-day hospital operations from one workspace.
           </p>
 
           <div className="mt-8 grid grid-cols-2 gap-3">
@@ -383,7 +380,7 @@ export default function HospitalAuthPage() {
         <div className="w-full max-w-xl">
           <div className="mb-8 flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+              <p className="text-xs font-semibold tracking-[0.18em] text-blue-700 uppercase">
                 OHealth+ · Hospital portal
               </p>
               <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
@@ -506,10 +503,7 @@ export default function HospitalAuthPage() {
           ) : null}
 
           {screen === "forgot-password" ? (
-            <form
-              className="space-y-5"
-              onSubmit={handlePasswordReset}
-            >
+            <form className="space-y-5" onSubmit={handlePasswordReset}>
               <Field
                 label="Email address"
                 value={forgotEmail}
@@ -572,7 +566,9 @@ export default function HospitalAuthPage() {
                     <Field
                       label="Hospital licence number"
                       value={hospital.licenseNumber}
-                      onChange={(value) => updateHospital("licenseNumber", value)}
+                      onChange={(value) =>
+                        updateHospital("licenseNumber", value)
+                      }
                       placeholder="e.g. HOS-LG-0000"
                     />
                   </div>
@@ -630,9 +626,7 @@ export default function HospitalAuthPage() {
                   <Field
                     label="Full name"
                     value={administrator.fullName}
-                    onChange={(value) =>
-                      updateAdministrator("fullName", value)
-                    }
+                    onChange={(value) => updateAdministrator("fullName", value)}
                     placeholder="e.g. Dr. Chiamaka Eze"
                     autoComplete="name"
                   />
@@ -655,9 +649,7 @@ export default function HospitalAuthPage() {
                   <Field
                     label="Create password"
                     value={administrator.password}
-                    onChange={(value) =>
-                      updateAdministrator("password", value)
-                    }
+                    onChange={(value) => updateAdministrator("password", value)}
                     type="password"
                     autoComplete="new-password"
                     placeholder="At least 8 characters"
@@ -719,10 +711,7 @@ export default function HospitalAuthPage() {
               ) : null}
 
               {registrationStep === 3 ? (
-                <form
-                  className="space-y-4"
-                  onSubmit={handleDocumentSubmission}
-                >
+                <form className="space-y-4" onSubmit={handleDocumentSubmission}>
                   <div className="mb-1">
                     <div className="flex items-center justify-between gap-3">
                       <h3 className="font-semibold text-slate-900">
@@ -867,9 +856,7 @@ export default function HospitalAuthPage() {
                       <p className="text-sm font-semibold text-slate-800">
                         {item[0]}
                       </p>
-                      <p className="mt-1 text-xs text-slate-500">
-                        {item[1]}
-                      </p>
+                      <p className="mt-1 text-xs text-slate-500">{item[1]}</p>
                     </div>
                     {index === 1 ? (
                       <span className="ml-auto rounded-full bg-blue-100 px-2 py-1 text-[10px] font-semibold text-blue-700">
@@ -911,8 +898,8 @@ export default function HospitalAuthPage() {
                   Hospital verified
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-slate-600">
-                  This is a preview of the approved state. A real approval
-                  would be granted only after the OHealth compliance process.
+                  This is a preview of the approved state. A real approval would
+                  be granted only after the OHealth compliance process.
                 </p>
               </div>
               <button
@@ -946,8 +933,16 @@ export default function HospitalAuthPage() {
               <div className="space-y-3">
                 {[
                   ["appointments", "Appointments", "Requests and schedules"],
-                  ["patients", "Patient management", "Patient lists and records"],
-                  ["laboratory", "Laboratory coordination", "Test requests and results"],
+                  [
+                    "patients",
+                    "Patient management",
+                    "Patient lists and records",
+                  ],
+                  [
+                    "laboratory",
+                    "Laboratory coordination",
+                    "Test requests and results",
+                  ],
                   ["prescriptions", "Prescriptions", "Prescription workflows"],
                 ].map(([key, label, description]) => {
                   const checked = selectedModules.includes(key);
@@ -1000,8 +995,8 @@ export default function HospitalAuthPage() {
                 Finish setup preview <ArrowRight className="size-4" />
               </button>
               <div className="rounded-lg border border-blue-100 bg-blue-50 px-3.5 py-3 text-xs leading-5 text-blue-800">
-                The full hospital dashboard will be added after the authentication
-                and hosting foundation is reviewed.
+                The full hospital dashboard will be added after the
+                authentication and hosting foundation is reviewed.
               </div>
               <button
                 className="w-full py-2 text-sm font-semibold text-slate-600 hover:text-slate-900"
