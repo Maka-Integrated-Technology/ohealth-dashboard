@@ -55,5 +55,8 @@ jobs:
       - name: Type-check
         run: npm run typecheck
 
-      - name: Build
+      - name: Build medical professional portal
         run: npm run build
+
+      - name: Build hospital portal
+        run: npm run build:hs

@@ -1,0 +1,1020 @@
+import {
+  Activity,
+  ArrowRight,
+  CalendarDays,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardCheck,
+  Eye,
+  EyeOff,
+  FileText,
+  FlaskConical,
+  HeartPulse,
+  ShieldCheck,
+  Users,
+} from "lucide-react";
+import { useId, useState, type ChangeEvent, type FormEvent } from "react";
+
+type AuthScreen =
+  | "sign-in"
+  | "register"
+  | "forgot-password"
+  | "review"
+  | "approved"
+  | "setup-complete";
+type RegistrationStep = 1 | 2 | 3;
+type InputKind = "text" | "email" | "tel" | "password";
+type DocumentKey = "license" | "registration" | "accreditation";
+
+type HospitalDetails = {
+  name: string;
+  registrationNumber: string;
+  licenseNumber: string;
+  address: string;
+  state: string;
+  phone: string;
+  email: string;
+};
+
+type AdministratorDetails = {
+  fullName: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+};
+
+const WIZARD_STEPS = [
+  "Hospital details",
+  "Administrator",
+  "Documents",
+  "Verification",
+  "Setup",
+];
+
+const DOCUMENTS: {
+  key: DocumentKey;
+  label: string;
+  description: string;
+}[] = [
+  {
+    key: "license",
+    label: "Hospital operating licence",
+    description: "Issued by the relevant State Ministry of Health.",
+  },
+  {
+    key: "registration",
+    label: "Corporate registration certificate",
+    description: "CAC certificate or equivalent registration document.",
+  },
+  {
+    key: "accreditation",
+    label: "Facility accreditation certificate",
+    description: "Facility recognition or accreditation document.",
+  },
+];
+
+const FEATURES = [
+  {
+    icon: CalendarDays,
+    title: "Appointments",
+    description: "Coordinate requests and schedules.",
+  },
+  {
+    icon: Users,
+    title: "Patient care",
+    description: "Keep patient workflows organised.",
+  },
+  {
+    icon: FlaskConical,
+    title: "Lab coordination",
+    description: "Follow test requests and results.",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Hospital operations",
+    description: "Manage key tasks in one workspace.",
+  },
+];
+
+const inputClassName =
+  "h-11 w-full rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10";
+
+const primaryButtonClassName =
+  "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-not-allowed disabled:opacity-50";
+
+const secondaryButtonClassName =
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600";
+
+function Field({
+  label,
+  value,
+  onChange,
+  type = "text",
+  placeholder,
+  autoComplete,
+  required = true,
+  hint,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: InputKind;
+  placeholder?: string;
+  autoComplete?: string;
+  required?: boolean;
+  hint?: string;
+}) {
+  const id = useId();
+
+  return (
+    <div className="space-y-1.5">
+      <label className="block text-sm font-medium text-slate-700" htmlFor={id}>
+        {label}
+        {required ? <span className="ml-1 text-rose-500">*</span> : null}
+      </label>
+      <input
+        id={id}
+        className={inputClassName}
+        type={type}
+        value={value}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        required={required}
+        onChange={(event) => onChange(event.currentTarget.value)}
+      />
+      {hint ? <p className="text-xs text-slate-500">{hint}</p> : null}
+    </div>
+  );
+}
+
+function StepProgress({ activeStep }: { activeStep: number }) {
+  return (
+    <ol className="mb-7 grid grid-cols-5 gap-1.5" aria-label="Registration progress">
+      {WIZARD_STEPS.map((label, index) => {
+        const stepNumber = index + 1;
+        const isComplete = stepNumber < activeStep;
+        const isActive = stepNumber === activeStep;
+
+        return (
+          <li className="min-w-0 text-center" key={label}>
+            <div
+              className={
+                "mx-auto mb-2 flex size-7 items-center justify-center rounded-full text-xs font-semibold " +
+                (isComplete || isActive
+                  ? "bg-blue-600 text-white"
+                  : "bg-slate-100 text-slate-500")
+              }
+              aria-current={isActive ? "step" : undefined}
+            >
+              {isComplete ? <CheckCircle2 className="size-4" /> : stepNumber}
+            </div>
+            <span
+              className={
+                "block text-[10px] leading-tight sm:text-xs " +
+                (isActive ? "font-semibold text-blue-700" : "text-slate-500")
+              }
+            >
+              {label}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+export default function HospitalAuthPage() {
+  const [screen, setScreen] = useState<AuthScreen>("sign-in");
+  const [registrationStep, setRegistrationStep] =
+    useState<RegistrationStep>(1);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [adminError, setAdminError] = useState("");
+  const [documentError, setDocumentError] = useState("");
+  const [hospital, setHospital] = useState<HospitalDetails>({
+    name: "",
+    registrationNumber: "",
+    licenseNumber: "",
+    address: "",
+    state: "",
+    phone: "",
+    email: "",
+  });
+  const [administrator, setAdministrator] =
+    useState<AdministratorDetails>({
+      fullName: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+    });
+  const [showAdminPassword, setShowAdminPassword] = useState(false);
+  const [documents, setDocuments] = useState<
+    Record<DocumentKey, File | null>
+  >({
+    license: null,
+    registration: null,
+    accreditation: null,
+  });
+  const [selectedModules, setSelectedModules] = useState([
+    "appointments",
+    "patients",
+    "laboratory",
+    "prescriptions",
+  ]);
+
+  const updateHospital = (key: keyof HospitalDetails, value: string) => {
+    setHospital((current) => ({ ...current, [key]: value }));
+  };
+
+  const updateAdministrator = (
+    key: keyof AdministratorDetails,
+    value: string
+  ) => {
+    setAdministrator((current) => ({ ...current, [key]: value }));
+  };
+
+  const openScreen = (nextScreen: AuthScreen) => {
+    setFeedback("");
+    setScreen(nextScreen);
+  };
+
+  const startRegistration = () => {
+    setRegistrationStep(1);
+    setAdminError("");
+    setDocumentError("");
+    openScreen("register");
+  };
+
+  const handleSignIn = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFeedback(
+      "Sign-in is not connected in this preview. No credentials were sent to a server."
+    );
+  };
+
+  const handlePasswordReset = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFeedback(
+      "Password-reset is a preview state only. No reset email was sent."
+    );
+  };
+
+  const handleHospitalDetails = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFeedback("");
+    setRegistrationStep(2);
+  };
+
+  const handleAdministratorDetails = (
+    event: FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    if (administrator.password.length < 8) {
+      setAdminError("Use at least 8 characters for the password.");
+      return;
+    }
+    if (administrator.password !== administrator.confirmPassword) {
+      setAdminError("The passwords do not match. Please try again.");
+      return;
+    }
+
+    setAdminError("");
+    setRegistrationStep(3);
+  };
+
+  const handleDocumentChange = (
+    key: DocumentKey,
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.currentTarget.files?.[0] ?? null;
+    if (file && file.size > 10 * 1024 * 1024) {
+      setDocumentError("Each document must be 10 MB or smaller.");
+      event.currentTarget.value = "";
+      return;
+    }
+
+    setDocumentError("");
+    setDocuments((current) => ({ ...current, [key]: file }));
+  };
+
+  const handleDocumentSubmission = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (DOCUMENTS.some((document) => !documents[document.key])) {
+      setDocumentError("Please choose all three documents to continue.");
+      return;
+    }
+
+    setDocumentError("");
+    openScreen("review");
+  };
+
+  const activeStep =
+    screen === "review" ? 4 : screen === "approved" || screen === "setup-complete"
+      ? 5
+      : registrationStep;
+
+  return (
+    <div className="min-h-screen bg-slate-50 lg:grid lg:grid-cols-[minmax(350px,0.92fr)_minmax(500px,1.08fr)]">
+      <aside className="relative isolate overflow-hidden bg-gradient-to-br from-[#061a49] via-[#083b8f] to-[#0a57d5] px-6 py-7 text-white sm:px-10 sm:py-10 lg:flex lg:min-h-screen lg:flex-col lg:justify-between lg:px-12 lg:py-12">
+        <div
+          className="pointer-events-none absolute -right-28 -top-28 size-80 rounded-full border border-white/10"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute -right-10 top-4 size-44 rounded-full border border-white/10"
+          aria-hidden="true"
+        />
+        <div className="relative z-10 flex items-center gap-3">
+          <span className="flex size-10 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/20">
+            <HeartPulse className="size-6" aria-hidden="true" />
+          </span>
+          <span className="text-xl font-bold tracking-tight">
+            OHealth<span className="text-blue-200">+</span>
+          </span>
+        </div>
+
+        <div className="relative z-10 max-w-xl py-9 lg:py-16">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-medium text-blue-100">
+            <Activity className="size-3.5" />
+            Hospital workspace
+          </div>
+          <h1 className="max-w-lg text-3xl font-bold leading-tight tracking-tight sm:text-4xl xl:text-5xl">
+            Your hospital, connected.
+          </h1>
+          <p className="mt-4 max-w-md text-sm leading-6 text-blue-100 sm:text-base sm:leading-7">
+            Coordinate appointments, patient workflows, laboratory requests,
+            and day-to-day hospital operations from one workspace.
+          </p>
+
+          <div className="mt-8 grid grid-cols-2 gap-3">
+            {FEATURES.map((feature) => (
+              <div
+                className="rounded-xl border border-white/10 bg-white/[0.07] p-3.5 backdrop-blur-sm sm:p-4"
+                key={feature.title}
+              >
+                <feature.icon
+                  className="mb-3 size-5 text-blue-200"
+                  aria-hidden="true"
+                />
+                <p className="text-sm font-semibold">{feature.title}</p>
+                <p className="mt-1 text-xs leading-5 text-blue-100/80">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <p className="relative z-10 text-xs text-blue-100/70">
+          A connected workspace for hospital teams.
+        </p>
+      </aside>
+
+      <main className="flex min-h-[70vh] items-center justify-center px-5 py-10 sm:px-8 lg:min-h-screen lg:px-12 xl:px-16">
+        <div className="w-full max-w-xl">
+          <div className="mb-8 flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+                OHealth+ · Hospital portal
+              </p>
+              <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
+                {screen === "sign-in"
+                  ? "Welcome back"
+                  : screen === "forgot-password"
+                    ? "Reset your password"
+                    : screen === "register"
+                      ? "Register your hospital"
+                      : screen === "review"
+                        ? "Application submitted"
+                        : screen === "approved"
+                          ? "Verified & approved"
+                          : "Set up your workspace"}
+              </h2>
+              <p className="mt-2 max-w-lg text-sm leading-6 text-slate-500">
+                {screen === "sign-in"
+                  ? "Sign in to manage your hospital on OHealth+."
+                  : screen === "forgot-password"
+                    ? "Enter the email associated with your hospital administrator account."
+                    : screen === "register"
+                      ? "Tell us about your facility so we can prepare your workspace."
+                      : screen === "review"
+                        ? "Your registration journey has reached the verification stage."
+                        : screen === "approved"
+                          ? "Preview the next step after a hospital has been verified."
+                          : "Choose the hospital workflows your team will use first."}
+              </p>
+            </div>
+            <span className="shrink-0 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-800">
+              Preview
+            </span>
+          </div>
+
+          {screen === "sign-in" ? (
+            <form className="space-y-5" onSubmit={handleSignIn}>
+              <Field
+                label="Email address"
+                value={loginEmail}
+                onChange={setLoginEmail}
+                type="email"
+                autoComplete="email"
+                placeholder="admin@hospital.ng"
+              />
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between gap-3">
+                  <label
+                    className="text-sm font-medium text-slate-700"
+                    htmlFor="hospital-login-password"
+                  >
+                    Password <span className="text-rose-500">*</span>
+                  </label>
+                  <button
+                    className="text-xs font-semibold text-blue-700 hover:text-blue-800"
+                    type="button"
+                    onClick={() => openScreen("forgot-password")}
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+                <div className="relative">
+                  <input
+                    id="hospital-login-password"
+                    className={inputClassName + " pr-12"}
+                    type={showLoginPassword ? "text" : "password"}
+                    value={loginPassword}
+                    autoComplete="current-password"
+                    placeholder="Enter your password"
+                    required
+                    onChange={(event) =>
+                      setLoginPassword(event.currentTarget.value)
+                    }
+                  />
+                  <button
+                    className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-slate-400 hover:text-slate-700"
+                    type="button"
+                    aria-label={
+                      showLoginPassword ? "Hide password" : "Show password"
+                    }
+                    onClick={() => setShowLoginPassword((shown) => !shown)}
+                  >
+                    {showLoginPassword ? (
+                      <EyeOff className="size-4" />
+                    ) : (
+                      <Eye className="size-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {feedback ? (
+                <p
+                  className="rounded-lg border border-blue-100 bg-blue-50 px-3.5 py-3 text-sm leading-5 text-blue-800"
+                  role="status"
+                >
+                  {feedback}
+                </p>
+              ) : null}
+
+              <button className={primaryButtonClassName} type="submit">
+                Sign in <ArrowRight className="size-4" />
+              </button>
+              <div className="flex items-center gap-3 py-1">
+                <span className="h-px flex-1 bg-slate-200" />
+                <span className="text-xs text-slate-400">New to OHealth+?</span>
+                <span className="h-px flex-1 bg-slate-200" />
+              </div>
+              <button
+                className={secondaryButtonClassName + " w-full"}
+                type="button"
+                onClick={startRegistration}
+              >
+                Register your hospital
+              </button>
+            </form>
+          ) : null}
+
+          {screen === "forgot-password" ? (
+            <form
+              className="space-y-5"
+              onSubmit={handlePasswordReset}
+            >
+              <Field
+                label="Email address"
+                value={forgotEmail}
+                onChange={setForgotEmail}
+                type="email"
+                autoComplete="email"
+                placeholder="admin@hospital.ng"
+              />
+              {feedback ? (
+                <p
+                  className="rounded-lg border border-blue-100 bg-blue-50 px-3.5 py-3 text-sm leading-5 text-blue-800"
+                  role="status"
+                >
+                  {feedback}
+                </p>
+              ) : null}
+              <button className={primaryButtonClassName} type="submit">
+                Preview reset request <ArrowRight className="size-4" />
+              </button>
+              <button
+                className={secondaryButtonClassName + " w-full"}
+                type="button"
+                onClick={() => openScreen("sign-in")}
+              >
+                <ChevronLeft className="size-4" /> Back to sign in
+              </button>
+            </form>
+          ) : null}
+
+          {screen === "register" ? (
+            <>
+              <StepProgress activeStep={activeStep} />
+
+              {registrationStep === 1 ? (
+                <form className="space-y-4" onSubmit={handleHospitalDetails}>
+                  <div className="mb-1">
+                    <h3 className="font-semibold text-slate-900">
+                      Hospital details
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-500">
+                      Tell us about your facility.
+                    </p>
+                  </div>
+                  <Field
+                    label="Hospital name"
+                    value={hospital.name}
+                    onChange={(value) => updateHospital("name", value)}
+                    placeholder="e.g. St. Mary's Medical Center"
+                    autoComplete="organization"
+                  />
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Field
+                      label="Registration number"
+                      value={hospital.registrationNumber}
+                      onChange={(value) =>
+                        updateHospital("registrationNumber", value)
+                      }
+                      placeholder="e.g. RC-000000"
+                    />
+                    <Field
+                      label="Hospital licence number"
+                      value={hospital.licenseNumber}
+                      onChange={(value) => updateHospital("licenseNumber", value)}
+                      placeholder="e.g. HOS-LG-0000"
+                    />
+                  </div>
+                  <Field
+                    label="Hospital address"
+                    value={hospital.address}
+                    onChange={(value) => updateHospital("address", value)}
+                    placeholder="Street address, city"
+                    autoComplete="street-address"
+                  />
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Field
+                      label="State / region"
+                      value={hospital.state}
+                      onChange={(value) => updateHospital("state", value)}
+                      placeholder="e.g. Rivers"
+                      autoComplete="address-level1"
+                    />
+                    <Field
+                      label="Phone number"
+                      value={hospital.phone}
+                      onChange={(value) => updateHospital("phone", value)}
+                      type="tel"
+                      placeholder="+234 800 000 0000"
+                      autoComplete="tel"
+                    />
+                  </div>
+                  <Field
+                    label="Contact email"
+                    value={hospital.email}
+                    onChange={(value) => updateHospital("email", value)}
+                    type="email"
+                    placeholder="info@hospital.ng"
+                    autoComplete="email"
+                  />
+                  <button className={primaryButtonClassName} type="submit">
+                    Continue <ChevronRight className="size-4" />
+                  </button>
+                </form>
+              ) : null}
+
+              {registrationStep === 2 ? (
+                <form
+                  className="space-y-4"
+                  onSubmit={handleAdministratorDetails}
+                >
+                  <div className="mb-1">
+                    <h3 className="font-semibold text-slate-900">
+                      Administrator account
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-500">
+                      This person will manage the hospital workspace.
+                    </p>
+                  </div>
+                  <Field
+                    label="Full name"
+                    value={administrator.fullName}
+                    onChange={(value) =>
+                      updateAdministrator("fullName", value)
+                    }
+                    placeholder="e.g. Dr. Chiamaka Eze"
+                    autoComplete="name"
+                  />
+                  <Field
+                    label="Administrator email"
+                    value={administrator.email}
+                    onChange={(value) => updateAdministrator("email", value)}
+                    type="email"
+                    placeholder="admin@hospital.ng"
+                    autoComplete="email"
+                  />
+                  <Field
+                    label="Phone number"
+                    value={administrator.phone}
+                    onChange={(value) => updateAdministrator("phone", value)}
+                    type="tel"
+                    placeholder="+234 800 000 0000"
+                    autoComplete="tel"
+                  />
+                  <Field
+                    label="Create password"
+                    value={administrator.password}
+                    onChange={(value) =>
+                      updateAdministrator("password", value)
+                    }
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="At least 8 characters"
+                    hint="Use at least 8 characters."
+                  />
+                  <div className="space-y-1.5">
+                    <label
+                      className="block text-sm font-medium text-slate-700"
+                      htmlFor="hospital-confirm-password"
+                    >
+                      Confirm password <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        id="hospital-confirm-password"
+                        className={inputClassName}
+                        type={showAdminPassword ? "text" : "password"}
+                        value={administrator.confirmPassword}
+                        autoComplete="new-password"
+                        placeholder="Re-enter password"
+                        required
+                        onChange={(event) =>
+                          updateAdministrator(
+                            "confirmPassword",
+                            event.currentTarget.value
+                          )
+                        }
+                      />
+                    </div>
+                    <button
+                      className="text-xs font-medium text-blue-700 hover:text-blue-800"
+                      type="button"
+                      onClick={() => setShowAdminPassword((shown) => !shown)}
+                    >
+                      {showAdminPassword ? "Hide password" : "Show password"}
+                    </button>
+                  </div>
+                  {adminError ? (
+                    <p className="text-sm text-rose-600" role="alert">
+                      {adminError}
+                    </p>
+                  ) : null}
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <button
+                      className={secondaryButtonClassName}
+                      type="button"
+                      onClick={() => {
+                        setAdminError("");
+                        setRegistrationStep(1);
+                      }}
+                    >
+                      <ChevronLeft className="size-4" /> Back
+                    </button>
+                    <button className={primaryButtonClassName} type="submit">
+                      Continue <ChevronRight className="size-4" />
+                    </button>
+                  </div>
+                </form>
+              ) : null}
+
+              {registrationStep === 3 ? (
+                <form
+                  className="space-y-4"
+                  onSubmit={handleDocumentSubmission}
+                >
+                  <div className="mb-1">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="font-semibold text-slate-900">
+                        Verification documents
+                      </h3>
+                      <span className="text-xs font-medium text-slate-500">
+                        {Object.values(documents).filter(Boolean).length} / 3
+                        selected
+                      </span>
+                    </div>
+                    <p className="mt-1 text-sm text-slate-500">
+                      Upload clear, legible copies of your hospital documents.
+                    </p>
+                  </div>
+
+                  {DOCUMENTS.map((document) => {
+                    const file = documents[document.key];
+                    const inputId = "hospital-document-" + document.key;
+
+                    return (
+                      <div
+                        className="rounded-xl border border-slate-200 bg-white p-4"
+                        key={document.key}
+                      >
+                        <div className="flex gap-3">
+                          <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
+                            {file ? (
+                              <CheckCircle2 className="size-5" />
+                            ) : (
+                              <FileText className="size-5" />
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <label
+                              className="block cursor-pointer text-sm font-semibold text-slate-800"
+                              htmlFor={inputId}
+                            >
+                              {document.label}
+                            </label>
+                            <p className="mt-1 text-xs leading-5 text-slate-500">
+                              {file ? file.name : document.description}
+                            </p>
+                            <p className="mt-1 text-[11px] text-slate-400">
+                              PDF, JPG or PNG · Maximum 10 MB
+                            </p>
+                          </div>
+                          <label
+                            className="shrink-0 cursor-pointer self-center rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                            htmlFor={inputId}
+                          >
+                            {file ? "Replace" : "Browse"}
+                          </label>
+                        </div>
+                        <input
+                          id={inputId}
+                          className="sr-only"
+                          type="file"
+                          accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                          onChange={(event) =>
+                            handleDocumentChange(document.key, event)
+                          }
+                        />
+                      </div>
+                    );
+                  })}
+
+                  {documentError ? (
+                    <p className="text-sm text-rose-600" role="alert">
+                      {documentError}
+                    </p>
+                  ) : null}
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <button
+                      className={secondaryButtonClassName}
+                      type="button"
+                      onClick={() => setRegistrationStep(2)}
+                    >
+                      <ChevronLeft className="size-4" /> Back
+                    </button>
+                    <button
+                      className={primaryButtonClassName}
+                      type="submit"
+                      disabled={
+                        Object.values(documents).filter(Boolean).length !== 3
+                      }
+                    >
+                      Submit for review <ArrowRight className="size-4" />
+                    </button>
+                  </div>
+                  <p className="text-xs leading-5 text-slate-500">
+                    This preview does not upload documents or submit a real
+                    registration application.
+                  </p>
+                </form>
+              ) : null}
+            </>
+          ) : null}
+
+          {screen === "review" ? (
+            <div className="space-y-6">
+              <div className="rounded-2xl border border-blue-100 bg-blue-50/70 p-5">
+                <div className="flex size-12 items-center justify-center rounded-full bg-blue-100 text-blue-700">
+                  <ShieldCheck className="size-6" />
+                </div>
+                <h3 className="mt-4 text-lg font-semibold text-slate-900">
+                  Documents submitted
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  The next step is for OHealth to review the hospital details
+                  and supporting documents. In a live service, status updates
+                  would be sent to the administrator email.
+                </p>
+              </div>
+              <StepProgress activeStep={activeStep} />
+              <ol className="space-y-4">
+                {[
+                  ["Documents received", "Registration details collected"],
+                  ["Under review", "Compliance team review"],
+                  ["Approved", "Verification complete"],
+                ].map((item, index) => (
+                  <li className="flex items-start gap-3" key={item[0]}>
+                    <span
+                      className={
+                        "mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full " +
+                        (index === 0
+                          ? "bg-emerald-100 text-emerald-700"
+                          : index === 1
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-slate-100 text-slate-400")
+                      }
+                    >
+                      {index === 0 ? (
+                        <CheckCircle2 className="size-4" />
+                      ) : index === 1 ? (
+                        <Activity className="size-4" />
+                      ) : (
+                        <ShieldCheck className="size-4" />
+                      )}
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold text-slate-800">
+                        {item[0]}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">
+                        {item[1]}
+                      </p>
+                    </div>
+                    {index === 1 ? (
+                      <span className="ml-auto rounded-full bg-blue-100 px-2 py-1 text-[10px] font-semibold text-blue-700">
+                        Current state
+                      </span>
+                    ) : null}
+                  </li>
+                ))}
+              </ol>
+              <div className="rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-3 text-xs leading-5 text-amber-900">
+                Demo state only: no registration was saved and no compliance
+                review has taken place.
+              </div>
+              <button
+                className={primaryButtonClassName}
+                type="button"
+                onClick={() => openScreen("approved")}
+              >
+                Preview approved state <ArrowRight className="size-4" />
+              </button>
+              <button
+                className="w-full py-2 text-sm font-semibold text-slate-600 hover:text-slate-900"
+                type="button"
+                onClick={() => openScreen("sign-in")}
+              >
+                Return to sign in
+              </button>
+            </div>
+          ) : null}
+
+          {screen === "approved" ? (
+            <div className="space-y-5">
+              <StepProgress activeStep={activeStep} />
+              <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-6 text-center">
+                <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                  <CheckCircle2 className="size-7" />
+                </div>
+                <h3 className="mt-4 text-lg font-semibold text-slate-900">
+                  Hospital verified
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  This is a preview of the approved state. A real approval
+                  would be granted only after the OHealth compliance process.
+                </p>
+              </div>
+              <button
+                className={primaryButtonClassName}
+                type="button"
+                onClick={() => openScreen("setup-complete")}
+              >
+                Continue to setup <ArrowRight className="size-4" />
+              </button>
+              <button
+                className="w-full py-2 text-sm font-semibold text-slate-600 hover:text-slate-900"
+                type="button"
+                onClick={() => openScreen("sign-in")}
+              >
+                Return to sign in
+              </button>
+            </div>
+          ) : null}
+
+          {screen === "setup-complete" ? (
+            <div className="space-y-5">
+              <StepProgress activeStep={5} />
+              <div>
+                <h3 className="font-semibold text-slate-900">
+                  Choose your first workflows
+                </h3>
+                <p className="mt-1 text-sm leading-6 text-slate-500">
+                  These are preview selections for the intended workspace setup.
+                </p>
+              </div>
+              <div className="space-y-3">
+                {[
+                  ["appointments", "Appointments", "Requests and schedules"],
+                  ["patients", "Patient management", "Patient lists and records"],
+                  ["laboratory", "Laboratory coordination", "Test requests and results"],
+                  ["prescriptions", "Prescriptions", "Prescription workflows"],
+                ].map(([key, label, description]) => {
+                  const checked = selectedModules.includes(key);
+                  return (
+                    <button
+                      aria-pressed={checked}
+                      className={
+                        "flex w-full items-center gap-3 rounded-xl border p-4 text-left transition " +
+                        (checked
+                          ? "border-blue-200 bg-blue-50/60"
+                          : "border-slate-200 bg-white hover:bg-slate-50")
+                      }
+                      key={key}
+                      type="button"
+                      onClick={() =>
+                        setSelectedModules((current) =>
+                          current.includes(key)
+                            ? current.filter((item) => item !== key)
+                            : [...current, key]
+                        )
+                      }
+                    >
+                      <span
+                        className={
+                          "flex size-5 shrink-0 items-center justify-center rounded border " +
+                          (checked
+                            ? "border-blue-600 bg-blue-600 text-white"
+                            : "border-slate-300 bg-white")
+                        }
+                      >
+                        {checked ? <CheckCircle2 className="size-3.5" /> : null}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-semibold text-slate-800">
+                          {label}
+                        </span>
+                        <span className="mt-1 block text-xs text-slate-500">
+                          {description}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              <button
+                className={primaryButtonClassName}
+                type="button"
+                onClick={() => openScreen("setup-complete")}
+              >
+                Finish setup preview <ArrowRight className="size-4" />
+              </button>
+              <div className="rounded-lg border border-blue-100 bg-blue-50 px-3.5 py-3 text-xs leading-5 text-blue-800">
+                The full hospital dashboard will be added after the authentication
+                and hosting foundation is reviewed.
+              </div>
+              <button
+                className="w-full py-2 text-sm font-semibold text-slate-600 hover:text-slate-900"
+                type="button"
+                onClick={() => openScreen("sign-in")}
+              >
+                Return to sign in
+              </button>
+            </div>
+          ) : null}
+
+          <div className="mt-8 border-t border-slate-200 pt-4">
+            <p className="text-center text-[11px] leading-5 text-slate-400">
+              Prototype only · Authentication, password reset, file upload,
+              verification, and account creation are not connected to live
+              services. Form data is kept only in this page session.
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
