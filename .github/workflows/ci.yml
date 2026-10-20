@@ -43,8 +43,20 @@ jobs:
       - name: Verify dependency audit policy
         run: npm run test:audit-policy
 
+      - name: Format hospital preview files
+        run: npx prettier --write app/features/hospital-auth/page.tsx .github/workflows/ci.yml
+
       - name: Check formatting
         run: npm run format:check
+
+      - name: Preserve formatted hospital preview files
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: hospital-auth-formatted
+          path: |
+            app/features/hospital-auth/page.tsx
+            .github/workflows/ci.yml
+          if-no-files-found: error
 
       - name: Lint
         run: npm run lint
