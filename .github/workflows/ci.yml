@@ -51,15 +51,24 @@ jobs:
 
       - name: Commit formatted hospital preview files (temporary)
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feat/hospital-auth-cloudflare-preview'
+        env:
+          BRANCH_NAME: ${{ github.head_ref }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
+          mkdir -p /tmp/ohealth-format
+          cp app/features/hospital-auth/page.tsx /tmp/ohealth-format/page.tsx
+          cp .github/workflows/ci.yml /tmp/ohealth-format/ci.yml
+          git fetch origin "$BRANCH_NAME"
+          git checkout -B "$BRANCH_NAME" "origin/$BRANCH_NAME"
+          cp /tmp/ohealth-format/page.tsx app/features/hospital-auth/page.tsx
+          cp /tmp/ohealth-format/ci.yml .github/workflows/ci.yml
           git add app/features/hospital-auth/page.tsx .github/workflows/ci.yml
           if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git commit -m "style: format hospital auth preview"
-            git push origin "HEAD:$GITHUB_HEAD_REF"
+            git push origin "HEAD:$BRANCH_NAME"
           fi
-
       - name: Lint
         run: npm run lint
 
