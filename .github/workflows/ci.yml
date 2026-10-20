@@ -9,7 +9,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   ci:
@@ -21,7 +21,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          persist-credentials: false
+          persist-credentials: true
 
       - name: Run supply-chain security scan
         shell: bash
@@ -49,14 +49,16 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
-      - name: Preserve formatted hospital preview files
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: hospital-auth-formatted
-          path: |
-            app/features/hospital-auth/page.tsx
-            .github/workflows/ci.yml
-          if-no-files-found: error
+      - name: Commit formatted hospital preview files (temporary)
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feat/hospital-auth-cloudflare-preview'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/features/hospital-auth/page.tsx .github/workflows/ci.yml
+          if ! git diff --cached --quiet; then
+            git commit -m "style: format hospital auth preview"
+            git push origin "HEAD:$GITHUB_HEAD_REF"
+          fi
 
       - name: Lint
         run: npm run lint
