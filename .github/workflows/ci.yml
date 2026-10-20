@@ -43,9 +43,6 @@ jobs:
       - name: Verify dependency audit policy
         run: npm run test:audit-policy
 
-      - name: Audit dependencies
-        run: npm run audit:dependencies
-
       - name: Check formatting
         run: npm run format:check
 
@@ -60,3 +57,7 @@ jobs:
 
       - name: Build hospital portal
         run: npm run build:hs
+
+      - name: Audit dependencies
+        run: npm run audit:dependencies
+
