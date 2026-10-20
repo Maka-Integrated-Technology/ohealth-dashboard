@@ -9,7 +9,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   ci:
@@ -21,7 +21,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          persist-credentials: true
+          persist-credentials: false
 
       - name: Run supply-chain security scan
         shell: bash
@@ -43,30 +43,9 @@ jobs:
       - name: Verify dependency audit policy
         run: npm run test:audit-policy
 
-      - name: Format hospital preview files
-        run: npx prettier --write app/features/hospital-auth/page.tsx .github/workflows/ci.yml
-
       - name: Check formatting
         run: npm run format:check
 
-      - name: Commit formatted hospital preview source (temporary)
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feat/hospital-auth-cloudflare-preview'
-        env:
-          BRANCH_NAME: ${{ github.head_ref }}
-        run: |
-          set -euo pipefail
-          mkdir -p /tmp/ohealth-format
-          cp app/features/hospital-auth/page.tsx /tmp/ohealth-format/page.tsx
-          git fetch origin "$BRANCH_NAME"
-          git checkout -B "$BRANCH_NAME" "origin/$BRANCH_NAME"
-          cp /tmp/ohealth-format/page.tsx app/features/hospital-auth/page.tsx
-          git add app/features/hospital-auth/page.tsx
-          if ! git diff --cached --quiet; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "style: format hospital auth preview"
-            git push origin "HEAD:$BRANCH_NAME"
-          fi
       - name: Lint
         run: npm run lint
 
@@ -81,4 +60,3 @@ jobs:
 
       - name: Audit dependencies
         run: npm run audit:dependencies
-
