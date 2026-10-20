@@ -22,7 +22,8 @@ type AuthScreen =
   | "forgot-password"
   | "review"
   | "approved"
-  | "setup-complete";
+  | "setup-complete"
+  | "ready";
 type RegistrationStep = 1 | 2 | 3;
 type InputKind = "text" | "email" | "tel" | "password";
 type DocumentKey = "license" | "registration" | "accreditation";
@@ -315,9 +316,11 @@ export default function HospitalAuthPage() {
   };
 
   const activeStep =
-    screen === "review" ? 4 : screen === "approved" || screen === "setup-complete"
-      ? 5
-      : registrationStep;
+    screen === "review" || screen === "approved"
+      ? 4
+      : screen === "setup-complete" || screen === "ready"
+        ? 5
+        : registrationStep;
 
   return (
     <div className="min-h-screen bg-slate-50 lg:grid lg:grid-cols-[minmax(350px,0.92fr)_minmax(500px,1.08fr)]">
@@ -394,7 +397,9 @@ export default function HospitalAuthPage() {
                         ? "Application submitted"
                         : screen === "approved"
                           ? "Verified & approved"
-                          : "Set up your workspace"}
+                          : screen === "ready"
+                            ? "Preview complete"
+                            : "Set up your workspace"}
               </h2>
               <p className="mt-2 max-w-lg text-sm leading-6 text-slate-500">
                 {screen === "sign-in"
@@ -407,7 +412,9 @@ export default function HospitalAuthPage() {
                         ? "Your registration journey has reached the verification stage."
                         : screen === "approved"
                           ? "Preview the next step after a hospital has been verified."
-                          : "Choose the hospital workflows your team will use first."}
+                          : screen === "ready"
+                            ? "You have reached the end of the authentication and onboarding preview."
+                            : "Choose the hospital workflows your team will use first."}
               </p>
             </div>
             <span className="shrink-0 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-800">
@@ -988,7 +995,7 @@ export default function HospitalAuthPage() {
               <button
                 className={primaryButtonClassName}
                 type="button"
-                onClick={() => openScreen("setup-complete")}
+                onClick={() => openScreen("ready")}
               >
                 Finish setup preview <ArrowRight className="size-4" />
               </button>
@@ -998,6 +1005,31 @@ export default function HospitalAuthPage() {
               </div>
               <button
                 className="w-full py-2 text-sm font-semibold text-slate-600 hover:text-slate-900"
+                type="button"
+                onClick={() => openScreen("sign-in")}
+              >
+                Return to sign in
+              </button>
+            </div>
+          ) : null}
+
+          {screen === "ready" ? (
+            <div className="space-y-5">
+              <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-6 text-center">
+                <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                  <CheckCircle2 className="size-7" />
+                </div>
+                <h3 className="mt-4 text-lg font-semibold text-slate-900">
+                  Authentication preview complete
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Sign-in, registration, document selection, review, approval,
+                  and workspace setup states are ready for visual review. No
+                  real account or verification was created.
+                </p>
+              </div>
+              <button
+                className={primaryButtonClassName}
                 type="button"
                 onClick={() => openScreen("sign-in")}
               >
