@@ -155,17 +155,17 @@ export default function LaboratoryTestBookingsRoute() {
       search={headerQuery}
       onSearchChange={setHeaderQuery}
     >
-      <div className="mx-auto w-full max-w-[1500px] px-[20px] pt-[45px] pb-[74px] sm:px-[30px]">
-        <h1 className="text-[29px] leading-[37px] font-semibold tracking-[-0.5px] text-[#202b3a]">
+      <div className="mx-auto w-full max-w-[1500px] px-[15px] pt-[24px] pb-[44px] sm:px-[30px] sm:pt-[45px] sm:pb-[74px]">
+        <h1 className="text-[22px] leading-[30px] font-semibold tracking-[-0.4px] text-[#202b3a] sm:text-[29px] sm:leading-[37px] sm:tracking-[-0.5px]">
           Test Bookings
         </h1>
-        <p className="mt-[1px] text-[17px] leading-[25px] text-[#566371]">
+        <p className="mt-[1px] text-[13px] leading-[20px] text-[#566371] sm:text-[17px] sm:leading-[25px]">
           Manage and track all laboratory test bookings
         </p>
 
-        <section className="mt-[39px] overflow-hidden rounded-[17px] border border-[#e4eaf2] bg-white">
-          <div className="flex flex-wrap items-center gap-[16px] px-[19px] pt-[16px] pb-[8px]">
-            <div className="relative min-w-[230px] flex-1 sm:max-w-[281px]">
+        <section className="mt-[23px] overflow-hidden rounded-[13px] border border-[#e4eaf2] bg-white sm:mt-[39px] sm:rounded-[17px]">
+          <div className="flex flex-wrap items-center gap-[10px] px-[12px] pt-[12px] pb-[8px] sm:gap-[16px] sm:px-[19px] sm:pt-[16px]">
+            <div className="relative min-w-[180px] flex-1 sm:max-w-[281px]">
               <Search
                 className="pointer-events-none absolute top-[10px] left-[13px] size-[16px] text-[#9ca6b4]"
                 strokeWidth={1.8}
@@ -176,7 +176,7 @@ export default function LaboratoryTestBookingsRoute() {
                 placeholder="Search by name, ID, test..."
                 value={query}
                 onChange={(event) => setQuery(event.currentTarget.value)}
-                className="h-[37px] w-full rounded-[11px] border border-[#dce4f0] bg-white pr-3 pl-[36px] text-[13px] text-[#344660] outline-none placeholder:text-[#90a4bf] focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff]"
+                className="h-[35px] w-full rounded-[9px] border border-[#dce4f0] bg-white pr-3 pl-[36px] text-[12px] sm:h-[37px] sm:rounded-[11px] sm:text-[13px] text-[#344660] outline-none placeholder:text-[#90a4bf] focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff]"
               />
             </div>
             <div className="relative w-full sm:w-[214px]">
@@ -184,7 +184,7 @@ export default function LaboratoryTestBookingsRoute() {
                 aria-label="Filter by test category"
                 value={category}
                 onChange={(event) => setCategory(event.currentTarget.value)}
-                className="h-[37px] w-full appearance-none rounded-[11px] border border-[#dce4f0] bg-white px-[16px] pr-[35px] text-[13px] text-[#34435a] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff]"
+                className="h-[35px] w-full appearance-none rounded-[9px] border border-[#dce4f0] bg-white px-[13px] pr-[35px] text-[12px] sm:h-[37px] sm:rounded-[11px] sm:px-[16px] sm:pr-[35px] sm:text-[13px] text-[#34435a] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff]"
               >
                 <option value="">Filter by category</option>
                 {CATEGORIES.map((value) => (
@@ -202,7 +202,7 @@ export default function LaboratoryTestBookingsRoute() {
           <div
             role="tablist"
             aria-label="Booking filters"
-            className="mx-[19px] mt-[5px] flex items-stretch justify-between gap-1 overflow-x-auto border-b border-[#dfe6f0]"
+            className="mx-[12px] mt-[5px] flex items-stretch justify-between gap-1 overflow-x-auto sm:mx-[19px] border-b border-[#dfe6f0]"
           >
             {TABS.map((tab) => {
               const selectedTab = tab === activeTab;
@@ -217,7 +217,7 @@ export default function LaboratoryTestBookingsRoute() {
                   aria-selected={selectedTab}
                   onClick={() => setActiveTab(tab)}
                   className={
-                    "flex min-h-[42px] shrink-0 items-center gap-[8px] border-b-[2px] px-[14px] text-[13px] font-medium transition-colors " +
+                    "flex min-h-[38px] shrink-0 items-center gap-[6px] border-b-[2px] px-[10px] text-[12px] font-medium transition-colors sm:min-h-[42px] sm:gap-[8px] sm:px-[14px] sm:text-[13px] " +
                     (selectedTab
                       ? "border-[#155eef] text-[#155eef]"
                       : "border-transparent text-[#617799] hover:text-[#155eef]")
@@ -279,10 +279,10 @@ export default function LaboratoryTestBookingsRoute() {
                         openBooking(booking.id);
                       }
                     }}
-                    className="h-[64px] cursor-pointer border-b border-[#eef2f7] bg-white transition-colors last:border-b-0 hover:bg-[#f8fbff] focus-visible:bg-[#edf4ff] focus-visible:outline-2 focus-visible:outline-[#155eef]"
+                    className="h-[55px] cursor-pointer border-b border-[#eef2f7] bg-white transition-colors last:border-b-0 hover:bg-[#f8fbff] focus-visible:bg-[#edf4ff] focus-visible:outline-2 focus-visible:outline-[#155eef]"
                   >
                     <td className="px-[16px] py-[9px]">
-                      <span className="block text-[14px] leading-[19px] font-medium text-[#24334e]">
+                      <span className="block text-[12px] leading-[17px] font-medium text-[#24334e] sm:text-[14px] sm:leading-[19px]">
                         {booking.patient}
                       </span>
                       <span className="block font-mono text-[11px] leading-[15px] text-[#8da2c0]">
@@ -290,7 +290,7 @@ export default function LaboratoryTestBookingsRoute() {
                       </span>
                     </td>
                     <td className="px-[16px] py-[9px]">
-                      <span className="block text-[14px] leading-[19px] text-[#394b68]">
+                      <span className="block text-[12px] leading-[17px] text-[#394b68] sm:text-[14px] sm:leading-[19px]">
                         {booking.test}
                       </span>
                       <span className="block text-[12px] leading-[15px] text-[#90a5c3]">
@@ -298,7 +298,7 @@ export default function LaboratoryTestBookingsRoute() {
                       </span>
                     </td>
                     <td className="px-[16px] py-[9px]">
-                      <span className="block text-[14px] leading-[18px] text-[#405574]">
+                      <span className="block text-[12px] leading-[17px] text-[#405574] sm:text-[14px] sm:leading-[18px]">
                         {booking.date}
                       </span>
                       <span className="block font-mono text-[12px] leading-[16px] text-[#3c506c]">
@@ -308,7 +308,7 @@ export default function LaboratoryTestBookingsRoute() {
                     <td className="px-[16px] py-[9px]">
                       <span
                         className={
-                          "inline-flex items-center rounded-[9px] px-[9px] py-[3px] text-[12px] leading-[16px] font-medium " +
+                          "inline-flex items-center rounded-[9px] px-[8px] py-[3px] text-[11px] leading-[15px] font-medium sm:px-[9px] sm:text-[12px] sm:leading-[16px] " +
                           statusStyle(booking.status)
                         }
                       >
@@ -344,7 +344,7 @@ export default function LaboratoryTestBookingsRoute() {
             )}
           </div>
 
-          <div className="flex min-h-[55px] items-center justify-between border-t border-[#eef2f7] px-[19px]">
+          <div className="flex min-h-[48px] items-center justify-between border-t sm:min-h-[55px] border-[#eef2f7] px-[19px]">
             <span className="text-[12px] text-[#8ea4c1]">
               {visible.length} {visible.length === 1 ? "booking" : "bookings"}
             </span>
@@ -414,19 +414,19 @@ export default function LaboratoryTestBookingsRoute() {
             aria-labelledby="reschedule-heading"
             onMouseDown={(event) => event.stopPropagation()}
             onSubmit={submitReschedule}
-            className="w-full max-w-[490px] rounded-[21px] bg-white px-[30px] pt-[32px] pb-[29px] shadow-[0_20px_45px_rgba(15,23,42,0.15)]"
+            className="w-full max-w-[490px] rounded-[17px] bg-white px-[20px] pt-[24px] pb-[22px] sm:rounded-[21px] sm:px-[30px] sm:pt-[32px] sm:pb-[29px] shadow-[0_20px_45px_rgba(15,23,42,0.15)]"
           >
             <h2
               id="reschedule-heading"
-              className="text-[21px] font-semibold tracking-[-0.3px] text-[#131f33]"
+              className="text-[18px] font-semibold tracking-[-0.2px] text-[#131f33] sm:text-[21px] sm:tracking-[-0.3px]"
             >
               Reschedule Appointment
             </h2>
-            <p className="mt-[22px] text-[17px] text-[#657b9b]">
+            <p className="mt-[18px] text-[14px] text-[#657b9b] sm:mt-[22px] sm:text-[17px]">
               Patient:{" "}
               <span className="font-semibold">{reschedule.patient}</span>
             </p>
-            <label className="mt-[22px] block text-[15px] font-medium text-[#465d7c]">
+            <label className="mt-[22px] block text-[13px] font-medium text-[#465d7c] sm:text-[15px]">
               New Date
               <span className="relative mt-[7px] block">
                 <input
@@ -434,7 +434,7 @@ export default function LaboratoryTestBookingsRoute() {
                   type="date"
                   value={newDate}
                   onChange={(event) => setNewDate(event.currentTarget.value)}
-                  className="h-[49px] w-full rounded-[14px] border border-[#dce4ef] bg-white px-[23px] pr-12 text-[16px] text-[#405573] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff]"
+                  className="h-[44px] w-full rounded-[12px] border border-[#dce4ef] bg-white px-[15px] pr-12 text-[14px] sm:h-[49px] sm:rounded-[14px] sm:px-[23px] sm:text-[16px] text-[#405573] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff]"
                 />
                 <CalendarDays
                   aria-hidden="true"
@@ -442,7 +442,7 @@ export default function LaboratoryTestBookingsRoute() {
                 />
               </span>
             </label>
-            <label className="mt-[17px] block text-[15px] font-medium text-[#465d7c]">
+            <label className="mt-[17px] block text-[13px] font-medium text-[#465d7c] sm:text-[15px]">
               New Time
               <span className="relative mt-[7px] block">
                 <input
@@ -450,7 +450,7 @@ export default function LaboratoryTestBookingsRoute() {
                   type="time"
                   value={newTime}
                   onChange={(event) => setNewTime(event.currentTarget.value)}
-                  className="h-[49px] w-full rounded-[14px] border border-[#dce4ef] bg-white px-[23px] pr-12 text-[16px] text-[#405573] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff]"
+                  className="h-[44px] w-full rounded-[12px] border border-[#dce4ef] bg-white px-[15px] pr-12 text-[14px] sm:h-[49px] sm:rounded-[14px] sm:px-[23px] sm:text-[16px] text-[#405573] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff]"
                 />
                 <Clock3
                   aria-hidden="true"
@@ -465,13 +465,13 @@ export default function LaboratoryTestBookingsRoute() {
                   setRescheduleId(null);
                   setSelectedId(reschedule.id);
                 }}
-                className="min-h-[49px] rounded-[15px] border border-[#c9d5e6] px-[20px] text-[17px] font-medium text-[#394c67] hover:bg-[#f8fafc]"
+                className="min-h-[44px] rounded-[12px] border border-[#c9d5e6] px-[14px] text-[14px] sm:min-h-[49px] sm:rounded-[15px] sm:px-[20px] sm:text-[17px] font-medium text-[#394c67] hover:bg-[#f8fafc]"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="min-h-[49px] rounded-[15px] bg-[#155eef] px-[20px] text-[17px] font-medium text-white shadow-sm hover:bg-[#0049d0]"
+                className="min-h-[44px] rounded-[12px] bg-[#155eef] px-[14px] text-[14px] sm:min-h-[49px] sm:rounded-[15px] sm:px-[20px] sm:text-[17px] font-medium text-white shadow-sm hover:bg-[#0049d0]"
               >
                 Confirm Reschedule
               </button>
