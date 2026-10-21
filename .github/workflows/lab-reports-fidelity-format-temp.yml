@@ -1,0 +1,40 @@
+name: Validate reports Figma fidelity (temporary)
+on:
+  push:
+    branches: [feat/laboratory-auth-cloudflare-preview]
+    paths:
+      - .github/workflows/lab-reports-fidelity-format-temp.yml
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/laboratory-auth-cloudflare-preview
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit
+      - name: Format screenshot-accurate Reports
+        run: npx prettier --write app/features/laboratory-dashboard/laboratory-reports.tsx
+      - name: Lint
+        run: npm run lint
+      - name: Type-check
+        run: npm run typecheck
+      - name: Build lab portal
+        run: npm run build:lb
+      - name: Commit formatted Reports
+        if: success()
+        run: |
+          if ! git diff --quiet -- app/features/laboratory-dashboard/laboratory-reports.tsx; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add app/features/laboratory-dashboard/laboratory-reports.tsx
+            git commit -m 'style(lab): format exact Reports screenshot implementation'
+            git push origin HEAD:feat/laboratory-auth-cloudflare-preview
+          fi
