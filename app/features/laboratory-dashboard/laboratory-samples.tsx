@@ -100,7 +100,7 @@ function StatusPill({
   return (
     <span
       className={
-        "inline-flex w-fit items-center gap-[6px] whitespace-nowrap rounded-[9px] px-[9px] py-[3px] text-[11px] leading-[16px] font-medium sm:text-[12px] " +
+        "inline-flex w-fit items-center gap-[6px] rounded-[9px] px-[9px] py-[3px] text-[11px] leading-[16px] font-medium whitespace-nowrap sm:text-[12px] " +
         colors.pill
       }
     >
@@ -162,16 +162,22 @@ export default function LaboratorySamplesAndTests() {
 
         <div className="mt-[34px] grid grid-cols-2 gap-[10px] sm:mt-[68px] sm:gap-[12px] lg:grid-cols-5">
           {STATUS_ORDER.map((status) => {
-            const count = SAMPLES.filter((sample) => sample.status === status).length;
+            const count = SAMPLES.filter(
+              (sample) => sample.status === status
+            ).length;
             return (
               <button
                 type="button"
                 key={status}
                 aria-pressed={filter === status}
-                onClick={() => setFilter((previous) => (previous === status ? "" : status))}
+                onClick={() =>
+                  setFilter((previous) => (previous === status ? "" : status))
+                }
                 className={
                   "flex min-h-[76px] flex-col items-start justify-center gap-[4px] rounded-[14px] border bg-white px-[13px] py-[12px] text-left transition-colors hover:border-[#b5cdf8] focus-visible:outline-2 focus-visible:outline-[#155eef] sm:min-h-[89px] sm:rounded-[16px] sm:px-[16px] sm:py-[15px] " +
-                  (filter === status ? "border-[#a8c4ff] ring-1 ring-[#e5efff]" : "border-[#e8edf5]")
+                  (filter === status
+                    ? "border-[#a8c4ff] ring-1 ring-[#e5efff]"
+                    : "border-[#e8edf5]")
                 }
               >
                 <span className="text-[20px] leading-[25px] font-semibold text-[#111b30] sm:text-[23px] sm:leading-[27px]">
@@ -204,7 +210,9 @@ export default function LaboratorySamplesAndTests() {
               <select
                 aria-label="Filter samples by status"
                 value={filter}
-                onChange={(event) => setFilter(event.currentTarget.value as SampleStatus | "")}
+                onChange={(event) =>
+                  setFilter(event.currentTarget.value as SampleStatus | "")
+                }
                 className="h-[35px] w-full appearance-none rounded-[9px] border border-[#dce4f0] bg-white px-[13px] pr-[35px] text-[12px] text-[#34435a] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff] sm:h-[37px] sm:rounded-[11px] sm:px-[16px] sm:pr-[35px] sm:text-[13px]"
               >
                 <option value="">All Statuses</option>
@@ -225,12 +233,24 @@ export default function LaboratorySamplesAndTests() {
             <table className="w-full min-w-[980px] border-collapse text-left">
               <thead>
                 <tr className="h-[42px] border-y border-[#e3e9f2] bg-[#f7f9fc] text-[11px] font-semibold tracking-[0.15px] text-[#60738f]">
-                  <th scope="col" className="w-[15%] px-[16px]">PATIENT</th>
-                  <th scope="col" className="w-[22%] px-[16px]">TEST TYPE</th>
-                  <th scope="col" className="w-[17%] px-[16px]">SAMPLE TYPE</th>
-                  <th scope="col" className="w-[15%] px-[16px]">COLLECTION DATE</th>
-                  <th scope="col" className="w-[15%] px-[16px]">TECHNICIAN</th>
-                  <th scope="col" className="w-[16%] px-[16px]">STATUS</th>
+                  <th scope="col" className="w-[15%] px-[16px]">
+                    PATIENT
+                  </th>
+                  <th scope="col" className="w-[22%] px-[16px]">
+                    TEST TYPE
+                  </th>
+                  <th scope="col" className="w-[17%] px-[16px]">
+                    SAMPLE TYPE
+                  </th>
+                  <th scope="col" className="w-[15%] px-[16px]">
+                    COLLECTION DATE
+                  </th>
+                  <th scope="col" className="w-[15%] px-[16px]">
+                    TECHNICIAN
+                  </th>
+                  <th scope="col" className="w-[16%] px-[16px]">
+                    STATUS
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -239,7 +259,9 @@ export default function LaboratorySamplesAndTests() {
                     key={sample.id}
                     tabIndex={0}
                     role="button"
-                    aria-label={"View sample " + sample.id + " for " + sample.patient}
+                    aria-label={
+                      "View sample " + sample.id + " for " + sample.patient
+                    }
                     onClick={() => setSelectedId(sample.id)}
                     onKeyDown={(event) => {
                       if (event.key === "Enter" || event.key === " ") {
@@ -253,7 +275,9 @@ export default function LaboratorySamplesAndTests() {
                       <span className="block text-[12px] leading-[17px] font-medium text-[#24334e] sm:text-[14px] sm:leading-[19px]">
                         {sample.patient}
                       </span>
-                      <span className="block font-mono text-[11px] leading-[15px] text-[#8da2c0]">{sample.id}</span>
+                      <span className="block font-mono text-[11px] leading-[15px] text-[#8da2c0]">
+                        {sample.id}
+                      </span>
                     </td>
                     <td className="px-[16px] py-[9px] text-[12px] leading-[17px] text-[#394b68] sm:text-[14px] sm:leading-[19px]">
                       {sample.test}
@@ -264,7 +288,14 @@ export default function LaboratorySamplesAndTests() {
                     <td className="px-[16px] py-[9px] font-mono text-[11px] leading-[17px] text-[#7187a7] sm:text-[12px]">
                       {sample.collectedAt}
                     </td>
-                    <td className={"px-[16px] py-[9px] text-[11px] leading-[17px] sm:text-[12px] " + (sample.technician === "Unassigned" ? "text-[#e56800]" : "text-[#6d82a3]")}>
+                    <td
+                      className={
+                        "px-[16px] py-[9px] text-[11px] leading-[17px] sm:text-[12px] " +
+                        (sample.technician === "Unassigned"
+                          ? "text-[#e56800]"
+                          : "text-[#6d82a3]")
+                      }
+                    >
                       {sample.technician}
                     </td>
                     <td className="px-[16px] py-[9px]">
@@ -292,11 +323,13 @@ export default function LaboratorySamplesAndTests() {
             )}
           </div>
           <div className="flex min-h-[47px] items-center border-t border-[#eef2f7] px-[19px] text-[12px] text-[#8fa5c1] sm:min-h-[51px]">
-            {visibleSamples.length} {visibleSamples.length === 1 ? "sample" : "samples"}
+            {visibleSamples.length}{" "}
+            {visibleSamples.length === 1 ? "sample" : "samples"}
           </div>
         </section>
         <p className="mt-4 text-[11px] text-[#96a4b5]">
-          Screenshot-based preview data only. No laboratory records are accessed or changed.
+          Screenshot-based preview data only. No laboratory records are accessed
+          or changed.
         </p>
       </div>
       {selected && (
@@ -313,7 +346,10 @@ export default function LaboratorySamplesAndTests() {
             className="flex h-full w-full max-w-[540px] flex-col overflow-y-auto bg-white shadow-[-10px_0_36px_rgba(16,24,40,0.08)]"
           >
             <header className="flex min-h-[62px] items-center justify-between border-b border-[#e5eaf2] px-[16px] sm:px-[26px]">
-              <h2 id="sample-details-heading" className="text-[15px] font-semibold text-[#151d32] sm:text-[17px]">
+              <h2
+                id="sample-details-heading"
+                className="text-[15px] font-semibold text-[#151d32] sm:text-[17px]"
+              >
                 Sample {selected.id}
               </h2>
               <button
@@ -334,17 +370,27 @@ export default function LaboratorySamplesAndTests() {
                 ["Collection Date", selected.collectedAt],
                 ["Technician", selected.technician],
               ].map(([label, value]) => (
-                <div key={label} className="min-w-0 rounded-[12px] bg-[#f7f9fb] px-[12px] py-[12px]">
-                  <p className="text-[11px] text-[#8da2c0] sm:text-[13px]">{label}</p>
-                  <p className="mt-[4px] break-words text-[13px] font-medium text-[#1c2a40] sm:text-[15px]">{value}</p>
+                <div
+                  key={label}
+                  className="min-w-0 rounded-[12px] bg-[#f7f9fb] px-[12px] py-[12px]"
+                >
+                  <p className="text-[11px] text-[#8da2c0] sm:text-[13px]">
+                    {label}
+                  </p>
+                  <p className="mt-[4px] text-[13px] font-medium break-words text-[#1c2a40] sm:text-[15px]">
+                    {value}
+                  </p>
                 </div>
               ))}
               <div className="col-span-2 mt-[7px]">
-                <p className="mb-[9px] text-[12px] font-semibold text-[#617796]">STATUS</p>
+                <p className="mb-[9px] text-[12px] font-semibold text-[#617796]">
+                  STATUS
+                </p>
                 <StatusPill status={selected.status} showDot />
               </div>
               <p className="col-span-2 mt-[13px] text-[12px] leading-5 text-[#8ba1c0]">
-                Read-only preview. The supplied images do not reveal additional sample details or available status transitions.
+                Read-only preview. The supplied images do not reveal additional
+                sample details or available status transitions.
               </p>
             </div>
           </aside>
