@@ -266,7 +266,7 @@ export default function LaboratoryProfile() {
           Laboratory Profile
         </h1>
         <p className="mt-[2px] text-[13px] leading-[20px] text-[#566371] sm:text-[16px] sm:leading-[24px]">
-          Manage your laboratory's information, operating hours, and branches
+          Manage your laboratory&apos;s information, operating hours, and branches
         </p>
 
         <div role="tablist" aria-label="Laboratory profile sections" className="mt-[32px] flex w-full max-w-[900px] gap-[16px] overflow-x-auto border-b border-[#e1e8f1] sm:mt-[42px] sm:gap-[40px]">
