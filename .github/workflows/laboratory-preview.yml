@@ -5,6 +5,7 @@ on:
     branches: [dev]
     paths:
       - app/features/laboratory-auth/**
+      - app/features/laboratory-dashboard/**
       - app/routes/lb-dashboard/**
       - app/routes.ts
       - package.json
