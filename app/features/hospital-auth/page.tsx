@@ -355,7 +355,7 @@ export default function HospitalAuthPage() {
           <div className="mt-10 grid grid-cols-2 gap-4">
             {FEATURES.map((feature) => (
               <div
-                className="min-h-[72px] rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3"
+                className="min-h-[72px] rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 backdrop-blur-sm"
                 key={feature.value}
               >
                 <p className="text-[18px] leading-7 font-semibold text-white">
@@ -368,7 +368,6 @@ export default function HospitalAuthPage() {
             ))}
           </div>
         </div>
-
       </aside>
 
       <main className="flex min-h-[70vh] items-center justify-center px-5 py-10 sm:px-8 lg:min-h-screen lg:px-12 xl:px-16">
