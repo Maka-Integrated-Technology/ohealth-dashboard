@@ -168,14 +168,14 @@ function PaymentBadge({ payment }: { payment: Appointment["payment"] }) {
 function MetricCard({ metric }: { metric: (typeof metrics)[number] }) {
   const Icon = metric.icon;
   return (
-    <section className="min-h-[207px] rounded-2xl border border-[#e2e8f0] bg-white p-[22px] shadow-[0_1px_2px_rgba(15,23,42,0.025)]">
+    <section className="min-h-[147px] rounded-xl border border-[#e2e8f0] bg-white p-[15px] sm:min-h-[207px] sm:rounded-2xl sm:p-[22px] shadow-[0_1px_2px_rgba(15,23,42,0.025)]">
       <div
-        className={`flex size-12 items-center justify-center rounded-xl ${metric.iconClass}`}
+        className={`flex size-10 items-center justify-center rounded-lg sm:size-12 sm:rounded-xl ${metric.iconClass}`}
         aria-hidden="true"
       >
         <Icon className="size-[23px]" strokeWidth={1.8} />
       </div>
-      <p className="h-[59px] text-[36px] leading-[59px] font-semibold tracking-[-1.2px] text-[#0f172b]">
+      <p className="h-[42px] text-[28px] leading-[42px] sm:h-[59px] sm:text-[36px] sm:leading-[59px] font-semibold tracking-[-1.2px] text-[#0f172b]">
         {metric.value}
       </p>
       <p className="text-[15px] leading-6 font-medium text-[#344256]">
@@ -418,7 +418,7 @@ export default function HospitalDashboardPage() {
       ) : null}
 
       <div className="min-h-screen lg:pl-[240px]">
-        <header className="sticky top-0 z-20 flex h-[88px] items-center gap-4 border-b border-[#e2e8f0] bg-white px-5 sm:px-8 lg:px-[35px]">
+        <header className="sticky top-0 z-20 flex h-[64px] items-center gap-3 border-b border-[#e2e8f0] bg-white px-4 sm:h-[88px] sm:gap-4 sm:px-8 lg:px-[35px]">
           <button
             type="button"
             aria-label="Open navigation"
@@ -464,7 +464,7 @@ export default function HospitalDashboardPage() {
           </button>
         </header>
 
-        <main className="mx-auto w-full max-w-[1440px] px-5 pt-8 pb-12 sm:px-8 lg:pt-[36px] lg:pr-[35px] lg:pl-10">
+        <main className="mx-auto w-full max-w-[1440px] px-4 pt-6 pb-9 sm:px-8 sm:pt-8 sm:pb-12 lg:pt-[36px] lg:pr-[35px] lg:pl-10">
           {patientId ? (
             selectedPatient ? (
               <HospitalPatientDetails
@@ -488,22 +488,22 @@ export default function HospitalDashboardPage() {
             )
           ) : activeSection === "Dashboard" ? (
             <>
-              <div className="mb-[41px]">
-                <h2 className="text-[28px] leading-[43px] font-semibold tracking-[-0.7px] text-[#0f172b]">
+              <div className="mb-[24px] sm:mb-[41px]">
+                <h2 className="text-[23px] leading-[32px] font-semibold sm:text-[28px] sm:leading-[43px] tracking-[-0.7px] text-[#0f172b]">
                   Good afternoon, St. Mary&apos;s
                 </h2>
-                <p className="text-[15px] leading-[29px] text-[#62748e]">
+                <p className="text-[13px] leading-[20px] text-[#62748e] sm:text-[15px] sm:leading-[29px]">
                   Here&apos;s what&apos;s happening at your hospital today.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 xl:gap-x-[30px] xl:gap-y-7">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 xl:gap-x-[30px] xl:gap-y-7">
                 {metrics.map((metric) => (
                   <MetricCard key={metric.label} metric={metric} />
                 ))}
               </div>
 
-              <section className="mt-32 rounded-2xl border border-[#e2e8f0] bg-white">
+              <section className="mt-10 rounded-xl border border-[#e2e8f0] bg-white sm:mt-32 sm:rounded-2xl">
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f1f5f9] px-6 py-5">
                   <SectionHeading
                     title="Today’s Appointments"
@@ -615,8 +615,8 @@ export default function HospitalDashboardPage() {
               </section>
 
               <div className="mt-7 space-y-8">
-                <section className="overflow-hidden rounded-[22px] border border-[#f1f5f9] bg-white">
-                  <h3 className="flex items-center gap-3 border-b border-[#f1f5f9] px-7 py-[21px] text-[19px] font-semibold text-[#1f2a37]">
+                <section className="overflow-hidden rounded-[15px] border border-[#f1f5f9] bg-white sm:rounded-[22px]">
+                  <h3 className="flex items-center gap-2 border-b border-[#f1f5f9] px-4 py-[14px] text-[16px] sm:gap-3 sm:px-7 sm:py-[21px] sm:text-[19px] font-semibold text-[#1f2a37]">
                     <CalendarClock className="size-[22px] text-[#45556c]" />
                     Needs Your Attention
                   </h3>
@@ -674,8 +674,8 @@ export default function HospitalDashboardPage() {
                   ))}
                 </section>
 
-                <section className="overflow-hidden rounded-[22px] border border-[#f1f5f9] bg-white">
-                  <h3 className="flex items-center gap-3 border-b border-[#f1f5f9] px-7 py-[21px] text-[19px] font-semibold text-[#1d293d]">
+                <section className="overflow-hidden rounded-[15px] border border-[#f1f5f9] bg-white sm:rounded-[22px]">
+                  <h3 className="flex items-center gap-2 border-b border-[#f1f5f9] px-4 py-[14px] text-[16px] sm:gap-3 sm:px-7 sm:py-[21px] sm:text-[19px] font-semibold text-[#1d293d]">
                     <Bell className="size-[22px] text-[#45556c]" />
                     Recent Activity
                   </h3>
