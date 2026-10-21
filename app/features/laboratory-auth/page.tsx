@@ -1,765 +1,1029 @@
 import {
-  ArrowLeft,
+  Activity,
   ArrowRight,
-  Check,
-  ClipboardCheck,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Eye,
   EyeOff,
-  FileCheck2,
   FileText,
-  FlaskConical,
   ShieldCheck,
-  TestTubes,
-  UploadCloud,
 } from "lucide-react";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useId, useState, type ChangeEvent, type FormEvent } from "react";
 import Logo from "~/components/shared/logo";
 
-type Mode = "sign-in" | "register" | "forgot-password";
-type LabField =
-  | "name"
-  | "registration"
-  | "license"
-  | "address"
-  | "region"
-  | "phone"
-  | "contactEmail";
-type AdminField = "name" | "email" | "password" | "confirmPassword";
-type DocumentField = "license" | "accreditation" | "cac";
+type AuthScreen =
+  | "sign-in"
+  | "register"
+  | "forgot-password"
+  | "review"
+  | "approved"
+  | "setup-complete"
+  | "ready";
+type RegistrationStep = 1 | 2 | 3;
+type InputKind = "text" | "email" | "tel" | "password";
+type DocumentKey = "license" | "registration" | "accreditation";
 
-const steps = [
-  "Lab Details",
+type LaboratoryDetails = {
+  name: string;
+  registrationNumber: string;
+  licenseNumber: string;
+  address: string;
+  state: string;
+  phone: string;
+  email: string;
+};
+
+type AdministratorDetails = {
+  fullName: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+};
+
+const WIZARD_STEPS = [
+  "Laboratory details",
   "Administrator",
   "Documents",
   "Verification",
   "Setup",
-] as const;
+];
 
-const documents: { id: DocumentField; title: string; issuer: string }[] = [
+const DOCUMENTS: {
+  key: DocumentKey;
+  label: string;
+  description: string;
+}[] = [
   {
-    id: "license",
-    title: "Laboratory License",
-    issuer: "Issued by NAFDAC / State Ministry of Health",
+    key: "license",
+    label: "Laboratory License",
+    description: "Issued by NAFDAC / State Ministry of Health.",
   },
   {
-    id: "accreditation",
-    title: "Accreditation Certificate",
-    issuer: "Medical Laboratory Science Council of Nigeria",
+    key: "registration",
+    label: "CAC Registration Certificate",
+    description: "Corporate Affairs Commission.",
   },
   {
-    id: "cac",
-    title: "CAC Registration Certificate",
-    issuer: "Corporate Affairs Commission",
+    key: "accreditation",
+    label: "Accreditation Certificate",
+    description: "Medical Laboratory Science Council of Nigeria.",
   },
 ];
 
-const regions = [
-  "Abuja (FCT)",
-  "Abia",
-  "Adamawa",
-  "Akwa Ibom",
-  "Anambra",
-  "Bauchi",
-  "Bayelsa",
-  "Benue",
-  "Borno",
-  "Cross River",
-  "Delta",
-  "Ebonyi",
-  "Edo",
-  "Ekiti",
-  "Enugu",
-  "Gombe",
-  "Imo",
-  "Jigawa",
-  "Kaduna",
-  "Kano",
-  "Katsina",
-  "Kebbi",
-  "Kogi",
-  "Kwara",
-  "Lagos",
-  "Nasarawa",
-  "Niger",
-  "Ogun",
-  "Ondo",
-  "Osun",
-  "Oyo",
-  "Plateau",
-  "Rivers",
-  "Sokoto",
-  "Taraba",
-  "Yobe",
-  "Zamfara",
+const FEATURES = [
+  { value: "12,400+", description: "Tests processed monthly" },
+  { value: "340+", description: "Partner laboratories" },
+  { value: "99.8%", description: "Result accuracy rate" },
+  { value: "< 4h", description: "Average turnaround time" },
 ];
 
-const fieldClass =
-  "mt-2 block h-[51px] w-full rounded-xl border border-[#d9e1ef] bg-white px-4 text-[15px] text-[#1f2a37] outline-none placeholder:text-[#98a2b3] focus:border-[#2970ff] focus:ring-2 focus:ring-[#2970ff]/10";
-const primaryButton =
-  "inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-[#155eef] px-5 text-[15px] font-semibold text-white shadow-sm transition-colors hover:bg-[#004eeb] disabled:cursor-not-allowed disabled:opacity-55";
+const inputClassName =
+  "h-11 w-full rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10";
 
-function FormField({
+const primaryButtonClassName =
+  "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-not-allowed disabled:opacity-50";
+
+const secondaryButtonClassName =
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600";
+
+function Field({
   label,
-  placeholder,
   value,
   onChange,
   type = "text",
-  required = true,
-  autoComplete,
-}: {
-  label: string;
-  placeholder?: string;
-  value: string;
-  onChange: (value: string) => void;
-  type?: string;
-  required?: boolean;
-  autoComplete?: string;
-}) {
-  return (
-    <label className="block text-[14px] font-medium text-[#344054]">
-      {label} {required ? <span className="text-[#f04438]">*</span> : null}
-      <input
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        required={required}
-        autoComplete={autoComplete}
-        className={fieldClass}
-      />
-    </label>
-  );
-}
-
-function PasswordField({
-  label,
   placeholder,
-  value,
-  onChange,
   autoComplete,
-  minLength,
+  required = true,
+  hint,
 }: {
   label: string;
-  placeholder: string;
   value: string;
   onChange: (value: string) => void;
-  autoComplete: string;
-  minLength?: number;
+  type?: InputKind;
+  placeholder?: string;
+  autoComplete?: string;
+  required?: boolean;
+  hint?: string;
 }) {
-  const [visible, setVisible] = useState(false);
-  return (
-    <label className="block text-[14px] font-medium text-[#344054]">
-      {label} <span className="text-[#f04438]">*</span>
-      <span className="relative mt-2 block">
-        <input
-          required
-          type={visible ? "text" : "password"}
-          value={value}
-          minLength={minLength}
-          onChange={(event) => onChange(event.target.value)}
-          autoComplete={autoComplete}
-          placeholder={placeholder}
-          className="block h-[51px] w-full rounded-xl border border-[#d9e1ef] bg-white px-4 pr-12 text-[15px] text-[#1f2a37] outline-none placeholder:text-[#98a2b3] focus:border-[#2970ff] focus:ring-2 focus:ring-[#2970ff]/10"
-        />
-        <button
-          type="button"
-          aria-label={visible ? "Hide password" : "Show password"}
-          onClick={() => setVisible((previous) => !previous)}
-          className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-[#667085] hover:text-[#155eef]"
-        >
-          {visible ? (
-            <EyeOff className="size-[18px]" />
-          ) : (
-            <Eye className="size-[18px]" />
-          )}
-        </button>
-      </span>
-    </label>
-  );
-}
+  const id = useId();
 
-function LabBrandPanel() {
   return (
-    <div className="relative hidden min-h-[100vh] flex-col overflow-hidden bg-[linear-gradient(155deg,#062c56_0%,#084b84_54%,#0a718e_100%)] px-12 py-12 text-white lg:flex lg:w-[49.6%] lg:shrink-0 lg:justify-between xl:px-16">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-40 -left-44 size-[460px] rounded-full border border-white/10 bg-[#0994bb]/10"
+    <div className="space-y-1.5">
+      <label className="block text-sm font-medium text-slate-700" htmlFor={id}>
+        {label}
+        {required ? <span className="ml-1 text-rose-500">*</span> : null}
+      </label>
+      <input
+        id={id}
+        className={inputClassName}
+        type={type}
+        value={value}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        // Preview mode keeps this optional so every screen can be explored.
+        // Native input types (such as email) still validate values when supplied.
+        onChange={(event) => onChange(event.currentTarget.value)}
       />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-40 bottom-24 size-[500px] rounded-full border border-white/10 bg-white/5"
-      />
-      <div className="relative flex items-center gap-2.5">
-        <span className="flex size-11 items-center justify-center rounded-xl bg-white/15">
-          <TestTubes className="size-7" />
-        </span>
-        <span className="text-[27px] font-bold tracking-[-1px]">
-          OHealth<span className="text-[#7fe7f3]">+</span>
-        </span>
-      </div>
-      <div className="relative max-w-[540px] py-12">
-        <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-[#c4effa]">
-          <FlaskConical className="size-4" /> Laboratory Partner Portal
-        </div>
-        <h2 className="max-w-[500px] text-[clamp(38px,4vw,58px)] leading-[1.15] font-bold tracking-[-1.6px]">
-          Your laboratory, connected.
-        </h2>
-        <p className="mt-6 max-w-[470px] text-[18px] leading-8 text-[#c8e6f1]">
-          Manage diagnostic operations, track test results, and connect with
-          healthcare professionals on OHealth+.
-        </p>
-        <div className="mt-12 grid grid-cols-2 gap-4">
-          {[
-            ["12,400+", "Tests processed monthly"],
-            ["340+", "Partner laboratories"],
-            ["99.8%", "Result accuracy rate"],
-            ["< 4h", "Average turnaround time"],
-          ].map(([value, caption]) => (
-            <div
-              key={caption}
-              className="rounded-[18px] border border-white/15 bg-white/10 p-5 backdrop-blur-sm"
-            >
-              <p className="text-[29px] font-semibold tracking-tight text-white">
-                {value}
-              </p>
-              <p className="mt-2 text-[13px] leading-5 text-[#c8e6f1]">
-                {caption}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-      <p className="relative text-xs text-[#afcedc]">
-        OHealth+ Laboratory Workspace · Preview
-      </p>
+      {hint ? <p className="text-xs text-slate-500">{hint}</p> : null}
     </div>
   );
 }
 
-export default function LaboratoryAuthentication() {
-  const [mode, setMode] = useState<Mode>("sign-in");
-  const [step, setStep] = useState(0);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [resetEmail, setResetEmail] = useState("");
-  const [notice, setNotice] = useState("");
-  const [lab, setLab] = useState({
+function StepProgress({ activeStep }: { activeStep: number }) {
+  return (
+    <ol
+      className="mb-7 grid grid-cols-5 gap-1.5"
+      aria-label="Registration progress"
+    >
+      {WIZARD_STEPS.map((label, index) => {
+        const stepNumber = index + 1;
+        const isComplete = stepNumber < activeStep;
+        const isActive = stepNumber === activeStep;
+
+        return (
+          <li className="min-w-0 text-center" key={label}>
+            <div
+              className={
+                "mx-auto mb-2 flex size-7 items-center justify-center rounded-full text-xs font-semibold " +
+                (isComplete || isActive
+                  ? "bg-blue-600 text-white"
+                  : "bg-slate-100 text-slate-500")
+              }
+              aria-current={isActive ? "step" : undefined}
+            >
+              {isComplete ? <CheckCircle2 className="size-4" /> : stepNumber}
+            </div>
+            <span
+              className={
+                "block text-[10px] leading-tight sm:text-xs " +
+                (isActive ? "font-semibold text-blue-700" : "text-slate-500")
+              }
+            >
+              {label}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+export default function LaboratoryAuthPage() {
+  const [screen, setScreen] = useState<AuthScreen>("sign-in");
+  const [registrationStep, setRegistrationStep] = useState<RegistrationStep>(1);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [adminError, setAdminError] = useState("");
+  const [documentError, setDocumentError] = useState("");
+  const [laboratory, setLaboratory] = useState<LaboratoryDetails>({
     name: "",
-    registration: "",
-    license: "",
+    registrationNumber: "",
+    licenseNumber: "",
     address: "",
-    region: "",
+    state: "",
     phone: "",
-    contactEmail: "",
-  });
-  const [admin, setAdmin] = useState({
-    name: "",
     email: "",
+  });
+  const [administrator, setAdministrator] = useState<AdministratorDetails>({
+    fullName: "",
+    email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
   });
-  const [files, setFiles] = useState<Partial<Record<DocumentField, File>>>({});
-  const [accepted, setAccepted] = useState(false);
+  const [showAdminPassword, setShowAdminPassword] = useState(false);
+  const [documents, setDocuments] = useState<Record<DocumentKey, File | null>>({
+    license: null,
+    registration: null,
+    accreditation: null,
+  });
+  const [selectedModules, setSelectedModules] = useState([
+    "appointments",
+    "patients",
+    "laboratory",
+    "prescriptions",
+  ]);
 
-  const changeLab = (field: LabField, value: string) =>
-    setLab((current) => ({ ...current, [field]: value }));
-  const changeAdmin = (field: AdminField, value: string) =>
-    setAdmin((current) => ({ ...current, [field]: value }));
-  const changeMode = (next: Mode) => {
-    setMode(next);
-    setNotice("");
+  const updateLaboratory = (key: keyof LaboratoryDetails, value: string) => {
+    setLaboratory((current) => ({ ...current, [key]: value }));
   };
-  const submitLogin = (event: FormEvent<HTMLFormElement>) => {
+
+  const updateAdministrator = (
+    key: keyof AdministratorDetails,
+    value: string
+  ) => {
+    setAdministrator((current) => ({ ...current, [key]: value }));
+  };
+
+  const openScreen = (nextScreen: AuthScreen) => {
+    setFeedback("");
+    setScreen(nextScreen);
+  };
+
+  const startRegistration = () => {
+    setRegistrationStep(1);
+    setAdminError("");
+    setDocumentError("");
+    openScreen("register");
+  };
+
+  const handleSignIn = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!email.trim() || !password) return;
-    setNotice(
-      "Lab sign-in is a visual preview only. No credentials were sent or verified. Authentication will be connected before launch."
+    // This preview must not imply credentials were verified or create a session.
+    setFeedback("Laboratory sign-in is a UI preview only. No account was authenticated and no session was created.");
+    setLoginPassword("");
+  };
+
+  const handlePasswordReset = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFeedback(
+      "Password-reset is a preview state only. No reset email was sent."
     );
-    setPassword("");
   };
-  const submitReset = (event: FormEvent<HTMLFormElement>) => {
+
+  const handleLaboratoryDetails = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setNotice(
-      "Password recovery is not connected yet. No reset email was sent."
-    );
+    setFeedback("");
+    setRegistrationStep(2);
   };
-  const submitLabDetails = (event: FormEvent<HTMLFormElement>) => {
+
+  const handleAdministratorDetails = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setNotice("");
-    setStep(1);
-  };
-  const submitAdmin = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (admin.password !== admin.confirmPassword) {
-      setNotice("The administrator passwords do not match.");
+
+    // The preview can advance with empty fields. Preserve password rules when
+    // the visitor chooses to try them out.
+    if (administrator.password && administrator.password.length < 8) {
+      setAdminError("Use at least 8 characters for the password.");
       return;
     }
-    setNotice("");
-    setStep(2);
+    if (
+      (administrator.password || administrator.confirmPassword) &&
+      administrator.password !== administrator.confirmPassword
+    ) {
+      setAdminError("The passwords do not match. Please try again.");
+      return;
+    }
+
+    setAdminError("");
+    setRegistrationStep(3);
   };
-  const handleFile = (
-    id: DocumentField,
+
+  const handleDocumentChange = (
+    key: DocumentKey,
     event: ChangeEvent<HTMLInputElement>
   ) => {
-    const selected = event.target.files?.[0];
-    if (!selected) return;
-    const allowed = ["application/pdf", "image/jpeg", "image/png"];
-    const validExtension = /\.(pdf|jpe?g|png)$/i.test(selected.name);
-    if (
-      selected.size > 10 * 1024 * 1024 ||
-      (!allowed.includes(selected.type) && !validExtension)
-    ) {
-      event.target.value = "";
-      setNotice("Choose a PDF, JPG or PNG file no larger than 10 MB.");
+    const file = event.currentTarget.files?.[0] ?? null;
+    if (file && file.size > 10 * 1024 * 1024) {
+      setDocumentError("Each document must be 10 MB or smaller.");
+      event.currentTarget.value = "";
       return;
     }
-    setFiles((current) => ({ ...current, [id]: selected }));
-    setNotice("");
-  };
-  const submitDocuments = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!documents.every(({ id }) => Boolean(files[id]))) {
-      setNotice("Select all three documents to continue with the preview.");
-      return;
-    }
-    setNotice("");
-    setStep(3);
-  };
-  const register = () => {
-    setStep(0);
-    setNotice("");
-    changeMode("register");
+
+    setDocumentError("");
+    setDocuments((current) => ({ ...current, [key]: file }));
   };
 
-  const isRegister = mode === "register";
-  const title =
-    mode === "sign-in"
-      ? "Sign in"
-      : mode === "forgot-password"
-        ? "Reset your password"
-        : step === 0
-          ? "Laboratory Details"
-          : step === 1
-            ? "Administrator Account"
-            : step === 2
-              ? "Verification Documents"
-              : step === 3
-                ? "Identity Verification"
-                : "Laboratory Setup";
-  const description =
-    mode === "sign-in"
-      ? "Sign in to your laboratory dashboard"
-      : mode === "forgot-password"
-        ? "Enter your email address to request a password reset."
-        : step === 0
-          ? "Tell us about your laboratory so we can set up your workspace."
-          : step === 1
-            ? "This account will have full administrative access to your laboratory."
-            : step === 2
-              ? "Upload clear, legible copies of the following documents."
-              : step === 3
-                ? "Review the sample verification process before going live."
-                : "Your laboratory workspace preview is ready.";
+  const handleDocumentSubmission = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // File selection is optional while previewing the journey.
+    setDocumentError("");
+    openScreen("review");
+  };
+
+  const activeStep =
+    screen === "review" || screen === "approved"
+      ? 4
+      : screen === "setup-complete" || screen === "ready"
+        ? 5
+        : registrationStep;
 
   return (
-    <div className="min-h-screen bg-white text-[#1f2a37] lg:flex">
-      <LabBrandPanel />
-      <main className="flex min-h-screen w-full flex-1 flex-col items-center justify-center px-6 py-12 sm:px-10 lg:min-h-[1024px] lg:px-12">
-        <div className="w-full max-w-[576px]">
-          <div className="mb-8 flex items-center justify-between lg:hidden">
-            <Logo />
-            <span className="text-xs font-semibold text-[#62748e]">
-              Laboratory
+    <div className="min-h-screen bg-[#fcfcfc] lg:grid lg:grid-cols-[minmax(350px,0.99fr)_minmax(500px,1.01fr)]">
+      <aside
+        className="relative isolate overflow-hidden bg-[#001338] px-6 py-7 text-white sm:px-10 sm:py-10 lg:flex lg:min-h-screen lg:flex-col lg:px-16 lg:py-14"
+        style={{
+          backgroundImage:
+            "linear-gradient(-34.22046568354368deg, rgb(0, 53, 158) 4.8884%, rgb(0, 19, 56) 106.65%)",
+        }}
+      >
+        <div
+          className="pointer-events-none absolute inset-0 opacity-10"
+          style={{
+            backgroundImage:
+              "linear-gradient(180deg, rgba(255,255,255,1) 0.15%, transparent 0.15%), linear-gradient(90deg, rgba(255,255,255,1) 0.14%, transparent 0.14%)",
+            backgroundSize: "28px 28px",
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative z-10 flex items-center lg:absolute lg:top-14 lg:left-16">
+          <Logo size="auth" variant="light" />
+        </div>
+
+        <div className="relative z-10 max-w-xl py-9 lg:absolute lg:top-[270px] lg:left-16 lg:w-[586px] lg:py-0">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-medium text-blue-100">
+            <Activity className="size-3.5" />
+            Laboratory workspace
+          </div>
+          <h1 className="max-w-lg font-sans text-4xl leading-[1.25] font-bold tracking-tight">
+            <span className="block text-white">Your laboratory,</span>
+            <span className="block text-[#51a2ff]">connected.</span>
+          </h1>
+          <p className="mt-4 max-w-[384px] text-base leading-[26px] text-[#90a1b9]">
+            Manage diagnostic operations, track test results, and connect with
+            healthcare professionals on OHealth+.
+          </p>
+
+          <div className="mt-10 grid grid-cols-2 gap-4">
+            {FEATURES.map((feature) => (
+              <div
+                className="min-h-[72px] rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 backdrop-blur-sm"
+                key={feature.value}
+              >
+                <p className="text-[18px] leading-7 font-semibold text-white">
+                  {feature.value}
+                </p>
+                <p className="mt-1 text-xs leading-4 text-[#90a1b9]">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </aside>
+
+      <main className="flex min-h-[70vh] items-center justify-center px-5 py-10 sm:px-8 lg:min-h-screen lg:px-12 xl:px-16">
+        <div className="w-full max-w-xl">
+          <div className="mb-8 flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold tracking-[0.18em] text-blue-700 uppercase">
+                OHealth+ · Laboratory portal
+              </p>
+              <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
+                {screen === "sign-in"
+                  ? "Sign in"
+                  : screen === "forgot-password"
+                    ? "Reset your password"
+                    : screen === "register"
+                      ? "Register your laboratory"
+                      : screen === "review"
+                        ? "Application submitted"
+                        : screen === "approved"
+                          ? "Verified & approved"
+                          : screen === "ready"
+                            ? "Preview complete"
+                            : "Set up your workspace"}
+              </h2>
+              <p className="mt-2 max-w-lg text-sm leading-6 text-slate-500">
+                {screen === "sign-in"
+                  ? "Sign in to your laboratory dashboard"
+                  : screen === "forgot-password"
+                    ? "Enter your laboratory administrator email address."
+                    : screen === "register"
+                      ? "Tell us about your facility so we can prepare your workspace."
+                      : screen === "review"
+                        ? "Your registration journey has reached the verification stage."
+                        : screen === "approved"
+                          ? "Preview the next step after a laboratory has been verified."
+                          : screen === "ready"
+                            ? "You have reached the end of the authentication and onboarding preview."
+                            : "Choose the laboratory workflows your team will use first."}
+              </p>
+            </div>
+            <span className="shrink-0 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-800">
+              Preview
             </span>
           </div>
-          {isRegister && (
-            <div
-              className="mb-9"
-              aria-label={`Registration step ${step + 1} of ${steps.length}`}
-            >
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={() =>
-                    step === 0
-                      ? changeMode("sign-in")
-                      : setStep((current) => current - 1)
-                  }
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#155eef] hover:underline"
-                >
-                  <ArrowLeft className="size-4" />
-                  {step === 0 ? "Back to sign in" : "Back"}
-                </button>
-                <span className="text-[13px] font-medium text-[#62748e]">
-                  Step {step + 1} of {steps.length}
-                </span>
-              </div>
-              <div className="grid grid-cols-5 gap-2">
-                {steps.map((label, index) => (
-                  <div key={label} className="min-w-0">
-                    <div
-                      className={`flex h-2 rounded-full ${index <= step ? "bg-[#2970ff]" : "bg-[#e2e8f0]"}`}
-                    />
-                    <span
-                      className={`mt-2 block truncate text-[10px] sm:text-[11px] ${index === step ? "font-semibold text-[#155eef]" : "text-[#90a1b9]"}`}
-                    >
-                      {label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          <div className="mb-8">
-            <h1 className="text-[32px] leading-[1.2] font-bold tracking-[-0.7px] text-[#101828]">
-              {title}
-            </h1>
-            <p className="mt-3 text-[16px] leading-7 text-[#667085]">
-              {description}
-            </p>
-          </div>
-          {notice && (
-            <div
-              role="status"
-              className="mb-6 rounded-xl border border-[#bfdbfe] bg-[#eff6ff] px-4 py-3 text-sm leading-6 text-[#155eef]"
-            >
-              {notice}
-            </div>
-          )}
-          {mode === "sign-in" && (
-            <>
-              <form onSubmit={submitLogin} className="space-y-6">
-                <FormField
-                  label="Email address"
-                  type="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={setEmail}
-                  placeholder="chiamaka.eze@ohealthplus.ng"
-                />
-                <div>
-                  <PasswordField
-                    label="Password"
-                    placeholder="Your password"
-                    value={password}
-                    onChange={setPassword}
-                    autoComplete="current-password"
-                  />
+
+          {screen === "sign-in" ? (
+            <form className="space-y-5" onSubmit={handleSignIn}>
+              <Field
+                label="Email address"
+                value={loginEmail}
+                onChange={setLoginEmail}
+                type="email"
+                autoComplete="email"
+                placeholder="admin@laboratory.ng"
+              />
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between gap-3">
+                  <label
+                    className="text-sm font-medium text-slate-700"
+                    htmlFor="laboratory-login-password"
+                  >
+                    Password <span className="text-rose-500">*</span>
+                  </label>
                   <button
+                    className="text-xs font-semibold text-blue-700 hover:text-blue-800"
                     type="button"
-                    className="mt-3 block w-full text-right text-sm font-semibold text-[#155eef] hover:underline"
-                    onClick={() => changeMode("forgot-password")}
+                    onClick={() => openScreen("forgot-password")}
                   >
                     Forgot password?
                   </button>
                 </div>
-                <button type="submit" className={primaryButton}>
-                  Sign In <ArrowRight className="size-5" />
-                </button>
-              </form>
-              <p className="mt-8 text-center text-[15px] text-[#667085]">
-                New to OHealth+?{" "}
-                <button
-                  type="button"
-                  onClick={register}
-                  className="font-semibold text-[#155eef] hover:underline"
+                <div className="relative">
+                  <input
+                    id="laboratory-login-password"
+                    className={inputClassName + " pr-12"}
+                    type={showLoginPassword ? "text" : "password"}
+                    value={loginPassword}
+                    autoComplete="current-password"
+                    placeholder="Enter your password"
+                    onChange={(event) =>
+                      setLoginPassword(event.currentTarget.value)
+                    }
+                  />
+                  <button
+                    className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-slate-400 hover:text-slate-700"
+                    type="button"
+                    aria-label={
+                      showLoginPassword ? "Hide password" : "Show password"
+                    }
+                    onClick={() => setShowLoginPassword((shown) => !shown)}
+                  >
+                    {showLoginPassword ? (
+                      <EyeOff className="size-4" />
+                    ) : (
+                      <Eye className="size-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {feedback ? (
+                <p
+                  className="rounded-lg border border-blue-100 bg-blue-50 px-3.5 py-3 text-sm leading-5 text-blue-800"
+                  role="status"
                 >
-                  Register your laboratory
-                </button>
-              </p>
-              <p className="mt-7 text-center text-xs leading-6 text-[#98a2b3]">
-                By signing in you agree to the OHealth+ Terms of Service and
-                Privacy Policy.
-              </p>
-              <p className="mt-4 text-center text-xs text-[#667085]">
-                Preview only — this page does not authenticate users.
-              </p>
-            </>
-          )}
-          {mode === "forgot-password" && (
-            <form onSubmit={submitReset} className="space-y-6">
-              <FormField
+                  {feedback}
+                </p>
+              ) : null}
+
+              <button className={primaryButtonClassName} type="submit">
+                Sign in <ArrowRight className="size-4" />
+              </button>
+              <div className="flex items-center gap-3 py-1">
+                <span className="h-px flex-1 bg-slate-200" />
+                <span className="text-xs text-slate-400">New to OHealth+?</span>
+                <span className="h-px flex-1 bg-slate-200" />
+              </div>
+              <button
+                className={secondaryButtonClassName + " w-full"}
+                type="button"
+                onClick={startRegistration}
+              >
+                Register your laboratory
+              </button>
+            </form>
+          ) : null}
+
+          {screen === "forgot-password" ? (
+            <form className="space-y-5" onSubmit={handlePasswordReset}>
+              <Field
                 label="Email address"
-                placeholder="you@laboratory.ng"
+                value={forgotEmail}
+                onChange={setForgotEmail}
                 type="email"
                 autoComplete="email"
-                value={resetEmail}
-                onChange={setResetEmail}
+                placeholder="admin@laboratory.ng"
               />
-              <button type="submit" className={primaryButton}>
-                Request reset link <ArrowRight className="size-5" />
+              {feedback ? (
+                <p
+                  className="rounded-lg border border-blue-100 bg-blue-50 px-3.5 py-3 text-sm leading-5 text-blue-800"
+                  role="status"
+                >
+                  {feedback}
+                </p>
+              ) : null}
+              <button className={primaryButtonClassName} type="submit">
+                Preview reset request <ArrowRight className="size-4" />
               </button>
               <button
+                className={secondaryButtonClassName + " w-full"}
                 type="button"
-                onClick={() => changeMode("sign-in")}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[#155eef] hover:underline"
+                onClick={() => openScreen("sign-in")}
               >
-                <ArrowLeft className="size-4" />
-                Back to sign in
+                <ChevronLeft className="size-4" /> Back to sign in
               </button>
             </form>
-          )}
-          {isRegister && step === 0 && (
-            <form onSubmit={submitLabDetails} className="space-y-5">
-              <FormField
-                label="Laboratory Name"
-                placeholder="e.g. MedCore Diagnostics"
-                value={lab.name}
-                onChange={(value) => changeLab("name", value)}
-              />
-              <div className="grid gap-5 sm:grid-cols-2">
-                <FormField
-                  label="Registration Number"
-                  placeholder="RC-000000"
-                  value={lab.registration}
-                  onChange={(value) => changeLab("registration", value)}
-                />
-                <FormField
-                  label="Laboratory License Number"
-                  placeholder="LAB-LG-0000-2025"
-                  value={lab.license}
-                  onChange={(value) => changeLab("license", value)}
-                />
-              </div>
-              <FormField
-                label="Laboratory Address"
-                placeholder="Street address, city"
-                value={lab.address}
-                onChange={(value) => changeLab("address", value)}
-              />
-              <label className="block text-[14px] font-medium text-[#344054]">
-                State / Region <span className="text-[#f04438]">*</span>
-                <select
-                  required
-                  value={lab.region}
-                  onChange={(event) => changeLab("region", event.target.value)}
-                  className={fieldClass}
+          ) : null}
+
+          {screen === "register" ? (
+            <>
+              <p className="mb-4 rounded-lg border border-blue-100 bg-blue-50 px-3.5 py-2.5 text-xs leading-5 text-blue-800">
+                Preview mode: leave fields blank to move through the steps.
+                Entered email addresses and selected file sizes are still
+                checked.
+              </p>
+              <StepProgress activeStep={activeStep} />
+
+              {registrationStep === 1 ? (
+                <form className="space-y-4" onSubmit={handleLaboratoryDetails}>
+                  <div className="mb-1">
+                    <h3 className="font-semibold text-slate-900">
+                      Laboratory details
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-500">
+                      Tell us about your facility.
+                    </p>
+                  </div>
+                  <Field
+                    label="Laboratory name"
+                    value={laboratory.name}
+                    onChange={(value) => updateLaboratory("name", value)}
+                    placeholder="e.g. MedCore Diagnostics"
+                    autoComplete="organization"
+                  />
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Field
+                      label="Registration number"
+                      value={laboratory.registrationNumber}
+                      onChange={(value) =>
+                        updateLaboratory("registrationNumber", value)
+                      }
+                      placeholder="e.g. RC-000000"
+                    />
+                    <Field
+                      label="Laboratory licence number"
+                      value={laboratory.licenseNumber}
+                      onChange={(value) =>
+                        updateLaboratory("licenseNumber", value)
+                      }
+                      placeholder="e.g. LAB-LG-0000-2025"
+                    />
+                  </div>
+                  <Field
+                    label="Laboratory address"
+                    value={laboratory.address}
+                    onChange={(value) => updateLaboratory("address", value)}
+                    placeholder="Street address, city"
+                    autoComplete="street-address"
+                  />
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Field
+                      label="State / region"
+                      value={laboratory.state}
+                      onChange={(value) => updateLaboratory("state", value)}
+                      placeholder="e.g. Lagos"
+                      autoComplete="address-level1"
+                    />
+                    <Field
+                      label="Phone number"
+                      value={laboratory.phone}
+                      onChange={(value) => updateLaboratory("phone", value)}
+                      type="tel"
+                      placeholder="+234 800 000 0000"
+                      autoComplete="tel"
+                    />
+                  </div>
+                  <Field
+                    label="Contact email"
+                    value={laboratory.email}
+                    onChange={(value) => updateLaboratory("email", value)}
+                    type="email"
+                    placeholder="info@laboratory.ng"
+                    autoComplete="email"
+                  />
+                  <button className={primaryButtonClassName} type="submit">
+                    Continue <ChevronRight className="size-4" />
+                  </button>
+                </form>
+              ) : null}
+
+              {registrationStep === 2 ? (
+                <form
+                  className="space-y-4"
+                  onSubmit={handleAdministratorDetails}
                 >
-                  <option value="">Select state…</option>
-                  {regions.map((region) => (
-                    <option key={region} value={region}>
-                      {region}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <div className="grid gap-5 sm:grid-cols-2">
-                <FormField
-                  label="Phone Number"
-                  placeholder="+234 800 000 0000"
-                  type="tel"
-                  value={lab.phone}
-                  onChange={(value) => changeLab("phone", value)}
-                />
-                <FormField
-                  label="Contact Email"
-                  placeholder="info@laboratory.ng"
-                  type="email"
-                  value={lab.contactEmail}
-                  onChange={(value) => changeLab("contactEmail", value)}
-                />
-              </div>
-              <button className={primaryButton} type="submit">
-                Continue <ArrowRight className="size-5" />
-              </button>
-            </form>
-          )}
-          {isRegister && step === 1 && (
-            <form onSubmit={submitAdmin} className="space-y-5">
-              <FormField
-                label="Full Name"
-                placeholder="e.g. Dr. Chiamaka Eze"
-                value={admin.name}
-                onChange={(value) => changeAdmin("name", value)}
-                autoComplete="name"
-              />
-              <FormField
-                label="Email Address"
-                type="email"
-                placeholder="admin@laboratory.ng"
-                value={admin.email}
-                onChange={(value) => changeAdmin("email", value)}
-                autoComplete="email"
-              />
-              <PasswordField
-                label="Password"
-                minLength={8}
-                placeholder="Minimum 8 characters"
-                value={admin.password}
-                onChange={(value) => changeAdmin("password", value)}
-                autoComplete="new-password"
-              />
-              <PasswordField
-                label="Confirm Password"
-                minLength={8}
-                placeholder="Repeat your password"
-                value={admin.confirmPassword}
-                onChange={(value) => changeAdmin("confirmPassword", value)}
-                autoComplete="new-password"
-              />
-              <button className={primaryButton} type="submit">
-                Continue <ArrowRight className="size-5" />
-              </button>
-            </form>
-          )}
-          {isRegister && step === 2 && (
-            <form onSubmit={submitDocuments} className="space-y-4">
-              {documents.map(({ id, title: documentTitle, issuer }) => {
-                const file = files[id];
-                return (
-                  <label
-                    key={id}
-                    className="block rounded-2xl border border-[#e2e8f0] bg-[#fbfcfe] px-5 py-4"
-                  >
-                    <span className="flex items-center gap-2 text-[16px] font-semibold text-[#344054]">
-                      <FileText className="size-5 text-[#155eef]" />
-                      {documentTitle}
-                    </span>
-                    <span className="mt-1 block text-[13px] text-[#667085]">
-                      {issuer}
-                    </span>
-                    <span
-                      className={`mt-4 flex min-h-20 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed p-3 text-center ${file ? "border-[#a6f4c5] bg-[#ecfdf3]" : "border-[#cbd5e1] bg-white"}`}
+                  <div className="mb-1">
+                    <h3 className="font-semibold text-slate-900">
+                      Administrator account
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-500">
+                      This person will manage the laboratory workspace.
+                    </p>
+                  </div>
+                  <Field
+                    label="Full name"
+                    value={administrator.fullName}
+                    onChange={(value) => updateAdministrator("fullName", value)}
+                    placeholder="e.g. Dr. Chiamaka Eze"
+                    autoComplete="name"
+                  />
+                  <Field
+                    label="Administrator email"
+                    value={administrator.email}
+                    onChange={(value) => updateAdministrator("email", value)}
+                    type="email"
+                    placeholder="admin@laboratory.ng"
+                    autoComplete="email"
+                  />
+                  <Field
+                    label="Phone number"
+                    value={administrator.phone}
+                    onChange={(value) => updateAdministrator("phone", value)}
+                    type="tel"
+                    placeholder="+234 800 000 0000"
+                    autoComplete="tel"
+                  />
+                  <Field
+                    label="Create password"
+                    value={administrator.password}
+                    onChange={(value) => updateAdministrator("password", value)}
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="At least 8 characters"
+                    hint="Use at least 8 characters."
+                  />
+                  <div className="space-y-1.5">
+                    <label
+                      className="block text-sm font-medium text-slate-700"
+                      htmlFor="laboratory-confirm-password"
                     >
-                      {file ? (
-                        <>
-                          <FileCheck2 className="size-6 text-[#039855]" />
-                          <span className="mt-1 max-w-full text-sm font-medium break-all text-[#067647]">
-                            {file.name}
-                          </span>
-                          <span className="text-xs text-[#667085]">
-                            {Math.round(file.size / 1024)} KB · Choose to
-                            replace
-                          </span>
-                        </>
+                      Confirm password <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        id="laboratory-confirm-password"
+                        className={inputClassName}
+                        type={showAdminPassword ? "text" : "password"}
+                        value={administrator.confirmPassword}
+                        autoComplete="new-password"
+                        placeholder="Re-enter password"
+                        onChange={(event) =>
+                          updateAdministrator(
+                            "confirmPassword",
+                            event.currentTarget.value
+                          )
+                        }
+                      />
+                    </div>
+                    <button
+                      className="text-xs font-medium text-blue-700 hover:text-blue-800"
+                      type="button"
+                      onClick={() => setShowAdminPassword((shown) => !shown)}
+                    >
+                      {showAdminPassword ? "Hide password" : "Show password"}
+                    </button>
+                  </div>
+                  {adminError ? (
+                    <p className="text-sm text-rose-600" role="alert">
+                      {adminError}
+                    </p>
+                  ) : null}
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <button
+                      className={secondaryButtonClassName}
+                      type="button"
+                      onClick={() => {
+                        setAdminError("");
+                        setRegistrationStep(1);
+                      }}
+                    >
+                      <ChevronLeft className="size-4" /> Back
+                    </button>
+                    <button className={primaryButtonClassName} type="submit">
+                      Continue <ChevronRight className="size-4" />
+                    </button>
+                  </div>
+                </form>
+              ) : null}
+
+              {registrationStep === 3 ? (
+                <form className="space-y-4" onSubmit={handleDocumentSubmission}>
+                  <div className="mb-1">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="font-semibold text-slate-900">
+                        Verification documents
+                      </h3>
+                      <span className="text-xs font-medium text-slate-500">
+                        {Object.values(documents).filter(Boolean).length} / 3
+                        selected
+                      </span>
+                    </div>
+                    <p className="mt-1 text-sm text-slate-500">
+                      Upload clear, legible copies of your laboratory documents.
+                    </p>
+                  </div>
+
+                  {DOCUMENTS.map((document) => {
+                    const file = documents[document.key];
+                    const inputId = "laboratory-document-" + document.key;
+
+                    return (
+                      <div
+                        className="rounded-xl border border-slate-200 bg-white p-4"
+                        key={document.key}
+                      >
+                        <div className="flex gap-3">
+                          <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
+                            {file ? (
+                              <CheckCircle2 className="size-5" />
+                            ) : (
+                              <FileText className="size-5" />
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <label
+                              className="block cursor-pointer text-sm font-semibold text-slate-800"
+                              htmlFor={inputId}
+                            >
+                              {document.label}
+                            </label>
+                            <p className="mt-1 text-xs leading-5 text-slate-500">
+                              {file ? file.name : document.description}
+                            </p>
+                            <p className="mt-1 text-[11px] text-slate-400">
+                              PDF, JPG or PNG · Maximum 10 MB
+                            </p>
+                          </div>
+                          <label
+                            className="shrink-0 cursor-pointer self-center rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                            htmlFor={inputId}
+                          >
+                            {file ? "Replace" : "Browse"}
+                          </label>
+                        </div>
+                        <input
+                          id={inputId}
+                          className="sr-only"
+                          type="file"
+                          accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                          onChange={(event) =>
+                            handleDocumentChange(document.key, event)
+                          }
+                        />
+                      </div>
+                    );
+                  })}
+
+                  {documentError ? (
+                    <p className="text-sm text-rose-600" role="alert">
+                      {documentError}
+                    </p>
+                  ) : null}
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <button
+                      className={secondaryButtonClassName}
+                      type="button"
+                      onClick={() => setRegistrationStep(2)}
+                    >
+                      <ChevronLeft className="size-4" /> Back
+                    </button>
+                    <button className={primaryButtonClassName} type="submit">
+                      Submit for review <ArrowRight className="size-4" />
+                    </button>
+                  </div>
+                  <p className="text-xs leading-5 text-slate-500">
+                    This preview does not upload documents or submit a real
+                    registration application.
+                  </p>
+                </form>
+              ) : null}
+            </>
+          ) : null}
+
+          {screen === "review" ? (
+            <div className="space-y-6">
+              <div className="rounded-2xl border border-blue-100 bg-blue-50/70 p-5">
+                <div className="flex size-12 items-center justify-center rounded-full bg-blue-100 text-blue-700">
+                  <ShieldCheck className="size-6" />
+                </div>
+                <h3 className="mt-4 text-lg font-semibold text-slate-900">
+                  Documents submitted
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  The next step is for OHealth to review the laboratory details
+                  and supporting documents. In a live service, status updates
+                  would be sent to the administrator email.
+                </p>
+              </div>
+              <StepProgress activeStep={activeStep} />
+              <ol className="space-y-4">
+                {[
+                  ["Documents received", "Registration details collected"],
+                  ["Under review", "Compliance team review"],
+                  ["Approved", "Verification complete"],
+                ].map((item, index) => (
+                  <li className="flex items-start gap-3" key={item[0]}>
+                    <span
+                      className={
+                        "mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full " +
+                        (index === 0
+                          ? "bg-emerald-100 text-emerald-700"
+                          : index === 1
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-slate-100 text-slate-400")
+                      }
+                    >
+                      {index === 0 ? (
+                        <CheckCircle2 className="size-4" />
+                      ) : index === 1 ? (
+                        <Activity className="size-4" />
                       ) : (
-                        <>
-                          <UploadCloud className="size-6 text-[#155eef]" />
-                          <span className="mt-1 text-sm font-medium text-[#344054]">
-                            Click to select a file
-                          </span>
-                          <span className="mt-1 text-xs text-[#98a2b3]">
-                            PDF, JPG, PNG — max 10 MB
-                          </span>
-                        </>
+                        <ShieldCheck className="size-4" />
                       )}
                     </span>
-                    <input
-                      type="file"
-                      accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
-                      className="sr-only"
-                      onChange={(event) => handleFile(id, event)}
-                    />
-                  </label>
-                );
-              })}
-              <div className="flex items-center justify-between text-sm text-[#667085]">
-                <span>
-                  {documents.filter(({ id }) => Boolean(files[id])).length} / 3
-                  selected
-                </span>
-                <span>No file is uploaded in this preview.</span>
-              </div>
-              <button type="submit" className={primaryButton}>
-                Submit for Review <ArrowRight className="size-5" />
-              </button>
-              <p className="text-center text-xs leading-5 text-[#667085]">
-                Preview only: selecting documents does not upload or submit them
-                to OHealth+.
-              </p>
-            </form>
-          )}
-          {isRegister && step === 3 && (
-            <div className="space-y-6">
-              <div className="rounded-2xl border border-[#d1fadf] bg-[#ecfdf3] p-6">
-                <ShieldCheck className="mb-4 size-9 text-[#039855]" />
-                <h2 className="text-[21px] font-semibold text-[#101828]">
-                  Documents Selected
-                </h2>
-                <p className="mt-2 text-[15px] leading-7 text-[#475467]">
-                  Your preview registration details are ready for review. In the
-                  live experience, OHealth+ will verify submitted laboratory
-                  credentials.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-[#e2e8f0] p-5">
-                {[
-                  ["Submitted", "Documents received"],
-                  ["Under Review", "Team reviewing"],
-                  ["Approved", "Verification complete"],
-                ].map(([label, caption], index) => (
-                  <div key={label} className="flex gap-4 py-3">
-                    <span
-                      className={`flex size-9 shrink-0 items-center justify-center rounded-full ${index === 0 ? "bg-[#eff4ff] text-[#155eef]" : "bg-[#f2f4f7] text-[#98a2b3]"}`}
-                    >
-                      {index === 0 ? <Check className="size-5" /> : index + 1}
-                    </span>
                     <div>
-                      <p className="font-semibold text-[#344054]">{label}</p>
-                      <p className="mt-1 text-sm text-[#667085]">{caption}</p>
+                      <p className="text-sm font-semibold text-slate-800">
+                        {item[0]}
+                      </p>
+                      <p className="mt-1 text-xs text-slate-500">{item[1]}</p>
                     </div>
-                  </div>
+                    {index === 1 ? (
+                      <span className="ml-auto rounded-full bg-blue-100 px-2 py-1 text-[10px] font-semibold text-blue-700">
+                        Current state
+                      </span>
+                    ) : null}
+                  </li>
                 ))}
+              </ol>
+              <div className="rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-3 text-xs leading-5 text-amber-900">
+                Demo state only: no registration was saved and no compliance
+                review has taken place.
               </div>
-              <p className="text-[14px] leading-6 text-[#667085]">
-                No documents or application have been submitted. No verification
-                or approval has occurred, and no email notification will be
-                sent.
-              </p>
               <button
+                className={primaryButtonClassName}
                 type="button"
-                onClick={() => setStep(4)}
-                className={primaryButton}
+                onClick={() => openScreen("approved")}
               >
-                Continue to Setup <ArrowRight className="size-5" />
+                Preview approved state <ArrowRight className="size-4" />
+              </button>
+              <button
+                className="w-full py-2 text-sm font-semibold text-slate-600 hover:text-slate-900"
+                type="button"
+                onClick={() => openScreen("sign-in")}
+              >
+                Return to sign in
               </button>
             </div>
-          )}
-          {isRegister && step === 4 && (
-            <div className="space-y-6">
-              <div className="rounded-2xl border border-[#e2e8f0] bg-[#f8fafc] p-7 text-center">
-                <ClipboardCheck className="mx-auto mb-4 size-11 text-[#155eef]" />
-                <h2 className="text-[22px] font-semibold text-[#101828]">
-                  Registration Preview Complete
-                </h2>
-                <p className="mt-3 text-[15px] leading-7 text-[#667085]">
-                  You have previewed the registration steps for{" "}
-                  {lab.name || "your laboratory"}. Actual setup can begin after
-                  the OHealth+ backend and verification workflow are connected.
+          ) : null}
+
+          {screen === "approved" ? (
+            <div className="space-y-5">
+              <StepProgress activeStep={activeStep} />
+              <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-6 text-center">
+                <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                  <CheckCircle2 className="size-7" />
+                </div>
+                <h3 className="mt-4 text-lg font-semibold text-slate-900">
+                  Laboratory verified
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  This is a preview of the approved state. A real approval would
+                  be granted only after the OHealth compliance process.
                 </p>
               </div>
-              <label className="flex items-start gap-3 text-[14px] leading-6 text-[#475467]">
-                <input
-                  type="checkbox"
-                  checked={accepted}
-                  onChange={(event) => setAccepted(event.target.checked)}
-                  className="mt-1 size-4 accent-[#155eef]"
-                />
-                I understand this is a UI preview and I have not created or
-                verified a real laboratory account.
-              </label>
               <button
+                className={primaryButtonClassName}
                 type="button"
-                disabled={!accepted}
-                onClick={() => {
-                  setStep(0);
-                  changeMode("sign-in");
-                  setNotice(
-                    "Lab onboarding preview completed. Sign-in is not connected to a backend yet."
-                  );
-                }}
-                className={primaryButton}
+                onClick={() => openScreen("setup-complete")}
               >
-                Return to Sign In <ArrowRight className="size-5" />
+                Continue to setup <ArrowRight className="size-4" />
+              </button>
+              <button
+                className="w-full py-2 text-sm font-semibold text-slate-600 hover:text-slate-900"
+                type="button"
+                onClick={() => openScreen("sign-in")}
+              >
+                Return to sign in
               </button>
             </div>
-          )}
-          {isRegister && (
-            <p className="mt-6 text-center text-xs leading-6 text-[#98a2b3]">
-              Laboratory onboarding is a non-persistent preview. No backend
-              changes, file uploads, or emails occur.
+          ) : null}
+
+          {screen === "setup-complete" ? (
+            <div className="space-y-5">
+              <StepProgress activeStep={5} />
+              <div>
+                <h3 className="font-semibold text-slate-900">
+                  Choose your first workflows
+                </h3>
+                <p className="mt-1 text-sm leading-6 text-slate-500">
+                  These are preview selections for the intended workspace setup.
+                </p>
+              </div>
+              <div className="space-y-3">
+                {[
+                  ["appointments", "Appointments", "Requests and schedules"],
+                  [
+                    "patients",
+                    "Patient records",
+                    "Test results and patient records",
+                  ],
+                  [
+                    "laboratory",
+                    "Test processing",
+                    "Track lab tests and results",
+                  ],
+                  ["prescriptions", "Results sharing", "Clinician communication"],
+                ].map(([key, label, description]) => {
+                  const checked = selectedModules.includes(key);
+                  return (
+                    <button
+                      aria-pressed={checked}
+                      className={
+                        "flex w-full items-center gap-3 rounded-xl border p-4 text-left transition " +
+                        (checked
+                          ? "border-blue-200 bg-blue-50/60"
+                          : "border-slate-200 bg-white hover:bg-slate-50")
+                      }
+                      key={key}
+                      type="button"
+                      onClick={() =>
+                        setSelectedModules((current) =>
+                          current.includes(key)
+                            ? current.filter((item) => item !== key)
+                            : [...current, key]
+                        )
+                      }
+                    >
+                      <span
+                        className={
+                          "flex size-5 shrink-0 items-center justify-center rounded border " +
+                          (checked
+                            ? "border-blue-600 bg-blue-600 text-white"
+                            : "border-slate-300 bg-white")
+                        }
+                      >
+                        {checked ? <CheckCircle2 className="size-3.5" /> : null}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-semibold text-slate-800">
+                          {label}
+                        </span>
+                        <span className="mt-1 block text-xs text-slate-500">
+                          {description}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              <button
+                className={primaryButtonClassName}
+                type="button"
+                onClick={() => openScreen("ready")}
+              >
+                Finish setup preview <ArrowRight className="size-4" />
+              </button>
+              <div className="rounded-lg border border-blue-100 bg-blue-50 px-3.5 py-3 text-xs leading-5 text-blue-800">
+                The laboratory dashboard will be implemented after this
+                authentication preview and the Cloudflare setup are reviewed.
+              </div>
+              <button
+                className="w-full py-2 text-sm font-semibold text-slate-600 hover:text-slate-900"
+                type="button"
+                onClick={() => openScreen("sign-in")}
+              >
+                Return to sign in
+              </button>
+            </div>
+          ) : null}
+
+          {screen === "ready" ? (
+            <div className="space-y-5">
+              <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-6 text-center">
+                <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                  <CheckCircle2 className="size-7" />
+                </div>
+                <h3 className="mt-4 text-lg font-semibold text-slate-900">
+                  Authentication preview complete
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Sign-in, registration, document selection, review, approval,
+                  and workspace setup states are ready for visual review. No
+                  real account or verification was created.
+                </p>
+              </div>
+              <button
+                className={primaryButtonClassName}
+                type="button"
+                onClick={() => openScreen("sign-in")}
+              >
+                Return to lab sign in <ArrowRight className="size-4" />
+              </button>
+              <button
+                className="w-full py-2 text-sm font-semibold text-slate-600 hover:text-slate-900"
+                type="button"
+                onClick={() => openScreen("sign-in")}
+              >
+                Return to sign in
+              </button>
+            </div>
+          ) : null}
+
+          <div className="mt-8 border-t border-slate-200 pt-4">
+            <p className="text-center text-[11px] leading-5 text-slate-400">
+              Prototype only · Authentication, password reset, file upload,
+              verification, and account creation are not connected to live
+              services. Form data is kept only in this page session.
             </p>
-          )}
+          </div>
         </div>
       </main>
     </div>
