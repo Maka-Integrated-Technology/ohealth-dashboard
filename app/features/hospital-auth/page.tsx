@@ -10,6 +10,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useId, useState, type ChangeEvent, type FormEvent } from "react";
+import { useNavigate } from "react-router";
 import Logo from "~/components/shared/logo";
 
 type AuthScreen =
@@ -183,6 +184,7 @@ function StepProgress({ activeStep }: { activeStep: number }) {
 }
 
 export default function HospitalAuthPage() {
+  const navigate = useNavigate();
   const [screen, setScreen] = useState<AuthScreen>("sign-in");
   const [registrationStep, setRegistrationStep] = useState<RegistrationStep>(1);
   const [loginEmail, setLoginEmail] = useState("");
@@ -1020,6 +1022,13 @@ export default function HospitalAuthPage() {
               </div>
               <button
                 className={primaryButtonClassName}
+                type="button"
+                onClick={() => navigate("/dashboard")}
+              >
+                Open hospital dashboard <ArrowRight className="size-4" />
+              </button>
+              <button
+                className="w-full py-2 text-sm font-semibold text-slate-600 hover:text-slate-900"
                 type="button"
                 onClick={() => openScreen("sign-in")}
               >
