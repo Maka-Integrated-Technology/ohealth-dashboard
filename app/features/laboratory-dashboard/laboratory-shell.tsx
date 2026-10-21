@@ -29,7 +29,6 @@ export function LaboratoryShell({
   onSearchChange?: (value: string) => void;
 }) {
   const navigate = useNavigate();
-  const bookingPage = section === "Test Bookings";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notice, setNotice] = useState("");
   const [showAlerts, setShowAlerts] = useState(false);
@@ -51,7 +50,7 @@ export function LaboratoryShell({
     <aside
       className={
         "flex h-full shrink-0 flex-col border-r border-[#e9edf3] bg-white " +
-        (bookingPage ? "w-[222px]" : "w-[195px]")
+        "w-[222px]"
       }
     >
       <Link
@@ -59,7 +58,7 @@ export function LaboratoryShell({
         onClick={() => setMobileOpen(false)}
         className={
           "flex shrink-0 items-center border-b border-[#e9edf3] " +
-          (bookingPage ? "h-[78px] px-[22px]" : "h-[69px] px-[19px]")
+          "h-[64px] px-[18px] sm:h-[78px] sm:px-[22px]"
         }
         aria-label="OHealth+ laboratory overview"
       >
@@ -70,16 +69,14 @@ export function LaboratoryShell({
           height="23"
           className="shrink-0"
         />
-        <span className="ml-1.5 text-[15px] font-semibold tracking-[-0.5px] whitespace-nowrap text-[#151b26]">
+        <span className="ml-1.5 text-[14px] font-semibold tracking-[-0.5px] whitespace-nowrap sm:text-[15px] text-[#151b26]">
           OHealth+
         </span>
       </Link>
       <nav
         className={
           "flex flex-1 flex-col overflow-y-auto " +
-          (bookingPage
-            ? "gap-[13px] px-[21px] py-[20px]"
-            : "gap-[14px] px-[18px] py-[18px]")
+          "gap-[11px] px-[16px] py-[16px] sm:gap-[13px] sm:px-[21px] sm:py-[20px]"
         }
         aria-label="Laboratory navigation"
       >
@@ -101,9 +98,7 @@ export function LaboratoryShell({
             </>
           );
           const className =
-            (bookingPage
-              ? "flex h-[43px] min-h-[43px] w-full items-center gap-[8px] rounded-[8px] px-[13px] text-left text-[14px] tracking-[-0.2px] transition-colors "
-              : "flex h-[35px] min-h-[35px] w-full items-center gap-[8px] rounded-[7px] px-[12px] text-left text-[12px] tracking-[-0.2px] transition-colors ") +
+            "flex h-[40px] min-h-[40px] w-full items-center gap-[8px] rounded-[8px] px-[12px] text-left text-[12px] tracking-[-0.2px] transition-colors sm:h-[43px] sm:min-h-[43px] sm:px-[13px] sm:text-[14px] " +
             (selected
               ? "bg-[#f1f5fc] font-medium text-[#155eef]"
               : "text-[#101828] hover:bg-[#f5f7fb]");
@@ -150,7 +145,7 @@ export function LaboratoryShell({
           <div
             className={
               "relative h-full shadow-xl " +
-              (bookingPage ? "w-[222px]" : "w-[195px]")
+              "w-[222px]"
             }
           >
             {sidebar}
@@ -159,13 +154,12 @@ export function LaboratoryShell({
       )}
       <div
         className={
-          "min-h-screen " + (bookingPage ? "lg:pl-[222px]" : "lg:pl-[195px]")
+          "min-h-screen lg:pl-[222px]"
         }
       >
         <header
           className={
-            "sticky top-0 z-30 flex items-center gap-4 border-b border-[#ebedf1] bg-white px-[22px] sm:px-[26px] " +
-            (bookingPage ? "h-[78px]" : "h-[69px]")
+            "sticky top-0 z-30 flex h-[64px] items-center gap-4 border-b border-[#ebedf1] bg-white px-[16px] sm:h-[78px] sm:px-[26px]"
           }
         >
           <button
@@ -177,7 +171,7 @@ export function LaboratoryShell({
             <Menu className="size-5" />
           </button>
           <h2 className="min-w-0 flex-1 text-[16px] font-semibold text-[#202b3a]">
-            {bookingPage ? "" : section}
+            <span className="sr-only">{section}</span>
           </h2>
           <div className="relative hidden w-[327px] shrink-0 items-center text-[#7386a4] md:flex">
             <Search
@@ -203,7 +197,7 @@ export function LaboratoryShell({
                 }}
                 aria-label="Notifications"
                 aria-expanded={showAlerts}
-                className="relative flex size-[26px] items-center justify-center text-[18px]"
+                className="relative flex size-[26px] items-center justify-center text-[16px] sm:text-[18px]"
               >
                 <span aria-hidden="true">🔔</span>
                 {!readAlerts && (
