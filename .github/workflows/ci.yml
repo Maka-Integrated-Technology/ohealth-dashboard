@@ -44,19 +44,7 @@ jobs:
         run: npm run test:audit-policy
 
       - name: Check formatting
-        shell: bash
-        run: |
-          npx prettier --write app/components/shared/logo.tsx app/features/hospital-auth/page.tsx app/features/hospital-dashboard/page.tsx
-          echo "FORMAT_LOGO_BEGIN"
-          base64 -w0 app/components/shared/logo.tsx
-          echo
-          echo "FORMAT_AUTH_BEGIN"
-          base64 -w0 app/features/hospital-auth/page.tsx
-          echo
-          echo "FORMAT_DASHBOARD_BEGIN"
-          base64 -w0 app/features/hospital-dashboard/page.tsx
-          echo
-          npm run format:check
+        run: npm run format:check
 
       - name: Lint
         run: npm run lint
