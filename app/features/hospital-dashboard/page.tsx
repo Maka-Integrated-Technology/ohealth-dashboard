@@ -178,7 +178,7 @@ function MetricCard({ metric }: { metric: (typeof metrics)[number] }) {
       <p className="h-[42px] text-[28px] leading-[42px] sm:h-[59px] sm:text-[36px] sm:leading-[59px] font-semibold tracking-[-1.2px] text-[#0f172b]">
         {metric.value}
       </p>
-      <p className="text-[15px] leading-6 font-medium text-[#344256]">
+      <p className="text-[12px] leading-[18px] font-medium text-[#344256] sm:text-[15px] sm:leading-6">
         {metric.label}
       </p>
       <p
@@ -207,7 +207,7 @@ function SectionHeading({
   return (
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div>
-        <h2 className="text-lg font-semibold tracking-[-0.35px] text-[#0f172b]">
+        <h2 className="text-[16px] font-semibold tracking-[-0.35px] text-[#0f172b] sm:text-lg">
           {title}
         </h2>
         {description ? (
@@ -504,7 +504,7 @@ export default function HospitalDashboardPage() {
               </div>
 
               <section className="mt-10 rounded-xl border border-[#e2e8f0] bg-white sm:mt-32 sm:rounded-2xl">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f1f5f9] px-6 py-5">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f1f5f9] px-4 py-3 sm:px-6 sm:py-5">
                   <SectionHeading
                     title="Today’s Appointments"
                     description="Review and manage your scheduled appointments."
@@ -648,24 +648,24 @@ export default function HospitalDashboardPage() {
                   ].map((item) => (
                     <div
                       key={item.title}
-                      className="flex items-start gap-4 border-b border-[#f8fafc] px-7 py-[21px] last:border-0"
+                      className="flex items-start gap-3 border-b border-[#f8fafc] px-4 py-[13px] last:border-0 sm:gap-4 sm:px-7 sm:py-[21px]"
                     >
                       <span
-                        className={`flex size-[43px] shrink-0 items-center justify-center rounded-2xl ${item.color}`}
+                        className={`flex size-[34px] shrink-0 sm:size-[43px] items-center justify-center rounded-2xl ${item.color}`}
                       >
                         <item.Icon className="size-5" strokeWidth={1.8} />
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="text-base leading-[22px] font-semibold text-[#1f2a37]">
+                        <p className="text-[13px] leading-[18px] font-semibold text-[#1f2a37] sm:text-base sm:leading-[22px]">
                           {item.title}
                         </p>
-                        <p className="mt-1 text-[15px] text-[#90a1b9]">
+                        <p className="mt-1 text-[12px] text-[#90a1b9] sm:text-[15px]">
                           {item.time}
                         </p>
                         <button
                           type="button"
                           onClick={() => setActiveSection(item.destination)}
-                          className="mt-2 inline-flex items-center gap-1 text-[15px] font-medium text-[#2970ff] hover:underline"
+                          className="mt-2 inline-flex items-center gap-1 text-[12px] font-medium text-[#2970ff] sm:text-[15px] hover:underline"
                         >
                           {item.action} <ChevronRight className="size-4" />
                         </button>
@@ -679,7 +679,7 @@ export default function HospitalDashboardPage() {
                     <Bell className="size-[22px] text-[#45556c]" />
                     Recent Activity
                   </h3>
-                  <div className="px-7 py-4">
+                  <div className="px-4 py-3 sm:px-7 sm:py-4">
                     {[
                       [
                         "Appointment confirmed",
@@ -715,7 +715,7 @@ export default function HospitalDashboardPage() {
                     ].map(([title, detail, time], index) => (
                       <div
                         key={title}
-                        className="flex items-start gap-4 border-b border-[#f8fafc] py-4 last:border-0"
+                        className="flex items-start gap-3 border-b border-[#f8fafc] py-3 last:border-0 sm:gap-4 sm:py-4"
                       >
                         <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-xl bg-[#f8fafc] text-[#62748e]">
                           {index === 2 ? (
@@ -731,14 +731,14 @@ export default function HospitalDashboardPage() {
                           )}
                         </span>
                         <div className="min-w-0 flex-1">
-                          <p className="text-base leading-[22px] font-medium text-[#314158]">
+                          <p className="text-[13px] leading-[18px] font-medium text-[#314158] sm:text-base sm:leading-[22px]">
                             {title}
                           </p>
-                          <p className="text-[15px] leading-[22px] text-[#90a1b9]">
+                          <p className="text-[12px] leading-[18px] text-[#90a1b9] sm:text-[15px] sm:leading-[22px]">
                             {detail}
                           </p>
                         </div>
-                        <time className="shrink-0 font-mono text-[15px] text-[#90a1b9]">
+                        <time className="shrink-0 font-mono text-[12px] text-[#90a1b9] sm:text-[15px]">
                           {time}
                         </time>
                       </div>
