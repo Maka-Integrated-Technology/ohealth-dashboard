@@ -1,0 +1,40 @@
+name: Validate hospital mobile refinements (temporary)
+on:
+  push:
+    branches: [feat/hospital-auth-cloudflare-preview]
+    paths:
+      - .github/workflows/hospital-mobile-format-validation-temp.yml
+permissions:
+  contents: write
+jobs:
+  validate-hospital-mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/hospital-auth-cloudflare-preview
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit
+      - name: Format hospital mobile refinements
+        run: npx prettier --write app/features/hospital-dashboard/*.tsx
+      - name: Check lint
+        run: npm run lint
+      - name: Type-check
+        run: npm run typecheck
+      - name: Build hospital portal
+        run: npm run build:hs
+      - name: Commit formatted source
+        if: success()
+        run: |
+          if ! git diff --quiet -- app/features/hospital-dashboard; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add app/features/hospital-dashboard
+            git commit -m 'style(hospital): format responsive dashboard and section previews'
+            git push origin HEAD:feat/hospital-auth-cloudflare-preview
+          fi
