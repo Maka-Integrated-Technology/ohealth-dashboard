@@ -4,6 +4,7 @@ on:
     branches: [feat/laboratory-auth-cloudflare-preview]
     paths:
       - .github/workflows/laboratory-compliance-format-temp.yml
+      - app/features/laboratory-dashboard/laboratory-compliance.tsx
 permissions:
   contents: write
 jobs:
