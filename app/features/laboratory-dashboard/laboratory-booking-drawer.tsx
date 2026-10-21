@@ -15,9 +15,9 @@ type Props = {
 
 function InformationCell({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex min-h-[67px] min-w-0 flex-col justify-center rounded-[15px] bg-[#f7f9fb] px-[13px] py-[10px]">
-      <p className="text-[13px] leading-[20px] text-[#8da2c0]">{label}</p>
-      <p className="mt-[2px] text-[15px] leading-[20px] font-medium break-words text-[#1c2a40]">
+    <div className="flex min-h-[58px] min-w-0 flex-col justify-center rounded-[12px] bg-[#f7f9fb] px-[10px] py-[8px] sm:min-h-[67px] sm:rounded-[15px] sm:px-[13px] sm:py-[10px]">
+      <p className="text-[11px] leading-[17px] text-[#8da2c0] sm:text-[13px] sm:leading-[20px]">{label}</p>
+      <p className="mt-[2px] text-[13px] leading-[18px] font-medium break-words sm:text-[15px] sm:leading-[20px] text-[#1c2a40]">
         {value}
       </p>
     </div>
@@ -28,7 +28,7 @@ function BookingLifecycle({ booking }: { booking: Booking }) {
   const current = lifecycleIndex(booking.status);
   return (
     <section
-      className="rounded-[17px] bg-[#f7f9fc] px-[17px] pt-[17px] pb-[15px]"
+      className="rounded-[13px] bg-[#f7f9fc] px-[10px] pt-[13px] pb-[11px] sm:rounded-[17px] sm:px-[17px] sm:pt-[17px] sm:pb-[15px]"
       aria-label="Booking lifecycle"
     >
       <h3 className="text-[12px] leading-[19px] font-semibold tracking-[0.1px] text-[#5d7396]">
@@ -76,7 +76,7 @@ function BookingLifecycle({ booking }: { booking: Booking }) {
               </span>
               <span
                 className={
-                  "mt-[8px] text-[10px] leading-[14px] " +
+                  "mt-[7px] text-[9px] leading-[12px] sm:mt-[8px] sm:text-[10px] sm:leading-[14px] " +
                   (active
                     ? "font-semibold text-[#1463ff]"
                     : past
@@ -104,11 +104,11 @@ export function LaboratoryBookingDrawer({
   onDismissToast,
 }: Props) {
   const primaryClass =
-    "min-h-[42px] rounded-[13px] bg-[#155eef] px-[17px] text-[15px] font-medium text-white shadow-sm hover:bg-[#064bd5]";
+    "min-h-[40px] rounded-[11px] bg-[#155eef] px-[12px] text-[13px] sm:min-h-[42px] sm:rounded-[13px] sm:px-[17px] sm:text-[15px] font-medium text-white shadow-sm hover:bg-[#064bd5]";
   const successClass =
-    "min-h-[42px] rounded-[13px] bg-[#009965] px-[18px] text-[15px] font-medium text-white shadow-sm hover:bg-[#008355]";
+    "min-h-[40px] rounded-[11px] bg-[#009965] px-[12px] text-[13px] sm:min-h-[42px] sm:rounded-[13px] sm:px-[18px] sm:text-[15px] font-medium text-white shadow-sm hover:bg-[#008355]";
   const neutralClass =
-    "min-h-[42px] rounded-[13px] border border-[#c4d1e4] bg-white px-[17px] text-[15px] font-medium text-[#344760] hover:bg-[#f7faff]";
+    "min-h-[40px] rounded-[11px] border border-[#c4d1e4] bg-white px-[12px] text-[13px] sm:min-h-[42px] sm:rounded-[13px] sm:px-[17px] sm:text-[15px] font-medium text-[#344760] hover:bg-[#f7faff]";
   const cancelled = booking.status === "Cancelled";
   const completed = booking.status === "Completed";
   let actions: ReactNode;
@@ -187,7 +187,7 @@ export function LaboratoryBookingDrawer({
         </button>
         <button
           type="button"
-          className="min-h-[42px] rounded-[13px] bg-[#df0008] px-[17px] text-[15px] font-medium text-white shadow-sm hover:bg-[#b50007]"
+          className="min-h-[40px] rounded-[11px] bg-[#df0008] px-[12px] text-[13px] sm:min-h-[42px] sm:rounded-[13px] sm:px-[17px] sm:text-[15px] font-medium text-white shadow-sm hover:bg-[#b50007]"
           onClick={onCancelRequest}
         >
           Cancel Booking
@@ -209,10 +209,10 @@ export function LaboratoryBookingDrawer({
         onMouseDown={(event) => event.stopPropagation()}
         className="flex h-full w-full max-w-[625px] flex-col overflow-hidden bg-white shadow-[-10px_0_36px_rgba(16,24,40,0.08)]"
       >
-        <div className="flex min-h-[62px] shrink-0 items-center justify-between border-b border-[#e5eaf2] px-[26px]">
+        <div className="flex min-h-[55px] shrink-0 items-center justify-between border-b border-[#e5eaf2] px-[16px] sm:min-h-[62px] sm:px-[26px]">
           <h2
             id="lab-booking-heading"
-            className="text-[17px] font-semibold tracking-[-0.25px] text-[#151d32]"
+            className="text-[15px] font-semibold tracking-[-0.25px] text-[#151d32] sm:text-[17px]"
           >
             Booking {booking.id}
           </h2>
@@ -225,14 +225,14 @@ export function LaboratoryBookingDrawer({
             <X className="size-[19px]" />
           </button>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto px-[26px] pt-[26px] pb-[90px]">
+        <div className="min-h-0 flex-1 overflow-y-auto px-[14px] pt-[18px] pb-[75px] sm:px-[26px] sm:pt-[26px] sm:pb-[90px]">
           <BookingLifecycle booking={booking} />
           <div className="mt-[26px]">{actions}</div>
           <section className="mt-[26px]">
             <h3 className="mb-[12px] text-[12px] font-semibold tracking-[0.15px] text-[#617796]">
               PATIENT INFORMATION
             </h3>
-            <div className="grid grid-cols-2 gap-[12px]">
+            <div className="grid grid-cols-2 gap-[8px] sm:gap-[12px]">
               <InformationCell label="Name" value={booking.patient} />
               <InformationCell label="Patient ID" value={booking.patientId} />
               <InformationCell label="Phone" value={booking.phone} />
@@ -243,7 +243,7 @@ export function LaboratoryBookingDrawer({
             <h3 className="mb-[12px] text-[12px] font-semibold tracking-[0.15px] text-[#617796]">
               TEST INFORMATION
             </h3>
-            <div className="grid grid-cols-2 gap-[12px]">
+            <div className="grid grid-cols-2 gap-[8px] sm:gap-[12px]">
               <InformationCell label="Test" value={booking.test} />
               <InformationCell label="Category" value={booking.category} />
               <InformationCell label="Scheduled Date" value={booking.date} />
@@ -256,7 +256,7 @@ export function LaboratoryBookingDrawer({
             <h3 className="mb-[9px] text-[12px] font-semibold tracking-[0.15px] text-[#617796]">
               NOTES
             </h3>
-            <p className="rounded-[13px] bg-[#f7f9fb] px-[13px] py-[14px] text-[14px] leading-5 text-[#485c79]">
+            <p className="rounded-[11px] bg-[#f7f9fb] px-[10px] py-[12px] text-[12px] sm:rounded-[13px] sm:px-[13px] sm:py-[14px] sm:text-[14px] leading-5 text-[#485c79]">
               {booking.notes}
             </p>
           </section>
@@ -270,7 +270,7 @@ export function LaboratoryBookingDrawer({
         {toast && (
           <div
             role="status"
-            className="absolute right-[25px] bottom-[39px] flex max-w-[350px] items-center gap-3 rounded-[11px] bg-[#009966] px-[15px] py-[12px] text-[12px] leading-[17px] text-white shadow-lg"
+            className="absolute right-[14px] bottom-[20px] flex max-w-[calc(100%-28px)] sm:right-[25px] sm:bottom-[39px] sm:max-w-[350px] items-center gap-3 rounded-[11px] bg-[#009966] px-[15px] py-[12px] text-[12px] leading-[17px] text-white shadow-lg"
           >
             <span className="flex-1">{toast}</span>
             <button
