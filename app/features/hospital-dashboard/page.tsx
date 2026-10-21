@@ -543,7 +543,9 @@ export default function HospitalDashboardPage() {
                           <td className="px-5 py-4 text-right">
                             <button
                               type="button"
-                              onClick={() => setSelectedAppointmentId(appointment.id)}
+                              onClick={() =>
+                                setSelectedAppointmentId(appointment.id)
+                              }
                               className="inline-flex h-9 items-center justify-center rounded-lg border border-[#d7e0ec] px-3.5 text-xs font-semibold text-[#155eef] hover:bg-[#f5f8ff]"
                             >
                               View
