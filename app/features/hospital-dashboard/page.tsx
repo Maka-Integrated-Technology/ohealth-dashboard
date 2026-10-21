@@ -325,7 +325,9 @@ export default function HospitalDashboardPage() {
           <div className="space-y-3.5">
             {navigation.map((item) => {
               const Icon = item.icon;
-              const active = patientId ? item.label === "Patients" : activeSection === item.label;
+              const active = patientId
+                ? item.label === "Patients"
+                : activeSection === item.label;
               return (
                 <button
                   className={`flex h-[44px] w-full items-center gap-3 rounded-lg px-4 text-left text-[13px] transition-colors ${
@@ -398,7 +400,11 @@ export default function HospitalDashboardPage() {
                       selectNavigation(item.label);
                     }}
                     className={`flex h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-sm ${
-                      (patientId ? item.label === "Patients" : activeSection === item.label)
+                      (
+                        patientId
+                          ? item.label === "Patients"
+                          : activeSection === item.label
+                      )
                         ? "bg-[#155eef]/[0.08] font-semibold text-[#155eef]"
                         : "text-[#45556c] hover:bg-slate-50"
                     }`}
@@ -575,7 +581,12 @@ export default function HospitalDashboardPage() {
                           <td className="px-5 py-4 text-right">
                             <button
                               type="button"
-                              onClick={() => navigate("/patients/" + encodeURIComponent(appointment.id))}
+                              onClick={() =>
+                                navigate(
+                                  "/patients/" +
+                                    encodeURIComponent(appointment.id)
+                                )
+                              }
                               className="inline-flex h-9 items-center justify-center rounded-lg border border-[#d7e0ec] px-3.5 text-xs font-semibold text-[#155eef] hover:bg-[#f5f8ff]"
                             >
                               View
@@ -653,7 +664,7 @@ export default function HospitalDashboardPage() {
                         <item.Icon className="size-5" strokeWidth={1.8} />
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="text-base font-semibold leading-[22px] text-[#1f2a37]">
+                        <p className="text-base leading-[22px] font-semibold text-[#1f2a37]">
                           {item.title}
                         </p>
                         <p className="mt-1 text-[15px] text-[#90a1b9]">
@@ -678,13 +689,37 @@ export default function HospitalDashboardPage() {
                   </h3>
                   <div className="px-7 py-4">
                     {[
-                      ["Appointment confirmed", "John Doe — Cardiology", "9:02 AM"],
-                      ["Patient marked as arrived", "David Lee — Neurology", "11:00 AM"],
+                      [
+                        "Appointment confirmed",
+                        "John Doe — Cardiology",
+                        "9:02 AM",
+                      ],
+                      [
+                        "Patient marked as arrived",
+                        "David Lee — Neurology",
+                        "11:00 AM",
+                      ],
                       ["New review received", "John Doe — 5 stars", "11:30 AM"],
-                      ["Lab results uploaded", "Emma Williams — Cardiac Panel", "12:15 PM"],
-                      ["Appointment cancelled", "Sarah Johnson — General Medicine", "1:45 PM"],
-                      ["Prescription created", "Ahmed Hassan — Dr. Patel", "2:20 PM"],
-                      ["Consultation completed", "Carlos Martinez — Neurology", "4:30 PM"],
+                      [
+                        "Lab results uploaded",
+                        "Emma Williams — Cardiac Panel",
+                        "12:15 PM",
+                      ],
+                      [
+                        "Appointment cancelled",
+                        "Sarah Johnson — General Medicine",
+                        "1:45 PM",
+                      ],
+                      [
+                        "Prescription created",
+                        "Ahmed Hassan — Dr. Patel",
+                        "2:20 PM",
+                      ],
+                      [
+                        "Consultation completed",
+                        "Carlos Martinez — Neurology",
+                        "4:30 PM",
+                      ],
                     ].map(([title, detail, time], index) => (
                       <div
                         key={title}
@@ -704,7 +739,7 @@ export default function HospitalDashboardPage() {
                           )}
                         </span>
                         <div className="min-w-0 flex-1">
-                          <p className="text-base font-medium leading-[22px] text-[#314158]">
+                          <p className="text-base leading-[22px] font-medium text-[#314158]">
                             {title}
                           </p>
                           <p className="text-[15px] leading-[22px] text-[#90a1b9]">
@@ -833,7 +868,6 @@ export default function HospitalDashboardPage() {
           )}
         </main>
       </div>
-
     </div>
   );
 }
