@@ -58,7 +58,9 @@ export default function Logo({
       )}
       <span className={textClass}>
         OHealth
-        <span className={variant === "light" ? "text-[#f5f7f7]" : "text-blue-600"}>
+        <span
+          className={variant === "light" ? "text-[#f5f7f7]" : "text-blue-600"}
+        >
           +
         </span>
       </span>
