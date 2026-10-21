@@ -20,7 +20,7 @@ type AppointmentStatus =
 
 type PaymentStatus = "Paid" | "Unpaid";
 
-type PreviewAppointment = {
+export type PreviewAppointment = {
   id: string;
   initials: string;
   patient: string;
@@ -37,7 +37,7 @@ type PreviewAppointment = {
 };
 
 // Figma reference records only. Status edits on this screen do not call the API.
-const appointmentSamples: PreviewAppointment[] = [
+export const appointmentSamples: PreviewAppointment[] = [
   {
     id: "APT-2041",
     initials: "JD",
@@ -166,7 +166,7 @@ function AppointmentBadge({ status }: { status: AppointmentStatus }) {
   );
 }
 
-function AppointmentDrawer({
+export function AppointmentDrawer({
   appointment,
   onClose,
   onUpdate,
@@ -381,8 +381,13 @@ function AppointmentDrawer({
   );
 }
 
-export default function HospitalAppointments() {
-  const [records, setRecords] = useState(appointmentSamples);
+export default function HospitalAppointments({
+  records,
+  onUpdate,
+}: {
+  records: PreviewAppointment[];
+  onUpdate: (appointment: PreviewAppointment) => void;
+}) {
   const [query, setQuery] = useState("");
   const [department, setDepartment] = useState("All");
   const [status, setStatus] = useState("All Status");
@@ -609,13 +614,7 @@ export default function HospitalAppointments() {
           key={selected.id}
           appointment={selected}
           onClose={() => setSelectedId(null)}
-          onUpdate={(updated) =>
-            setRecords((current) =>
-              current.map((record) =>
-                record.id === updated.id ? updated : record
-              )
-            )
-          }
+          onUpdate={onUpdate}
         />
       ) : null}
     </div>
