@@ -69,7 +69,7 @@ export function LaboratoryShell({
           height="23"
           className="shrink-0"
         />
-        <span className="ml-1.5 text-[14px] font-semibold tracking-[-0.5px] whitespace-nowrap sm:text-[15px] text-[#151b26]">
+        <span className="ml-1.5 text-[14px] font-semibold tracking-[-0.5px] whitespace-nowrap text-[#151b26] sm:text-[15px]">
           OHealth+
         </span>
       </Link>
@@ -142,21 +142,12 @@ export function LaboratoryShell({
             aria-label="Close navigation"
             onClick={() => setMobileOpen(false)}
           />
-          <div
-            className={
-              "relative h-full shadow-xl " +
-              "w-[222px]"
-            }
-          >
+          <div className={"relative h-full shadow-xl " + "w-[222px]"}>
             {sidebar}
           </div>
         </div>
       )}
-      <div
-        className={
-          "min-h-screen lg:pl-[222px]"
-        }
-      >
+      <div className={"min-h-screen lg:pl-[222px]"}>
         <header
           className={
             "sticky top-0 z-30 flex h-[64px] items-center gap-4 border-b border-[#ebedf1] bg-white px-[16px] sm:h-[78px] sm:px-[26px]"

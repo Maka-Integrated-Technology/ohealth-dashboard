@@ -16,8 +16,10 @@ type Props = {
 function InformationCell({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex min-h-[58px] min-w-0 flex-col justify-center rounded-[12px] bg-[#f7f9fb] px-[10px] py-[8px] sm:min-h-[67px] sm:rounded-[15px] sm:px-[13px] sm:py-[10px]">
-      <p className="text-[11px] leading-[17px] text-[#8da2c0] sm:text-[13px] sm:leading-[20px]">{label}</p>
-      <p className="mt-[2px] text-[13px] leading-[18px] font-medium break-words sm:text-[15px] sm:leading-[20px] text-[#1c2a40]">
+      <p className="text-[11px] leading-[17px] text-[#8da2c0] sm:text-[13px] sm:leading-[20px]">
+        {label}
+      </p>
+      <p className="mt-[2px] text-[13px] leading-[18px] font-medium break-words text-[#1c2a40] sm:text-[15px] sm:leading-[20px]">
         {value}
       </p>
     </div>
@@ -187,7 +189,7 @@ export function LaboratoryBookingDrawer({
         </button>
         <button
           type="button"
-          className="min-h-[40px] rounded-[11px] bg-[#df0008] px-[12px] text-[13px] sm:min-h-[42px] sm:rounded-[13px] sm:px-[17px] sm:text-[15px] font-medium text-white shadow-sm hover:bg-[#b50007]"
+          className="min-h-[40px] rounded-[11px] bg-[#df0008] px-[12px] text-[13px] font-medium text-white shadow-sm hover:bg-[#b50007] sm:min-h-[42px] sm:rounded-[13px] sm:px-[17px] sm:text-[15px]"
           onClick={onCancelRequest}
         >
           Cancel Booking
@@ -256,7 +258,7 @@ export function LaboratoryBookingDrawer({
             <h3 className="mb-[9px] text-[12px] font-semibold tracking-[0.15px] text-[#617796]">
               NOTES
             </h3>
-            <p className="rounded-[11px] bg-[#f7f9fb] px-[10px] py-[12px] text-[12px] sm:rounded-[13px] sm:px-[13px] sm:py-[14px] sm:text-[14px] leading-5 text-[#485c79]">
+            <p className="rounded-[11px] bg-[#f7f9fb] px-[10px] py-[12px] text-[12px] leading-5 text-[#485c79] sm:rounded-[13px] sm:px-[13px] sm:py-[14px] sm:text-[14px]">
               {booking.notes}
             </p>
           </section>
@@ -270,7 +272,7 @@ export function LaboratoryBookingDrawer({
         {toast && (
           <div
             role="status"
-            className="absolute right-[14px] bottom-[20px] flex max-w-[calc(100%-28px)] sm:right-[25px] sm:bottom-[39px] sm:max-w-[350px] items-center gap-3 rounded-[11px] bg-[#009966] px-[15px] py-[12px] text-[12px] leading-[17px] text-white shadow-lg"
+            className="absolute right-[14px] bottom-[20px] flex max-w-[calc(100%-28px)] items-center gap-3 rounded-[11px] bg-[#009966] px-[15px] py-[12px] text-[12px] leading-[17px] text-white shadow-lg sm:right-[25px] sm:bottom-[39px] sm:max-w-[350px]"
           >
             <span className="flex-1">{toast}</span>
             <button

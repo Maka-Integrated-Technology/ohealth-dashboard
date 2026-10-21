@@ -173,16 +173,16 @@ function MetricCard({ metric }: { metric: Metric }) {
   return (
     <div className="relative flex min-h-[126px] flex-col rounded-[13px] border border-[#e9eef5] bg-white px-[13px] pt-[17px] pb-[12px] sm:min-h-[151px] sm:rounded-[16px] sm:px-[17px] sm:pt-[26px] sm:pb-[17px]">
       <div
-        className="absolute top-[12px] right-[12px] flex size-[28px] sm:top-[17px] sm:right-[17px] sm:size-[33px] items-center justify-center rounded-[12px] bg-[#f7f8fa] text-[14px] text-[#2563eb]"
+        className="absolute top-[12px] right-[12px] flex size-[28px] items-center justify-center rounded-[12px] bg-[#f7f8fa] text-[14px] text-[#2563eb] sm:top-[17px] sm:right-[17px] sm:size-[33px]"
         aria-hidden="true"
       >
         {metric.icon}
       </div>
-      <p className="max-w-[138px] pr-[26px] text-[11px] sm:pr-1 leading-[14px] font-bold tracking-[0.15px] text-[#607594]">
+      <p className="max-w-[138px] pr-[26px] text-[11px] leading-[14px] font-bold tracking-[0.15px] text-[#607594] sm:pr-1">
         {metric.label}
       </p>
       <div className="mt-[15px] sm:mt-[22px]">
-        <p className="text-[19px] leading-[23px] font-bold tracking-[-0.45px] sm:text-[22px] sm:leading-[25px] sm:tracking-[-0.55px] text-[#0e1830]">
+        <p className="text-[19px] leading-[23px] font-bold tracking-[-0.45px] text-[#0e1830] sm:text-[22px] sm:leading-[25px] sm:tracking-[-0.55px]">
           {metric.value}
         </p>
         <p className="mt-[3px] text-[11px] leading-[16px] text-[#8ea2bf]">
@@ -221,7 +221,7 @@ function RevenueChart({ onReport }: { onReport: () => void }) {
           View full report <ArrowRight className="size-[12px]" />
         </button>
       </div>
-      <div className="mt-[9px] h-[156px] w-full sm:h-[178px] text-[10px]">
+      <div className="mt-[9px] h-[156px] w-full text-[10px] sm:h-[178px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={REVENUE}
@@ -287,7 +287,7 @@ function CategoryChart() {
         This month
       </p>
       <div
-        className="mx-auto mt-[18px] flex size-[110px] sm:mt-[21px] sm:size-[125px] items-center justify-center rounded-full"
+        className="mx-auto mt-[18px] flex size-[110px] items-center justify-center rounded-full sm:mt-[21px] sm:size-[125px]"
         style={{ background: categoryGradient }}
         role="img"
         aria-label="Tests by category: Blood 142, Urinalysis 58, Hormonal 34, Infectious Disease 67, Cardiology 22, Preventive 15"
@@ -345,14 +345,14 @@ export default function LaboratoryDashboard() {
     >
       <div className="px-[15px] pt-[20px] pb-10 sm:px-[32px] sm:pt-[29px] sm:pb-14 lg:pr-[60px] lg:pl-[43px]">
         <div>
-          <h1 className="text-[21px] leading-[29px] font-semibold tracking-[-0.4px] sm:text-[25px] sm:leading-[33px] sm:tracking-[-0.55px] text-[#202b3a]">
+          <h1 className="text-[21px] leading-[29px] font-semibold tracking-[-0.4px] text-[#202b3a] sm:text-[25px] sm:leading-[33px] sm:tracking-[-0.55px]">
             Good afternoon, MedCore Diagnostics
           </h1>
           <p className="mt-[1px] text-[13px] leading-[20px] text-[#525e6d] sm:text-[15px] sm:leading-[23px]">
             Saturday, 13 september
           </p>
         </div>
-        <div className="mt-[24px] grid grid-cols-1 gap-x-[12px] gap-y-[12px] min-[360px]:grid-cols-2 sm:mt-[41px] sm:gap-x-[18px] sm:gap-y-[19px] sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-[24px] grid grid-cols-1 gap-x-[12px] gap-y-[12px] min-[360px]:grid-cols-2 sm:mt-[41px] sm:grid-cols-2 sm:gap-x-[18px] sm:gap-y-[19px] lg:grid-cols-4">
           {METRICS.map((metric) => (
             <MetricCard key={metric.label} metric={metric} />
           ))}
@@ -379,7 +379,7 @@ export default function LaboratoryDashboard() {
                     type="button"
                     key={entry.name}
                     onClick={() => setSelectedAppointment(entry)}
-                    className="flex min-h-[60px] w-full items-start justify-between gap-3 border-b border-[#f1f4f8] px-[12px] py-[9px] sm:min-h-[70px] sm:px-[17px] sm:py-[12px] text-left last:border-b-0 hover:bg-[#fbfcff]"
+                    className="flex min-h-[60px] w-full items-start justify-between gap-3 border-b border-[#f1f4f8] px-[12px] py-[9px] text-left last:border-b-0 hover:bg-[#fbfcff] sm:min-h-[70px] sm:px-[17px] sm:py-[12px]"
                   >
                     <span className="min-w-0">
                       <span className="block text-[12px] leading-[16px] font-medium text-[#293854] sm:text-[13px] sm:leading-[17px]">
@@ -421,7 +421,7 @@ export default function LaboratoryDashboard() {
                 filteredActivity.map((entry) => (
                   <div
                     key={entry.summary}
-                    className="flex min-h-[60px] items-start gap-[10px] border-b border-[#f1f4f8] px-[12px] py-[9px] sm:min-h-[70px] sm:gap-[12px] sm:px-[17px] sm:py-[12px] last:border-b-0"
+                    className="flex min-h-[60px] items-start gap-[10px] border-b border-[#f1f4f8] px-[12px] py-[9px] last:border-b-0 sm:min-h-[70px] sm:gap-[12px] sm:px-[17px] sm:py-[12px]"
                   >
                     <span
                       aria-hidden="true"

@@ -176,7 +176,7 @@ export default function LaboratoryTestBookingsRoute() {
                 placeholder="Search by name, ID, test..."
                 value={query}
                 onChange={(event) => setQuery(event.currentTarget.value)}
-                className="h-[35px] w-full rounded-[9px] border border-[#dce4f0] bg-white pr-3 pl-[36px] text-[12px] sm:h-[37px] sm:rounded-[11px] sm:text-[13px] text-[#344660] outline-none placeholder:text-[#90a4bf] focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff]"
+                className="h-[35px] w-full rounded-[9px] border border-[#dce4f0] bg-white pr-3 pl-[36px] text-[12px] text-[#344660] outline-none placeholder:text-[#90a4bf] focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff] sm:h-[37px] sm:rounded-[11px] sm:text-[13px]"
               />
             </div>
             <div className="relative w-full sm:w-[214px]">
@@ -184,7 +184,7 @@ export default function LaboratoryTestBookingsRoute() {
                 aria-label="Filter by test category"
                 value={category}
                 onChange={(event) => setCategory(event.currentTarget.value)}
-                className="h-[35px] w-full appearance-none rounded-[9px] border border-[#dce4f0] bg-white px-[13px] pr-[35px] text-[12px] sm:h-[37px] sm:rounded-[11px] sm:px-[16px] sm:pr-[35px] sm:text-[13px] text-[#34435a] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff]"
+                className="h-[35px] w-full appearance-none rounded-[9px] border border-[#dce4f0] bg-white px-[13px] pr-[35px] text-[12px] text-[#34435a] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff] sm:h-[37px] sm:rounded-[11px] sm:px-[16px] sm:pr-[35px] sm:text-[13px]"
               >
                 <option value="">Filter by category</option>
                 {CATEGORIES.map((value) => (
@@ -202,7 +202,7 @@ export default function LaboratoryTestBookingsRoute() {
           <div
             role="tablist"
             aria-label="Booking filters"
-            className="mx-[12px] mt-[5px] flex items-stretch justify-between gap-1 overflow-x-auto sm:mx-[19px] border-b border-[#dfe6f0]"
+            className="mx-[12px] mt-[5px] flex items-stretch justify-between gap-1 overflow-x-auto border-b border-[#dfe6f0] sm:mx-[19px]"
           >
             {TABS.map((tab) => {
               const selectedTab = tab === activeTab;
@@ -344,7 +344,7 @@ export default function LaboratoryTestBookingsRoute() {
             )}
           </div>
 
-          <div className="flex min-h-[48px] items-center justify-between border-t sm:min-h-[55px] border-[#eef2f7] px-[19px]">
+          <div className="flex min-h-[48px] items-center justify-between border-t border-[#eef2f7] px-[19px] sm:min-h-[55px]">
             <span className="text-[12px] text-[#8ea4c1]">
               {visible.length} {visible.length === 1 ? "booking" : "bookings"}
             </span>
@@ -414,7 +414,7 @@ export default function LaboratoryTestBookingsRoute() {
             aria-labelledby="reschedule-heading"
             onMouseDown={(event) => event.stopPropagation()}
             onSubmit={submitReschedule}
-            className="w-full max-w-[490px] rounded-[17px] bg-white px-[20px] pt-[24px] pb-[22px] sm:rounded-[21px] sm:px-[30px] sm:pt-[32px] sm:pb-[29px] shadow-[0_20px_45px_rgba(15,23,42,0.15)]"
+            className="w-full max-w-[490px] rounded-[17px] bg-white px-[20px] pt-[24px] pb-[22px] shadow-[0_20px_45px_rgba(15,23,42,0.15)] sm:rounded-[21px] sm:px-[30px] sm:pt-[32px] sm:pb-[29px]"
           >
             <h2
               id="reschedule-heading"
@@ -434,7 +434,7 @@ export default function LaboratoryTestBookingsRoute() {
                   type="date"
                   value={newDate}
                   onChange={(event) => setNewDate(event.currentTarget.value)}
-                  className="h-[44px] w-full rounded-[12px] border border-[#dce4ef] bg-white px-[15px] pr-12 text-[14px] sm:h-[49px] sm:rounded-[14px] sm:px-[23px] sm:text-[16px] text-[#405573] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff]"
+                  className="h-[44px] w-full rounded-[12px] border border-[#dce4ef] bg-white px-[15px] pr-12 text-[14px] text-[#405573] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff] sm:h-[49px] sm:rounded-[14px] sm:px-[23px] sm:text-[16px]"
                 />
                 <CalendarDays
                   aria-hidden="true"
@@ -450,7 +450,7 @@ export default function LaboratoryTestBookingsRoute() {
                   type="time"
                   value={newTime}
                   onChange={(event) => setNewTime(event.currentTarget.value)}
-                  className="h-[44px] w-full rounded-[12px] border border-[#dce4ef] bg-white px-[15px] pr-12 text-[14px] sm:h-[49px] sm:rounded-[14px] sm:px-[23px] sm:text-[16px] text-[#405573] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff]"
+                  className="h-[44px] w-full rounded-[12px] border border-[#dce4ef] bg-white px-[15px] pr-12 text-[14px] text-[#405573] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#dce8ff] sm:h-[49px] sm:rounded-[14px] sm:px-[23px] sm:text-[16px]"
                 />
                 <Clock3
                   aria-hidden="true"
@@ -465,13 +465,13 @@ export default function LaboratoryTestBookingsRoute() {
                   setRescheduleId(null);
                   setSelectedId(reschedule.id);
                 }}
-                className="min-h-[44px] rounded-[12px] border border-[#c9d5e6] px-[14px] text-[14px] sm:min-h-[49px] sm:rounded-[15px] sm:px-[20px] sm:text-[17px] font-medium text-[#394c67] hover:bg-[#f8fafc]"
+                className="min-h-[44px] rounded-[12px] border border-[#c9d5e6] px-[14px] text-[14px] font-medium text-[#394c67] hover:bg-[#f8fafc] sm:min-h-[49px] sm:rounded-[15px] sm:px-[20px] sm:text-[17px]"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="min-h-[44px] rounded-[12px] bg-[#155eef] px-[14px] text-[14px] sm:min-h-[49px] sm:rounded-[15px] sm:px-[20px] sm:text-[17px] font-medium text-white shadow-sm hover:bg-[#0049d0]"
+                className="min-h-[44px] rounded-[12px] bg-[#155eef] px-[14px] text-[14px] font-medium text-white shadow-sm hover:bg-[#0049d0] sm:min-h-[49px] sm:rounded-[15px] sm:px-[20px] sm:text-[17px]"
               >
                 Confirm Reschedule
               </button>
