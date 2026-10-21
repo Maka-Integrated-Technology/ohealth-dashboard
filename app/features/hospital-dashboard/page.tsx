@@ -27,6 +27,9 @@ import {
 import { useMemo, useState, type ReactNode } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import HospitalPatientDetails from "~/features/hospital-dashboard/patient-details";
+import HospitalPatientsList, {
+  hospitalPatientRecords,
+} from "~/features/hospital-dashboard/patients-list";
 import Logo from "~/components/shared/logo";
 
 type HospitalSection =
@@ -279,7 +282,9 @@ export default function HospitalDashboardPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [appointments] = useState(initialAppointments);
   const selectedPatient = patientId
-    ? appointments.find((appointment) => appointment.id === patientId)
+    ? [...appointments, ...hospitalPatientRecords].find(
+        (patient) => patient.id === patientId
+      )
     : undefined;
   const [readNotifications, setReadNotifications] = useState(false);
 
@@ -755,6 +760,10 @@ export default function HospitalDashboardPage() {
                 </section>
               </div>
             </>
+          ) : activeSection === "Patients" ? (
+            <HospitalPatientsList
+              onView={(id) => navigate("/patients/" + encodeURIComponent(id))}
+            />
           ) : activeSection === "Appointments" ? (
             <section className="rounded-2xl border border-[#e2e8f0] bg-white p-6">
               <SectionHeading
