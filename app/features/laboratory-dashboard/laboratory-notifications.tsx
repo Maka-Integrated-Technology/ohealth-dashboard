@@ -3,7 +3,6 @@ import { CheckCheck, ChevronRight, Search } from "lucide-react";
 import { useNavigate } from "react-router";
 import { LaboratoryShell } from "./laboratory-shell";
 import {
-  getLabNotifications,
   markAllLabNotificationsRead,
   markLabNotificationRead,
   useLabNotifications,
