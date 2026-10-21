@@ -6,7 +6,7 @@ type NavEntry = { label: string; icon: string; href?: string };
 const NAV_ITEMS: NavEntry[] = [
   { label: "Overview", icon: "overview", href: "/dashboard" },
   { label: "Test Bookings", icon: "📅", href: "/test-bookings" },
-  { label: "Samples & Tests", icon: "🧪" },
+  { label: "Samples & Tests", icon: "🧪", href: "/samples-tests" },
   { label: "Results", icon: "📋" },
   { label: "External Results", icon: "🗂️" },
   { label: "Test Catalogue", icon: "📁" },
