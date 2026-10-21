@@ -7,7 +7,7 @@ const NAV_ITEMS: NavEntry[] = [
   { label: "Overview", icon: "overview", href: "/dashboard" },
   { label: "Test Bookings", icon: "📅", href: "/test-bookings" },
   { label: "Samples & Tests", icon: "🧪", href: "/samples-tests" },
-  { label: "Results", icon: "📋" },
+  { label: "Results", icon: "📋", href: "/results" },
   { label: "External Results", icon: "🗂️" },
   { label: "Test Catalogue", icon: "📁" },
   { label: "Notifications", icon: "🔔" },
