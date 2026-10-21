@@ -3,7 +3,6 @@ import {
   CalendarCheck,
   CheckCheck,
   ChevronRight,
-  ClipboardList,
   FlaskConical,
   MessageSquareText,
   Pill,
@@ -229,7 +228,7 @@ export default function HospitalNotifications({
                   {item.action && item.destination ? (
                     <button
                       type="button"
-                      onClick={() => { onRead(item.id); onNavigate(item.destination!); }}
+                      onClick={() => { onRead(item.id); if (item.destination) onNavigate(item.destination); }}
                       className="inline-flex items-center gap-1 text-[15px] font-semibold text-[#2970ff] hover:underline"
                     >
                       {item.action}<ChevronRight className="size-4" />
