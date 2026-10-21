@@ -842,9 +842,6 @@ export default function HospitalDashboardPage() {
                 {activeSection === "Hospital Profile" ? (
                   <Building2 className="size-5" />
                 ) : null}
-                {activeSection === "Patients" ? (
-                  <Users className="size-5" />
-                ) : null}
                 {activeSection === "Laboratory" ? (
                   <FlaskConical className="size-5" />
                 ) : null}
