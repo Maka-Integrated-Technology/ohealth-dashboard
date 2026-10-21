@@ -2,7 +2,6 @@ import {
   Check,
   ChevronDown,
   ChevronRight,
-  FilePlus2,
   Pill,
   Plus,
   Search,
