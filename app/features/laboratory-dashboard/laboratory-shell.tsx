@@ -13,7 +13,7 @@ const NAV_ITEMS: NavEntry[] = [
   { label: "Samples & Tests", icon: "🧪", href: "/samples-tests" },
   { label: "Results", icon: "📋", href: "/results" },
   { label: "External Results", icon: "🗂️", href: "/external-results" },
-  { label: "Test Catalogue", icon: "📁" },
+  { label: "Test Catalogue", icon: "📁", href: "/test-catalogue" },
   { label: "Notifications", icon: "🔔", href: "/notifications" },
   { label: "Reports & Analytics", icon: "📊", href: "/reports-analytics" },
   { label: "Laboratory Profile", icon: "🏥" },
