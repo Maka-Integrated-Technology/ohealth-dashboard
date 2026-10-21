@@ -1,0 +1,42 @@
+name: Format and validate lab results, notifications and analytics (temporary)
+on:
+  push:
+    branches: [feat/laboratory-auth-cloudflare-preview]
+    paths:
+      - .github/workflows/laboratory-results-reports-format-temp.yml
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/laboratory-auth-cloudflare-preview
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --no-audit
+      - name: Prettier Results, Notifications and Reports
+        run: |
+          npx prettier --write app/features/laboratory-dashboard/laboratory-results-data.ts app/features/laboratory-dashboard/laboratory-result-drawer.tsx app/features/laboratory-dashboard/laboratory-results.tsx app/features/laboratory-dashboard/laboratory-notifications-data.ts app/features/laboratory-dashboard/laboratory-notifications.tsx app/features/laboratory-dashboard/laboratory-reports.tsx app/features/laboratory-dashboard/laboratory-shell.tsx app/routes/lb-dashboard/results/page.tsx app/routes/lb-dashboard/notifications/page.tsx app/routes/lb-dashboard/reports-analytics/page.tsx
+      - name: Check lint
+        run: npm run lint
+      - name: Type-check
+        run: npm run typecheck
+      - name: Build laboratory portal
+        run: npm run build:lb
+      - name: Commit formatted sources
+        if: success()
+        run: |
+          if ! git diff --quiet -- app/features/laboratory-dashboard app/routes/lb-dashboard/results app/routes/lb-dashboard/notifications app/routes/lb-dashboard/reports-analytics; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add app/features/laboratory-dashboard app/routes/lb-dashboard/results app/routes/lb-dashboard/notifications app/routes/lb-dashboard/reports-analytics
+            git commit -m 'style(lab): format Results, Notifications and Reports dashboard screens'
+            git push origin HEAD:feat/laboratory-auth-cloudflare-preview
+          fi
