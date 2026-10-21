@@ -8,7 +8,6 @@ import {
   LockKeyhole,
   Mail,
   Plus,
-  Settings2,
   Shield,
   ShieldAlert,
   ShieldCheck,
