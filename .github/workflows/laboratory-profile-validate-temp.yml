@@ -39,3 +39,5 @@ jobs:
             git commit -m 'style(lab): format screenshot-based Laboratory Profile'
             git push origin HEAD:feat/laboratory-auth-cloudflare-preview
           fi
+
+# Rerun after fixing JSX escaped entity.
