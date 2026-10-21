@@ -362,7 +362,7 @@ export default function LaboratoryDashboard() {
           <section className="overflow-hidden rounded-[15px] border border-[#e9eef5] bg-white">
             <div className="flex h-[46px] items-center justify-between px-[17px] pt-[9px]">
               <h2 className="text-[12px] font-semibold text-[#23324b]">
-                Today's Schedule
+                Today&apos;s Schedule
               </h2>
               <button
                 type="button"
@@ -492,7 +492,7 @@ export default function LaboratoryDashboard() {
                 ))}
               </div>
               <p className="mt-4 text-xs text-[#667085]">
-                These values reproduce the screenshot's preview chart and are
+                These values reproduce the screenshot&apos;s preview chart and are
                 not live financial records.
               </p>
             </div>
