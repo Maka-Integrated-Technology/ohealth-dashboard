@@ -355,7 +355,7 @@ export default function HospitalAuthPage() {
           <div className="mt-10 grid grid-cols-2 gap-4">
             {FEATURES.map((feature) => (
               <div
-                className="min-h-[72px] rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 backdrop-blur-sm"
+                className="min-h-[72px] rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3"
                 key={feature.value}
               >
                 <p className="text-[18px] leading-7 font-semibold text-white">
@@ -531,7 +531,8 @@ export default function HospitalAuthPage() {
             <>
               <p className="mb-4 rounded-lg border border-blue-100 bg-blue-50 px-3.5 py-2.5 text-xs leading-5 text-blue-800">
                 Preview mode: leave fields blank to move through the steps.
-                Entered email addresses and selected file sizes are still checked.
+                Entered email addresses and selected file sizes are still
+                checked.
               </p>
               <StepProgress activeStep={activeStep} />
 
@@ -789,10 +790,7 @@ export default function HospitalAuthPage() {
                     >
                       <ChevronLeft className="size-4" /> Back
                     </button>
-                    <button
-                      className={primaryButtonClassName}
-                      type="submit"
-                    >
+                    <button className={primaryButtonClassName} type="submit">
                       Submit for review <ArrowRight className="size-4" />
                     </button>
                   </div>
