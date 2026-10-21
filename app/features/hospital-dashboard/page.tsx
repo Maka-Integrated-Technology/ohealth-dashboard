@@ -824,9 +824,6 @@ export default function HospitalDashboardPage() {
           ) : (
             <section className="rounded-2xl border border-[#e2e8f0] bg-white p-6">
               <span className="mb-4 flex size-11 items-center justify-center rounded-xl bg-[#eef4ff] text-[#155eef]">
-                {activeSection === "Hospital Profile" ? (
-                  <Building2 className="size-5" />
-                ) : null}
                 {activeSection === "Laboratory" ? (
                   <FlaskConical className="size-5" />
                 ) : null}
