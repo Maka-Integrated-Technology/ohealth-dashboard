@@ -1,0 +1,35 @@
+name: Format mirrored laboratory authentication (temporary)
+on:
+  push:
+    branches: [feat/laboratory-auth-cloudflare-preview]
+    paths:
+      - app/features/laboratory-auth/page.tsx
+      - .github/workflows/laboratory-auth-mirror-format-temp.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format-laboratory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/laboratory-auth-cloudflare-preview
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit
+      - name: Format lab auth
+        run: npx prettier --write app/features/laboratory-auth/page.tsx
+      - name: Commit and push formatting
+        run: |
+          if ! git diff --quiet -- app/features/laboratory-auth/page.tsx; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add app/features/laboratory-auth/page.tsx
+            git commit -m 'style(lab): format reused hospital authentication design'
+            git push origin HEAD:feat/laboratory-auth-cloudflare-preview
+          fi
