@@ -1,5 +1,7 @@
-import AppShell from "~/components/shared/app-shell";
+import { Outlet } from "react-router";
 
-export default function LbDashboardLayout() {
-  return <AppShell portal="Laboratory" />;
+// The laboratory sign-in experience owns its own full-screen split layout.
+// Keep the shared authenticated app shell for the future dashboard routes.
+export default function LaboratoryPortalLayout() {
+  return <Outlet />;
 }
