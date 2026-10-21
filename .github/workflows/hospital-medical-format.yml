@@ -1,0 +1,40 @@
+name: Format hospital labs and prescriptions (temporary)
+on:
+  push:
+    branches:
+      - feat/hospital-auth-cloudflare-preview
+    paths:
+      - app/features/hospital-dashboard/hospital-laboratory.tsx
+      - app/features/hospital-dashboard/hospital-prescriptions.tsx
+      - app/features/hospital-dashboard/page.tsx
+      - .github/workflows/hospital-medical-format.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format-hospital-medical:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/hospital-auth-cloudflare-preview
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Format Figma hospital screens
+        run: |
+          npx prettier --write app/features/hospital-dashboard/hospital-laboratory.tsx app/features/hospital-dashboard/hospital-prescriptions.tsx app/features/hospital-dashboard/page.tsx
+          git diff --stat
+      - name: Commit and push formatting
+        run: |
+          if ! git diff --quiet -- app/features/hospital-dashboard/hospital-laboratory.tsx app/features/hospital-dashboard/hospital-prescriptions.tsx app/features/hospital-dashboard/page.tsx; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add app/features/hospital-dashboard/hospital-laboratory.tsx app/features/hospital-dashboard/hospital-prescriptions.tsx app/features/hospital-dashboard/page.tsx
+            git commit -m 'style(hospital): format laboratory and prescriptions views'
+            git push origin HEAD:feat/hospital-auth-cloudflare-preview
+          fi
