@@ -18,7 +18,7 @@ const NAV_ITEMS: NavEntry[] = [
   { label: "Reports & Analytics", icon: "📊", href: "/reports-analytics" },
   { label: "Laboratory Profile", icon: "🏥" },
   { label: "Staff Management", icon: "👥" },
-  { label: "Compliance & Audit", icon: "🛡️" },
+  { label: "Compliance & Audit", icon: "🛡️", href: "/compliance-audit" },
 ];
 
 export function LaboratoryShell({
