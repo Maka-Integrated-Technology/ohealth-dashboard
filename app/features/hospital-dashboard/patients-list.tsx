@@ -106,12 +106,9 @@ export default function HospitalPatientsList({
     const term = filter.trim().toLowerCase();
     if (!term) return hospitalPatientRecords;
     return hospitalPatientRecords.filter((record) =>
-      [
-        record.patient,
-        record.detail,
-        record.doctor,
-        record.department,
-      ].some((value) => value.toLowerCase().includes(term))
+      [record.patient, record.detail, record.doctor, record.department].some(
+        (value) => value.toLowerCase().includes(term)
+      )
     );
   }, [filter]);
 
@@ -122,7 +119,8 @@ export default function HospitalPatientsList({
           Patients
         </h2>
         <p className="mt-1 text-[18px] leading-[26px] font-medium text-[#4d5761]">
-          Only patients who have booked appointments with your hospital are shown.
+          Only patients who have booked appointments with your hospital are
+          shown.
         </p>
       </div>
 
@@ -195,7 +193,10 @@ export default function HospitalPatientsList({
             ))}
             {visiblePatients.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-10 text-center text-sm text-[#62748e]">
+                <td
+                  colSpan={6}
+                  className="px-6 py-10 text-center text-sm text-[#62748e]"
+                >
                   No patients match your search.
                 </td>
               </tr>
