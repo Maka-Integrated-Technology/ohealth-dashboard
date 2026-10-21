@@ -28,7 +28,11 @@ import { useMemo, useState, type ReactNode } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import HospitalPatientDetails from "~/features/hospital-dashboard/patient-details";
 import HospitalProfile from "~/features/hospital-dashboard/hospital-profile";
-import HospitalAppointments from "~/features/hospital-dashboard/hospital-appointments";
+import HospitalAppointments, {
+  AppointmentDrawer,
+  appointmentSamples,
+  type PreviewAppointment,
+} from "~/features/hospital-dashboard/hospital-appointments";
 import HospitalPatientsList, {
   hospitalPatientRecords,
 } from "~/features/hospital-dashboard/patients-list";
@@ -45,18 +49,7 @@ type HospitalSection =
   | "Notifications"
   | "Settings";
 
-type Appointment = {
-  id: string;
-  initials: string;
-  patient: string;
-  detail: string;
-  time: string;
-  kind: string;
-  doctor: string;
-  department: string;
-  status: "Confirmed" | "Pending" | "Arrived" | "Completed" | "Cancelled";
-  payment: "Paid" | "Unpaid" | "Insurance";
-};
+type Appointment = PreviewAppointment;
 
 const navigation: {
   label: HospitalSection;
@@ -131,59 +124,9 @@ const metrics = [
   },
 ] as const;
 
-const initialAppointments: Appointment[] = [
-  {
-    id: "APT-2041",
-    initials: "JD",
-    patient: "John Doe",
-    detail: "45y · Male",
-    time: "09:00 AM",
-    kind: "Consultation",
-    doctor: "Dr. Sarah Chen",
-    department: "Cardiology",
-    status: "Confirmed",
-    payment: "Paid",
-  },
-  {
-    id: "APT-2042",
-    initials: "AM",
-    patient: "Adaeze Martins",
-    detail: "32y · Female",
-    time: "09:30 AM",
-    kind: "Follow-up",
-    doctor: "Dr. Michael Okafor",
-    department: "General Medicine",
-    status: "Pending",
-    payment: "Unpaid",
-  },
-  {
-    id: "APT-2043",
-    initials: "TO",
-    patient: "Tunde Okoye",
-    detail: "57y · Male",
-    time: "10:15 AM",
-    kind: "Consultation",
-    doctor: "Dr. Sarah Chen",
-    department: "Cardiology",
-    status: "Arrived",
-    payment: "Insurance",
-  },
-  {
-    id: "APT-2044",
-    initials: "FN",
-    patient: "Fatima Nwosu",
-    detail: "28y · Female",
-    time: "11:00 AM",
-    kind: "Consultation",
-    doctor: "Dr. David Bello",
-    department: "Paediatrics",
-    status: "Completed",
-    payment: "Paid",
-  },
-];
-
 const statusStyles: Record<Appointment["status"], string> = {
   Confirmed: "bg-emerald-50 text-emerald-700 ring-emerald-100",
+  Rescheduled: "bg-violet-50 text-violet-700 ring-violet-100",
   Pending: "bg-amber-50 text-amber-700 ring-amber-100",
   Arrived: "bg-blue-50 text-blue-700 ring-blue-100",
   Completed: "bg-slate-100 text-slate-700 ring-slate-200",
@@ -193,7 +136,6 @@ const statusStyles: Record<Appointment["status"], string> = {
 const paymentStyles: Record<Appointment["payment"], string> = {
   Paid: "bg-emerald-50 text-emerald-700",
   Unpaid: "bg-rose-50 text-rose-700",
-  Insurance: "bg-violet-50 text-violet-700",
 };
 
 function StatusBadge({ status }: { status: Appointment["status"] }) {
@@ -282,7 +224,20 @@ export default function HospitalDashboardPage() {
   );
   const [search, setSearch] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [appointments] = useState(initialAppointments);
+  const [appointments, setAppointments] =
+    useState<Appointment[]>(appointmentSamples);
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState<
+    string | null
+  >(null);
+  const selectedAppointment = appointments.find(
+    (appointment) => appointment.id === selectedAppointmentId
+  );
+  const updateAppointment = (updated: PreviewAppointment) =>
+    setAppointments((current) =>
+      current.map((appointment) =>
+        appointment.id === updated.id ? updated : appointment
+      )
+    );
   const selectedPatient = patientId
     ? [...appointments, ...hospitalPatientRecords].find(
         (patient) => patient.id === patientId
@@ -298,7 +253,7 @@ export default function HospitalDashboardPage() {
         appointment.patient,
         appointment.doctor,
         appointment.department,
-        appointment.kind,
+        appointment.type,
         appointment.status,
         appointment.id,
       ]
@@ -568,7 +523,7 @@ export default function HospitalDashboardPage() {
                               {appointment.time}
                             </span>
                             <span className="mt-1 block text-xs text-[#62748e]">
-                              {appointment.kind}
+                              {appointment.type}
                             </span>
                           </td>
                           <td className="px-5 py-4">
@@ -588,12 +543,7 @@ export default function HospitalDashboardPage() {
                           <td className="px-5 py-4 text-right">
                             <button
                               type="button"
-                              onClick={() =>
-                                navigate(
-                                  "/patients/" +
-                                    encodeURIComponent(appointment.id)
-                                )
-                              }
+                              onClick={() => setSelectedAppointmentId(appointment.id)}
                               className="inline-flex h-9 items-center justify-center rounded-lg border border-[#d7e0ec] px-3.5 text-xs font-semibold text-[#155eef] hover:bg-[#f5f8ff]"
                             >
                               View
@@ -769,7 +719,10 @@ export default function HospitalDashboardPage() {
           ) : activeSection === "Hospital Profile" ? (
             <HospitalProfile />
           ) : activeSection === "Appointments" ? (
-            <HospitalAppointments />
+            <HospitalAppointments
+              records={appointments}
+              onUpdate={updateAppointment}
+            />
           ) : activeSection === "Notifications" ? (
             <section className="rounded-2xl border border-[#e2e8f0] bg-white p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -856,6 +809,14 @@ export default function HospitalDashboardPage() {
           )}
         </main>
       </div>
+      {selectedAppointment ? (
+        <AppointmentDrawer
+          key={selectedAppointment.id}
+          appointment={selectedAppointment}
+          onClose={() => setSelectedAppointmentId(null)}
+          onUpdate={updateAppointment}
+        />
+      ) : null}
     </div>
   );
 }
