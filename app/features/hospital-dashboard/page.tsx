@@ -250,7 +250,9 @@ export default function HospitalDashboardPage() {
       )
     : undefined;
   const [readNotificationIds, setReadNotificationIds] = useState<string[]>(() =>
-    hospitalNotificationSamples.filter((item) => !item.unread).map((item) => item.id)
+    hospitalNotificationSamples
+      .filter((item) => !item.unread)
+      .map((item) => item.id)
   );
   const unreadNotificationCount = hospitalNotificationSamples.filter(
     (item) => !readNotificationIds.includes(item.id)
@@ -322,9 +324,15 @@ export default function HospitalDashboardPage() {
                 >
                   <Icon className="size-[19px]" strokeWidth={1.8} />
                   <span className="flex-1">{item.label}</span>
-                  {(item.label === "Notifications" ? unreadNotificationCount > 0 : Boolean(item.count)) ? (
+                  {(
+                    item.label === "Notifications"
+                      ? unreadNotificationCount > 0
+                      : Boolean(item.count)
+                  ) ? (
                     <span className="flex size-5 items-center justify-center rounded-full bg-[#155eef] text-[10px] font-semibold text-white">
-                      {item.label === "Notifications" ? unreadNotificationCount : item.count}
+                      {item.label === "Notifications"
+                        ? unreadNotificationCount
+                        : item.count}
                     </span>
                   ) : null}
                 </button>
@@ -390,9 +398,15 @@ export default function HospitalDashboardPage() {
                   >
                     <Icon className="size-5" />
                     {item.label}
-                    {(item.label === "Notifications" ? unreadNotificationCount > 0 : Boolean(item.count)) ? (
+                    {(
+                      item.label === "Notifications"
+                        ? unreadNotificationCount > 0
+                        : Boolean(item.count)
+                    ) ? (
                       <span className="ml-auto rounded-full bg-[#155eef] px-2 py-0.5 text-xs text-white">
-                        {item.label === "Notifications" ? unreadNotificationCount : item.count}
+                        {item.label === "Notifications"
+                          ? unreadNotificationCount
+                          : item.count}
                       </span>
                     ) : null}
                   </button>
