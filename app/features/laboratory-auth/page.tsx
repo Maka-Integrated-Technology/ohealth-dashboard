@@ -2,19 +2,15 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
-  CheckCircle2,
   ClipboardCheck,
   Eye,
   EyeOff,
   FileCheck2,
   FileText,
   FlaskConical,
-  LockKeyhole,
-  Mail,
   ShieldCheck,
   TestTubes,
   UploadCloud,
-  X,
 } from "lucide-react";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import Logo from "~/components/shared/logo";
@@ -352,7 +348,7 @@ export default function LaboratoryAuthentication() {
                     </span>
                     <span className="mt-1 block text-[13px] text-[#667085]">{issuer}</span>
                     <span className={`mt-4 flex min-h-20 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed p-3 text-center ${file ? "border-[#a6f4c5] bg-[#ecfdf3]" : "border-[#cbd5e1] bg-white"}`}>
-                      {file ? <><FileCheck2 className="size-6 text-[#039855]" /><span className="mt-1 max-w-full break-all text-sm font-medium text-[#067647]">{file.name}</span><span className="text-xs text-[#667085]">{Math.round(file.size / 1024)} KB · Choose to replace</span></> : <><UploadCloud className="size-6 text-[#155eef]" /><span className="mt-1 text-sm font-medium text-[#344054]">Drop file here or browse</span><span className="mt-1 text-xs text-[#98a2b3]">PDF, JPG, PNG — max 10 MB</span></>}
+                      {file ? <><FileCheck2 className="size-6 text-[#039855]" /><span className="mt-1 max-w-full break-all text-sm font-medium text-[#067647]">{file.name}</span><span className="text-xs text-[#667085]">{Math.round(file.size / 1024)} KB · Choose to replace</span></> : <><UploadCloud className="size-6 text-[#155eef]" /><span className="mt-1 text-sm font-medium text-[#344054]">Click to select a file</span><span className="mt-1 text-xs text-[#98a2b3]">PDF, JPG, PNG — max 10 MB</span></>}
                     </span>
                     <input type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" className="sr-only" onChange={(event) => handleFile(id, event)} />
                   </label>
