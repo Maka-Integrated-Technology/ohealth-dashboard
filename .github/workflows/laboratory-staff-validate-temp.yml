@@ -1,0 +1,41 @@
+name: Validate Staff Management preview (temporary)
+on:
+  push:
+    branches: [feat/laboratory-auth-cloudflare-preview]
+    paths:
+      - .github/workflows/laboratory-staff-validate-temp.yml
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/laboratory-auth-cloudflare-preview
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --no-audit
+      - name: Format Staff Management
+        run: npx prettier --write app/features/laboratory-dashboard/laboratory-staff-data.ts app/features/laboratory-dashboard/laboratory-staff.tsx app/features/laboratory-dashboard/laboratory-shell.tsx app/routes/lb-dashboard/staff-management/page.tsx
+      - name: Lint
+        run: npm run lint
+      - name: Type-check
+        run: npm run typecheck
+      - name: Build laboratory portal
+        run: npm run build:lb
+      - name: Commit formatted Staff Management
+        if: success()
+        run: |
+          if ! git diff --quiet -- app/features/laboratory-dashboard/laboratory-staff-data.ts app/features/laboratory-dashboard/laboratory-staff.tsx app/features/laboratory-dashboard/laboratory-shell.tsx app/routes/lb-dashboard/staff-management/page.tsx; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add app/features/laboratory-dashboard/laboratory-staff-data.ts app/features/laboratory-dashboard/laboratory-staff.tsx app/features/laboratory-dashboard/laboratory-shell.tsx app/routes/lb-dashboard/staff-management/page.tsx
+            git commit -m 'style(lab): format Staff Management implementation'
+            git push origin HEAD:feat/laboratory-auth-cloudflare-preview
+          fi
