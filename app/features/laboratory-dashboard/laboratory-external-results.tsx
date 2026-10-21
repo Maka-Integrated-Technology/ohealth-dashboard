@@ -101,7 +101,7 @@ function DetailField({ label, value }: { label: string; value: string }) {
       <span className="text-[11px] leading-[17px] text-[#91a5c2] sm:text-[13px] sm:leading-[19px]">
         {label}
       </span>
-      <span className="mt-[2px] break-words text-[13px] leading-[19px] font-medium text-[#1a2941] sm:text-[15px] sm:leading-[21px]">
+      <span className="mt-[2px] text-[13px] leading-[19px] font-medium break-words text-[#1a2941] sm:text-[15px] sm:leading-[21px]">
         {value}
       </span>
     </div>
@@ -210,7 +210,9 @@ function ExternalResultDetail({
             <div className="grid grid-cols-2 gap-[11px] sm:gap-[13px]">
               <DetailField label="Name" value={result.patient} />
               <DetailField label="Patient ID" value={result.patientId} />
-              {result.phone && <DetailField label="Phone" value={result.phone} />}
+              {result.phone && (
+                <DetailField label="Phone" value={result.phone} />
+              )}
             </div>
           </section>
 
@@ -233,8 +235,11 @@ function ExternalResultDetail({
               </h3>
               {result.reportFile ? (
                 <div className="flex min-h-[56px] items-center gap-[11px] rounded-[12px] border border-[#a5efd1] bg-[#ebfcf3] px-[12px] py-[10px] sm:px-[14px]">
-                  <FileText className="size-[17px] shrink-0 text-[#7b9c92]" aria-hidden="true" />
-                  <span className="min-w-0 flex-1 break-all text-[12px] font-medium text-[#00815e] sm:text-[14px]">
+                  <FileText
+                    className="size-[17px] shrink-0 text-[#7b9c92]"
+                    aria-hidden="true"
+                  />
+                  <span className="min-w-0 flex-1 text-[12px] font-medium break-all text-[#00815e] sm:text-[14px]">
                     {result.reportFile}
                   </span>
                   <button
@@ -251,7 +256,10 @@ function ExternalResultDetail({
                 </p>
               )}
               {downloadNotice && (
-                <p role="status" className="mt-[11px] rounded-[10px] border border-[#bed6ff] bg-[#eff5ff] px-[12px] py-[10px] text-[12px] leading-[19px] text-[#155eef]">
+                <p
+                  role="status"
+                  className="mt-[11px] rounded-[10px] border border-[#bed6ff] bg-[#eff5ff] px-[12px] py-[10px] text-[12px] leading-[19px] text-[#155eef]"
+                >
                   Preview only: the referenced PDF is not connected, so no
                   patient report can be downloaded here.
                 </p>
@@ -309,11 +317,15 @@ export default function LaboratoryExternalResults() {
           External Results
         </h1>
         <p className="mt-[1px] text-[13px] leading-[20px] text-[#566371] sm:text-[17px] sm:leading-[25px]">
-          Results uploaded externally by patients or shared from other facilities
+          Results uploaded externally by patients or shared from other
+          facilities
         </p>
 
         <div className="mt-[28px] flex items-start gap-[12px] rounded-[14px] border border-[#bbd9ff] bg-[#eff5ff] px-[14px] py-[14px] sm:mt-[42px] sm:px-[17px] sm:py-[13px]">
-          <Info className="mt-[2px] size-[17px] shrink-0 text-[#6c91ae]" aria-hidden="true" />
+          <Info
+            className="mt-[2px] size-[17px] shrink-0 text-[#6c91ae]"
+            aria-hidden="true"
+          />
           <p className="text-[12px] leading-[19px] text-[#155eef] sm:text-[14px] sm:leading-[22px]">
             External results are uploaded directly by patients from outside the
             OHealth+ network. They are clearly distinguished from results
@@ -325,7 +337,10 @@ export default function LaboratoryExternalResults() {
         <section className="mt-[24px] overflow-hidden rounded-[15px] border border-[#e8edf5] bg-white sm:mt-[35px] sm:rounded-[17px]">
           <div className="flex flex-wrap items-center justify-between gap-[12px] px-[12px] py-[12px] sm:px-[19px] sm:py-[12px]">
             <div className="relative w-full sm:w-[282px]">
-              <Search className="pointer-events-none absolute top-[11px] left-[13px] size-[15px] text-[#a1afc1]" aria-hidden="true" />
+              <Search
+                className="pointer-events-none absolute top-[11px] left-[13px] size-[15px] text-[#a1afc1]"
+                aria-hidden="true"
+              />
               <input
                 type="search"
                 aria-label="Search external results by patient, lab or test"
@@ -341,14 +356,22 @@ export default function LaboratoryExternalResults() {
                   type="button"
                   key={source}
                   aria-pressed={sourceFilter === source}
-                  title={sourceFilter === source ? "Show all sources" : "Filter by " + source}
-                  onClick={() => setSourceFilter(sourceFilter === source ? null : source)}
+                  title={
+                    sourceFilter === source
+                      ? "Show all sources"
+                      : "Filter by " + source
+                  }
+                  onClick={() =>
+                    setSourceFilter(sourceFilter === source ? null : source)
+                  }
                   className={
                     "rounded-[8px] px-[9px] py-[5px] text-[10px] leading-[14px] font-medium transition-all sm:text-[11px] " +
                     (source === "OHealth+ Lab"
                       ? "bg-[#edf4ff] text-[#155eef]"
                       : "bg-[#f1f3f6] text-[#4b5d78]") +
-                    (sourceFilter === source ? " ring-2 ring-[#155eef] ring-offset-1" : "")
+                    (sourceFilter === source
+                      ? " ring-2 ring-[#155eef] ring-offset-1"
+                      : "")
                   }
                 >
                   {source}
@@ -361,12 +384,24 @@ export default function LaboratoryExternalResults() {
             <table className="w-full min-w-[955px] border-collapse text-left">
               <thead>
                 <tr className="h-[40px] border-y border-[#e9edf4] bg-[#f7f9fc] text-[11px] font-semibold tracking-[0.15px] text-[#647995]">
-                  <th scope="col" className="w-[13%] px-[15px]">PATIENT</th>
-                  <th scope="col" className="w-[29%] px-[15px]">LAB / SOURCE</th>
-                  <th scope="col" className="w-[22%] px-[15px]">TEST TYPE</th>
-                  <th scope="col" className="w-[11%] px-[15px]">TEST DATE</th>
-                  <th scope="col" className="w-[11%] px-[15px]">UPLOADED</th>
-                  <th scope="col" className="w-[14%] px-[15px]">ACCESS STATUS</th>
+                  <th scope="col" className="w-[13%] px-[15px]">
+                    PATIENT
+                  </th>
+                  <th scope="col" className="w-[29%] px-[15px]">
+                    LAB / SOURCE
+                  </th>
+                  <th scope="col" className="w-[22%] px-[15px]">
+                    TEST TYPE
+                  </th>
+                  <th scope="col" className="w-[11%] px-[15px]">
+                    TEST DATE
+                  </th>
+                  <th scope="col" className="w-[11%] px-[15px]">
+                    UPLOADED
+                  </th>
+                  <th scope="col" className="w-[14%] px-[15px]">
+                    ACCESS STATUS
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -404,10 +439,10 @@ export default function LaboratoryExternalResults() {
                     <td className="px-[15px] py-[9px] text-[12px] leading-[18px] text-[#3e516d] sm:text-[14px]">
                       {result.test}
                     </td>
-                    <td className="whitespace-nowrap px-[15px] py-[9px] font-mono text-[11px] text-[#7388a8] sm:text-[12px]">
+                    <td className="px-[15px] py-[9px] font-mono text-[11px] whitespace-nowrap text-[#7388a8] sm:text-[12px]">
                       {result.testDate}
                     </td>
-                    <td className="whitespace-nowrap px-[15px] py-[9px] font-mono text-[11px] text-[#7388a8] sm:text-[12px]">
+                    <td className="px-[15px] py-[9px] font-mono text-[11px] whitespace-nowrap text-[#7388a8] sm:text-[12px]">
                       {result.uploadDate}
                     </td>
                     <td className="px-[15px] py-[9px]">
