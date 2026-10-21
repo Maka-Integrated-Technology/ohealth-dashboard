@@ -52,7 +52,11 @@ type Appointment = {
   payment: "Paid" | "Unpaid" | "Insurance";
 };
 
-const navigation: { label: HospitalSection; icon: LucideIcon; count?: string }[] = [
+const navigation: {
+  label: HospitalSection;
+  icon: LucideIcon;
+  count?: string;
+}[] = [
   { label: "Dashboard", icon: LayoutDashboard },
   { label: "Hospital Profile", icon: Building2 },
   { label: "Appointments", icon: CalendarDays },
@@ -220,10 +224,12 @@ function MetricCard({ metric }: { metric: (typeof metrics)[number] }) {
       <p className="h-[59px] text-[36px] leading-[59px] font-semibold tracking-[-1.2px] text-[#0f172b]">
         {metric.value}
       </p>
-      <p className="text-[15px] font-medium leading-6 text-[#344256]">
+      <p className="text-[15px] leading-6 font-medium text-[#344256]">
         {metric.label}
       </p>
-      <p className={`mt-1.5 flex items-center gap-1.5 text-xs ${metric.trendClass}`}>
+      <p
+        className={`mt-1.5 flex items-center gap-1.5 text-xs ${metric.trendClass}`}
+      >
         {metric.direction === "up" ? (
           <TrendingUp className="size-3.5" />
         ) : metric.direction === "down" ? (
@@ -261,7 +267,8 @@ function SectionHeading({
 
 export default function HospitalDashboardPage() {
   const navigate = useNavigate();
-  const [activeSection, setActiveSection] = useState<HospitalSection>("Dashboard");
+  const [activeSection, setActiveSection] =
+    useState<HospitalSection>("Dashboard");
   const [search, setSearch] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] =
@@ -431,11 +438,11 @@ export default function HospitalDashboardPage() {
             className="relative hidden size-10 shrink-0 items-center justify-center rounded-full text-[#45556c] hover:bg-slate-50 sm:flex"
           >
             <Bell className="size-5" strokeWidth={1.8} />
-            <span className="absolute right-2 top-2 size-2 rounded-full bg-[#155eef] ring-2 ring-white" />
+            <span className="absolute top-2 right-2 size-2 rounded-full bg-[#155eef] ring-2 ring-white" />
           </button>
           <button
             type="button"
-            className="hidden items-center gap-2 rounded-lg py-1 pl-1 pr-2 text-left hover:bg-slate-50 md:flex"
+            className="hidden items-center gap-2 rounded-lg py-1 pr-2 pl-1 text-left hover:bg-slate-50 md:flex"
             onClick={() => navigate("/")}
           >
             <span className="flex size-9 items-center justify-center rounded-full bg-[#e8f0ff] text-xs font-semibold text-[#155eef]">
@@ -445,7 +452,7 @@ export default function HospitalDashboardPage() {
           </button>
         </header>
 
-        <main className="mx-auto w-full max-w-[1440px] px-5 pb-12 pt-8 sm:px-8 lg:pr-[35px] lg:pl-10 lg:pt-[36px]">
+        <main className="mx-auto w-full max-w-[1440px] px-5 pt-8 pb-12 sm:px-8 lg:pt-[36px] lg:pr-[35px] lg:pl-10">
           {activeSection === "Dashboard" ? (
             <>
               <div className="mb-[41px]">
@@ -492,7 +499,10 @@ export default function HospitalDashboardPage() {
                     </thead>
                     <tbody className="divide-y divide-[#edf1f6]">
                       {filteredAppointments.map((appointment) => (
-                        <tr key={appointment.id} className="text-sm hover:bg-[#fbfdff]">
+                        <tr
+                          key={appointment.id}
+                          className="text-sm hover:bg-[#fbfdff]"
+                        >
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
                               <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#eef4ff] text-xs font-semibold text-[#155eef]">
@@ -533,7 +543,9 @@ export default function HospitalDashboardPage() {
                           <td className="px-5 py-4 text-right">
                             <button
                               type="button"
-                              onClick={() => setSelectedAppointment(appointment)}
+                              onClick={() =>
+                                setSelectedAppointment(appointment)
+                              }
                               className="inline-flex h-9 items-center justify-center rounded-lg border border-[#d7e0ec] px-3.5 text-xs font-semibold text-[#155eef] hover:bg-[#f5f8ff]"
                             >
                               View
@@ -543,7 +555,10 @@ export default function HospitalDashboardPage() {
                       ))}
                       {filteredAppointments.length === 0 ? (
                         <tr>
-                          <td colSpan={6} className="px-6 py-10 text-center text-sm text-[#62748e]">
+                          <td
+                            colSpan={6}
+                            className="px-6 py-10 text-center text-sm text-[#62748e]"
+                          >
                             No appointments match “{search}”.
                           </td>
                         </tr>
@@ -553,7 +568,8 @@ export default function HospitalDashboardPage() {
                 </div>
                 <div className="flex items-center justify-between border-t border-[#edf1f6] px-6 py-4">
                   <p className="text-xs text-[#62748e]">
-                    Showing {filteredAppointments.length} of {appointments.length} appointments
+                    Showing {filteredAppointments.length} of{" "}
+                    {appointments.length} appointments
                   </p>
                   <button
                     type="button"
@@ -655,9 +671,15 @@ export default function HospitalDashboardPage() {
                       </span>
                       <div className="min-w-0 flex-1">
                         <p className="text-sm leading-5 text-[#344256]">
-                          Appointment <strong className="font-semibold text-[#1d293d]">APT-2038</strong> was confirmed.
+                          Appointment{" "}
+                          <strong className="font-semibold text-[#1d293d]">
+                            APT-2038
+                          </strong>{" "}
+                          was confirmed.
                         </p>
-                        <p className="mt-1 text-xs text-[#90a1b9]">12 minutes ago</p>
+                        <p className="mt-1 text-xs text-[#90a1b9]">
+                          12 minutes ago
+                        </p>
                       </div>
                     </div>
                     <div className="flex gap-3">
@@ -668,7 +690,9 @@ export default function HospitalDashboardPage() {
                         <p className="text-sm leading-5 text-[#344256]">
                           A new patient profile was added to the hospital.
                         </p>
-                        <p className="mt-1 text-xs text-[#90a1b9]">38 minutes ago</p>
+                        <p className="mt-1 text-xs text-[#90a1b9]">
+                          38 minutes ago
+                        </p>
                       </div>
                     </div>
                     <div className="flex gap-3">
@@ -679,7 +703,9 @@ export default function HospitalDashboardPage() {
                         <p className="text-sm leading-5 text-[#344256]">
                           A laboratory result is ready to review.
                         </p>
-                        <p className="mt-1 text-xs text-[#90a1b9]">1 hour ago</p>
+                        <p className="mt-1 text-xs text-[#90a1b9]">
+                          1 hour ago
+                        </p>
                       </div>
                     </div>
                     <div className="flex gap-3">
@@ -690,7 +716,9 @@ export default function HospitalDashboardPage() {
                         <p className="text-sm leading-5 text-[#344256]">
                           A patient left a new review.
                         </p>
-                        <p className="mt-1 text-xs text-[#90a1b9]">2 hours ago</p>
+                        <p className="mt-1 text-xs text-[#90a1b9]">
+                          2 hours ago
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -713,7 +741,9 @@ export default function HospitalDashboardPage() {
                 }
               />
               <p className="mt-5 text-sm text-[#62748e]">
-                The appointment management screen is next in the Figma implementation sequence. The search above already filters the sample appointments on the dashboard.
+                The appointment management screen is next in the Figma
+                implementation sequence. The search above already filters the
+                sample appointments on the dashboard.
               </p>
             </section>
           ) : activeSection === "Notifications" ? (
@@ -733,15 +763,34 @@ export default function HospitalDashboardPage() {
               </div>
               <div className="mt-5 space-y-3">
                 {[
-                  ["Appointment request received", "Four appointment requests are waiting for confirmation.", "8 min ago"],
-                  ["Laboratory result ready", "A result is ready for the attending doctor to review.", "38 min ago"],
-                  ["New patient review", "A patient has shared feedback about their visit.", "2 hours ago"],
+                  [
+                    "Appointment request received",
+                    "Four appointment requests are waiting for confirmation.",
+                    "8 min ago",
+                  ],
+                  [
+                    "Laboratory result ready",
+                    "A result is ready for the attending doctor to review.",
+                    "38 min ago",
+                  ],
+                  [
+                    "New patient review",
+                    "A patient has shared feedback about their visit.",
+                    "2 hours ago",
+                  ],
                 ].map(([title, description, time], index) => (
-                  <div key={title} className={`flex items-start gap-3 rounded-xl border border-[#e2e8f0] p-4 ${!readNotifications && index === 0 ? "bg-[#f5f8ff]" : "bg-white"}`}>
+                  <div
+                    key={title}
+                    className={`flex items-start gap-3 rounded-xl border border-[#e2e8f0] p-4 ${!readNotifications && index === 0 ? "bg-[#f5f8ff]" : "bg-white"}`}
+                  >
                     <span className="mt-1 size-2 shrink-0 rounded-full bg-[#155eef]" />
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-[#1d293d]">{title}</p>
-                      <p className="mt-1 text-sm leading-5 text-[#62748e]">{description}</p>
+                      <p className="text-sm font-semibold text-[#1d293d]">
+                        {title}
+                      </p>
+                      <p className="mt-1 text-sm leading-5 text-[#62748e]">
+                        {description}
+                      </p>
                       <p className="mt-2 text-xs text-[#90a1b9]">{time}</p>
                     </div>
                   </div>
@@ -751,16 +800,32 @@ export default function HospitalDashboardPage() {
           ) : (
             <section className="rounded-2xl border border-[#e2e8f0] bg-white p-6">
               <span className="mb-4 flex size-11 items-center justify-center rounded-xl bg-[#eef4ff] text-[#155eef]">
-                {activeSection === "Hospital Profile" ? <Building2 className="size-5" /> : null}
-                {activeSection === "Patients" ? <Users className="size-5" /> : null}
-                {activeSection === "Laboratory" ? <FlaskConical className="size-5" /> : null}
-                {activeSection === "Prescriptions" ? <Pill className="size-5" /> : null}
-                {activeSection === "Reviews" ? <Star className="size-5" /> : null}
-                {activeSection === "Settings" ? <Settings className="size-5" /> : null}
+                {activeSection === "Hospital Profile" ? (
+                  <Building2 className="size-5" />
+                ) : null}
+                {activeSection === "Patients" ? (
+                  <Users className="size-5" />
+                ) : null}
+                {activeSection === "Laboratory" ? (
+                  <FlaskConical className="size-5" />
+                ) : null}
+                {activeSection === "Prescriptions" ? (
+                  <Pill className="size-5" />
+                ) : null}
+                {activeSection === "Reviews" ? (
+                  <Star className="size-5" />
+                ) : null}
+                {activeSection === "Settings" ? (
+                  <Settings className="size-5" />
+                ) : null}
               </span>
-              <h2 className="text-lg font-semibold text-[#0f172b]">{activeSection}</h2>
+              <h2 className="text-lg font-semibold text-[#0f172b]">
+                {activeSection}
+              </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-[#62748e]">
-                This area is included in the hospital navigation. Its full screen will be implemented against the corresponding Figma frame next. This preview currently uses sample data only.
+                This area is included in the hospital navigation. Its full
+                screen will be implemented against the corresponding Figma frame
+                next. This preview currently uses sample data only.
               </p>
               <button
                 type="button"
@@ -779,7 +844,8 @@ export default function HospitalDashboardPage() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-[#0f172b]/35 p-4"
           role="presentation"
           onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setSelectedAppointment(null);
+            if (event.target === event.currentTarget)
+              setSelectedAppointment(null);
           }}
         >
           <section
@@ -793,10 +859,15 @@ export default function HospitalDashboardPage() {
                 <p className="text-xs font-semibold tracking-[0.12em] text-[#155eef] uppercase">
                   Appointment details · {selectedAppointment.id}
                 </p>
-                <h2 id="appointment-dialog-title" className="mt-2 text-xl font-semibold text-[#0f172b]">
+                <h2
+                  id="appointment-dialog-title"
+                  className="mt-2 text-xl font-semibold text-[#0f172b]"
+                >
                   {selectedAppointment.patient}
                 </h2>
-                <p className="mt-1 text-sm text-[#62748e]">{selectedAppointment.detail}</p>
+                <p className="mt-1 text-sm text-[#62748e]">
+                  {selectedAppointment.detail}
+                </p>
               </div>
               <button
                 type="button"
@@ -810,19 +881,27 @@ export default function HospitalDashboardPage() {
             <div className="mt-5 grid grid-cols-1 gap-4 rounded-xl bg-[#f8fafc] p-4 sm:grid-cols-2">
               <div>
                 <p className="text-xs text-[#62748e]">Time</p>
-                <p className="mt-1 text-sm font-semibold text-[#1d293d]">{selectedAppointment.time}</p>
+                <p className="mt-1 text-sm font-semibold text-[#1d293d]">
+                  {selectedAppointment.time}
+                </p>
               </div>
               <div>
                 <p className="text-xs text-[#62748e]">Appointment type</p>
-                <p className="mt-1 text-sm font-semibold text-[#1d293d]">{selectedAppointment.kind}</p>
+                <p className="mt-1 text-sm font-semibold text-[#1d293d]">
+                  {selectedAppointment.kind}
+                </p>
               </div>
               <div>
                 <p className="text-xs text-[#62748e]">Doctor</p>
-                <p className="mt-1 text-sm font-semibold text-[#1d293d]">{selectedAppointment.doctor}</p>
+                <p className="mt-1 text-sm font-semibold text-[#1d293d]">
+                  {selectedAppointment.doctor}
+                </p>
               </div>
               <div>
                 <p className="text-xs text-[#62748e]">Department</p>
-                <p className="mt-1 text-sm font-semibold text-[#1d293d]">{selectedAppointment.department}</p>
+                <p className="mt-1 text-sm font-semibold text-[#1d293d]">
+                  {selectedAppointment.department}
+                </p>
               </div>
             </div>
             <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
@@ -836,7 +915,10 @@ export default function HospitalDashboardPage() {
                     type="button"
                     onClick={() => {
                       changeStatus(selectedAppointment.id, "Confirmed");
-                      setSelectedAppointment({ ...selectedAppointment, status: "Confirmed" });
+                      setSelectedAppointment({
+                        ...selectedAppointment,
+                        status: "Confirmed",
+                      });
                     }}
                     className="rounded-lg bg-[#155eef] px-4 py-2 text-sm font-semibold text-white hover:bg-[#174fc5]"
                   >
@@ -853,7 +935,8 @@ export default function HospitalDashboardPage() {
               </div>
             </div>
             <p className="mt-4 text-xs leading-5 text-[#90a1b9]">
-              Preview only: changing an appointment updates this screen&apos;s sample data, not a live hospital record.
+              Preview only: changing an appointment updates this screen&apos;s
+              sample data, not a live hospital record.
             </p>
           </section>
         </div>
