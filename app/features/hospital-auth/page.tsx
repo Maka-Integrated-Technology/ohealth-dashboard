@@ -248,9 +248,9 @@ export default function HospitalAuthPage() {
 
   const handleSignIn = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFeedback(
-      "Sign-in is not connected in this preview. No credentials were sent to a server."
-    );
+    // Preview-only navigation. This does not authenticate the visitor or
+    // create a session. Backend sign-in must be integrated separately.
+    navigate("/dashboard");
   };
 
   const handlePasswordReset = (event: FormEvent<HTMLFormElement>) => {
