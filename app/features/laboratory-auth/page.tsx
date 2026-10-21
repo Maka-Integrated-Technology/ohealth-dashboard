@@ -235,7 +235,9 @@ export default function LaboratoryAuthPage() {
   const handleSignIn = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // This preview must not imply credentials were verified or create a session.
-    setFeedback("Laboratory sign-in is a UI preview only. No account was authenticated and no session was created.");
+    setFeedback(
+      "Laboratory sign-in is a UI preview only. No account was authenticated and no session was created."
+    );
     setLoginPassword("");
   };
 
@@ -920,7 +922,11 @@ export default function LaboratoryAuthPage() {
                     "Test processing",
                     "Track lab tests and results",
                   ],
-                  ["prescriptions", "Results sharing", "Clinician communication"],
+                  [
+                    "prescriptions",
+                    "Results sharing",
+                    "Clinician communication",
+                  ],
                 ].map(([key, label, description]) => {
                   const checked = selectedModules.includes(key);
                   return (
