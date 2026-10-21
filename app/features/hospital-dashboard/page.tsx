@@ -1,5 +1,4 @@
 import {
-  Activity,
   ArrowUpRight,
   Bell,
   Building2,
@@ -9,28 +8,23 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronRight,
-  CircleAlert,
-  ClipboardList,
   Clock3,
   FlaskConical,
   LayoutDashboard,
   LogOut,
   Menu,
   MessageSquareText,
-  MoreHorizontal,
   Pill,
   Search,
   Settings,
-  ShieldCheck,
   Star,
   TrendingDown,
   TrendingUp,
-  UserRound,
   Users,
   X,
   type LucideIcon,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router";
 import Logo from "~/components/shared/logo";
 
@@ -248,7 +242,7 @@ function SectionHeading({
 }: {
   title: string;
   description?: string;
-  action?: React.ReactNode;
+  action?: ReactNode;
 }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3">
