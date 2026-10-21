@@ -73,6 +73,7 @@ function AnalyticsCard({
 
 export default function LaboratoryReportsAndAnalytics() {
   const [period, setPeriod] = useState<Period>("Last 7 Months");
+  const [headerSearch, setHeaderSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [selectedBar, setSelectedBar] = useState<string | null>(null);
   const series =
@@ -81,10 +82,12 @@ export default function LaboratoryReportsAndAnalytics() {
       : period === "Last 3 Months"
         ? REVENUE.slice(-3)
         : REVENUE;
-  const categoryData =
-    selectedCategory === "All"
-      ? TEST_CATEGORIES
-      : TEST_CATEGORIES.filter((item) => item.category === selectedCategory);
+  const matchingCategories = TEST_CATEGORIES.filter((item) =>
+    item.category.toLowerCase().includes(headerSearch.trim().toLowerCase())
+  );
+  const categoryData = selectedCategory === "All"
+    ? matchingCategories
+    : matchingCategories.filter((item) => item.category === selectedCategory);
   const csv = [
     "OHealth+ Lab Reports & Analytics — SAMPLE DATA (not live)",
     "Month,Estimated revenue NGN (thousands),Example test volume",
@@ -95,7 +98,7 @@ export default function LaboratoryReportsAndAnalytics() {
   ].join("\n");
 
   return (
-    <LaboratoryShell section="Reports & Analytics">
+    <LaboratoryShell section="Reports & Analytics" search={headerSearch} onSearchChange={setHeaderSearch}>
       <div className="mx-auto w-full max-w-[1500px] px-[15px] pt-[24px] pb-[70px] sm:px-[30px] sm:pt-[45px]">
         <div className="flex flex-wrap items-start justify-between gap-[14px]">
           <div>
@@ -274,7 +277,7 @@ export default function LaboratoryReportsAndAnalytics() {
               </ResponsiveContainer>
             </div>
             <div className="grid grid-cols-2 gap-x-[12px] gap-y-[7px]">
-              {TEST_CATEGORIES.map((item) => (
+              {matchingCategories.map((item) => (
                 <button
                   key={item.category}
                   type="button"
@@ -390,7 +393,7 @@ export default function LaboratoryReportsAndAnalytics() {
                 </tr>
               </thead>
               <tbody>
-                {TEST_CATEGORIES.map((item) => (
+                {matchingCategories.map((item) => (
                   <tr
                     key={item.category}
                     className="border-b border-[#eef2f6] text-[12px] text-[#435673] last:border-b-0 sm:text-[13px]"
