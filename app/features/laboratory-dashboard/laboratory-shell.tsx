@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router";
 import { ChevronDown, LayoutGrid, Menu, Search, X } from "lucide-react";
+import { markAllLabNotificationsRead, useLabNotifications } from "./laboratory-notifications-data";
 
 type NavEntry = { label: string; icon: string; href?: string };
 const NAV_ITEMS: NavEntry[] = [
@@ -10,8 +11,8 @@ const NAV_ITEMS: NavEntry[] = [
   { label: "Results", icon: "📋", href: "/results" },
   { label: "External Results", icon: "🗂️" },
   { label: "Test Catalogue", icon: "📁" },
-  { label: "Notifications", icon: "🔔" },
-  { label: "Reports & Analytics", icon: "📊" },
+  { label: "Notifications", icon: "🔔", href: "/notifications" },
+  { label: "Reports & Analytics", icon: "📊", href: "/reports-analytics" },
   { label: "Laboratory Profile", icon: "🏥" },
   { label: "Staff Management", icon: "👥" },
   { label: "Compliance & Audit", icon: "🛡️" },
@@ -32,18 +33,14 @@ export function LaboratoryShell({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notice, setNotice] = useState("");
   const [showAlerts, setShowAlerts] = useState(false);
-  const [readAlerts, setReadAlerts] = useState(false);
+  const notificationItems = useLabNotifications();
+  const unreadCount = notificationItems.filter((item) => item.unread).length;
   const [showProfile, setShowProfile] = useState(false);
 
   const openSection = (label: string) => {
     setMobileOpen(false);
     setShowAlerts(false);
-    if (label === "Notifications") {
-      setShowAlerts(true);
-      setNotice("");
-    } else {
-      setNotice(label + " is not included in the current laboratory preview.");
-    }
+    setNotice(label + " is not included in the current laboratory preview.");
   };
 
   const sidebar = (
@@ -191,9 +188,9 @@ export function LaboratoryShell({
                 className="relative flex size-[26px] items-center justify-center text-[16px] sm:text-[18px]"
               >
                 <span aria-hidden="true">🔔</span>
-                {!readAlerts && (
+                {unreadCount > 0 && (
                   <span className="absolute -top-[3px] -right-[5px] flex size-[14px] items-center justify-center rounded-full bg-[#f72e49] text-[9px] font-bold text-white">
-                    4
+                    {unreadCount}
                   </span>
                 )}
               </button>
@@ -210,19 +207,20 @@ export function LaboratoryShell({
                     </button>
                   </div>
                   <p className="mt-3 text-[13px] leading-5 text-[#65758d]">
-                    {readAlerts
+                    {unreadCount === 0
                       ? "All preview notifications marked as read."
-                      : "4 unread preview notifications. No live notification service is connected."}
+                      : unreadCount + " unread preview notifications. No live notification service is connected."}
                   </p>
-                  {!readAlerts && (
+                  {unreadCount > 0 && (
                     <button
                       type="button"
-                      onClick={() => setReadAlerts(true)}
+                      onClick={markAllLabNotificationsRead}
                       className="mt-3 text-xs font-semibold text-[#155eef]"
                     >
                       Mark all as read
                     </button>
                   )}
+                  <Link to="/notifications" onClick={() => setShowAlerts(false)} className="mt-3 block text-xs font-semibold text-[#155eef]">View all notifications</Link>
                 </div>
               )}
             </div>
