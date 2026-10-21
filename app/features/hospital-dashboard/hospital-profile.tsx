@@ -1,5 +1,6 @@
 import {
   Building2,
+  type LucideIcon,
   Check,
   Clock3,
   Contact,
@@ -12,7 +13,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 type HospitalProfileData = {
   name: string;
@@ -54,8 +55,8 @@ function SectionCard({
   editing,
 }: {
   title: string;
-  icon: typeof Building2;
-  children: React.ReactNode;
+  icon: LucideIcon;
+  children: ReactNode;
   onEdit?: () => void;
   editing?: boolean;
 }) {
