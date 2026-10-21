@@ -115,10 +115,10 @@ export default function HospitalPatientsList({
   return (
     <div className="max-w-[1143px] pb-12">
       <div className="mb-10">
-        <h2 className="text-[17px] sm:text-[21px] leading-8 font-semibold text-[#1f2a37]">
+        <h2 className="text-[17px] leading-8 font-semibold text-[#1f2a37] sm:text-[21px]">
           Patients
         </h2>
-        <p className="mt-1 text-[14px] sm:text-[18px] leading-[21px] sm:leading-[26px] font-medium text-[#4d5761]">
+        <p className="mt-1 text-[14px] leading-[21px] font-medium text-[#4d5761] sm:text-[18px] sm:leading-[26px]">
           Only patients who have booked appointments with your hospital are
           shown.
         </p>
@@ -133,7 +133,7 @@ export default function HospitalPatientsList({
             value={filter}
             placeholder="Search patients..."
             onChange={(event) => setFilter(event.currentTarget.value)}
-            className="min-w-0 flex-1 bg-transparent text-[14px] sm:text-[18px] text-[#1f2a37] outline-none placeholder:text-[#90a1b9]"
+            className="min-w-0 flex-1 bg-transparent text-[14px] text-[#1f2a37] outline-none placeholder:text-[#90a1b9] sm:text-[18px]"
           />
         </label>
       </div>
@@ -142,20 +142,23 @@ export default function HospitalPatientsList({
         <table className="w-full min-w-[990px] border-collapse text-left">
           <thead className="border-b border-[#f1f5f9] bg-[#f8fafc] text-[14px] font-semibold tracking-[0.65px] text-[#90a1b9] uppercase">
             <tr>
-              <th className="px-4 sm:px-6 py-[15px]">Patient</th>
+              <th className="px-4 py-[15px] sm:px-6">Patient</th>
               <th className="px-4 py-[15px]">Last Appointment</th>
               <th className="px-4 py-[15px]">Assigned Doctor</th>
               <th className="px-4 py-[15px]">Department</th>
               <th className="px-4 py-[15px]">Next Appointment</th>
-              <th className="px-4 sm:px-6 py-[15px] text-right">Action</th>
+              <th className="px-4 py-[15px] text-right sm:px-6">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#f1f5f9]">
             {visiblePatients.map((patient) => (
-              <tr key={patient.id} className="text-[13px] sm:text-[15px] hover:bg-[#fbfdff]">
-                <td className="px-4 sm:px-6 py-[17px]">
+              <tr
+                key={patient.id}
+                className="text-[13px] hover:bg-[#fbfdff] sm:text-[15px]"
+              >
+                <td className="px-4 py-[17px] sm:px-6">
                   <div className="flex items-center gap-3">
-                    <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#0891b2] text-[13px] sm:text-[15px] font-semibold text-white">
+                    <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#0891b2] text-[13px] font-semibold text-white sm:text-[15px]">
                       {patient.initials}
                     </span>
                     <span>
@@ -180,7 +183,7 @@ export default function HospitalPatientsList({
                 <td className="px-4 py-[17px] font-mono text-[#62748e]">
                   {patient.nextAppointment}
                 </td>
-                <td className="px-4 sm:px-6 py-[17px] text-right">
+                <td className="px-4 py-[17px] text-right sm:px-6">
                   <button
                     type="button"
                     onClick={() => onView(patient.id)}
@@ -195,7 +198,7 @@ export default function HospitalPatientsList({
               <tr>
                 <td
                   colSpan={6}
-                  className="px-4 sm:px-6 py-10 text-center text-sm text-[#62748e]"
+                  className="px-4 py-10 text-center text-sm text-[#62748e] sm:px-6"
                 >
                   No patients match your search.
                 </td>

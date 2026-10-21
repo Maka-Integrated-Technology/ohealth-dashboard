@@ -168,14 +168,14 @@ function PaymentBadge({ payment }: { payment: Appointment["payment"] }) {
 function MetricCard({ metric }: { metric: (typeof metrics)[number] }) {
   const Icon = metric.icon;
   return (
-    <section className="min-h-[147px] rounded-xl border border-[#e2e8f0] bg-white p-[15px] sm:min-h-[207px] sm:rounded-2xl sm:p-[22px] shadow-[0_1px_2px_rgba(15,23,42,0.025)]">
+    <section className="min-h-[147px] rounded-xl border border-[#e2e8f0] bg-white p-[15px] shadow-[0_1px_2px_rgba(15,23,42,0.025)] sm:min-h-[207px] sm:rounded-2xl sm:p-[22px]">
       <div
         className={`flex size-10 items-center justify-center rounded-lg sm:size-12 sm:rounded-xl ${metric.iconClass}`}
         aria-hidden="true"
       >
         <Icon className="size-[23px]" strokeWidth={1.8} />
       </div>
-      <p className="h-[42px] text-[28px] leading-[42px] sm:h-[59px] sm:text-[36px] sm:leading-[59px] font-semibold tracking-[-1.2px] text-[#0f172b]">
+      <p className="h-[42px] text-[28px] leading-[42px] font-semibold tracking-[-1.2px] text-[#0f172b] sm:h-[59px] sm:text-[36px] sm:leading-[59px]">
         {metric.value}
       </p>
       <p className="text-[12px] leading-[18px] font-medium text-[#344256] sm:text-[15px] sm:leading-6">
@@ -489,7 +489,7 @@ export default function HospitalDashboardPage() {
           ) : activeSection === "Dashboard" ? (
             <>
               <div className="mb-[24px] sm:mb-[41px]">
-                <h2 className="text-[23px] leading-[32px] font-semibold sm:text-[28px] sm:leading-[43px] tracking-[-0.7px] text-[#0f172b]">
+                <h2 className="text-[23px] leading-[32px] font-semibold tracking-[-0.7px] text-[#0f172b] sm:text-[28px] sm:leading-[43px]">
                   Good afternoon, St. Mary&apos;s
                 </h2>
                 <p className="text-[13px] leading-[20px] text-[#62748e] sm:text-[15px] sm:leading-[29px]">
@@ -616,7 +616,7 @@ export default function HospitalDashboardPage() {
 
               <div className="mt-7 space-y-8">
                 <section className="overflow-hidden rounded-[15px] border border-[#f1f5f9] bg-white sm:rounded-[22px]">
-                  <h3 className="flex items-center gap-2 border-b border-[#f1f5f9] px-4 py-[14px] text-[16px] sm:gap-3 sm:px-7 sm:py-[21px] sm:text-[19px] font-semibold text-[#1f2a37]">
+                  <h3 className="flex items-center gap-2 border-b border-[#f1f5f9] px-4 py-[14px] text-[16px] font-semibold text-[#1f2a37] sm:gap-3 sm:px-7 sm:py-[21px] sm:text-[19px]">
                     <CalendarClock className="size-[22px] text-[#45556c]" />
                     Needs Your Attention
                   </h3>
@@ -651,7 +651,7 @@ export default function HospitalDashboardPage() {
                       className="flex items-start gap-3 border-b border-[#f8fafc] px-4 py-[13px] last:border-0 sm:gap-4 sm:px-7 sm:py-[21px]"
                     >
                       <span
-                        className={`flex size-[34px] shrink-0 sm:size-[43px] items-center justify-center rounded-2xl ${item.color}`}
+                        className={`flex size-[34px] shrink-0 items-center justify-center rounded-2xl sm:size-[43px] ${item.color}`}
                       >
                         <item.Icon className="size-5" strokeWidth={1.8} />
                       </span>
@@ -665,7 +665,7 @@ export default function HospitalDashboardPage() {
                         <button
                           type="button"
                           onClick={() => setActiveSection(item.destination)}
-                          className="mt-2 inline-flex items-center gap-1 text-[12px] font-medium text-[#2970ff] sm:text-[15px] hover:underline"
+                          className="mt-2 inline-flex items-center gap-1 text-[12px] font-medium text-[#2970ff] hover:underline sm:text-[15px]"
                         >
                           {item.action} <ChevronRight className="size-4" />
                         </button>
@@ -675,7 +675,7 @@ export default function HospitalDashboardPage() {
                 </section>
 
                 <section className="overflow-hidden rounded-[15px] border border-[#f1f5f9] bg-white sm:rounded-[22px]">
-                  <h3 className="flex items-center gap-2 border-b border-[#f1f5f9] px-4 py-[14px] text-[16px] sm:gap-3 sm:px-7 sm:py-[21px] sm:text-[19px] font-semibold text-[#1d293d]">
+                  <h3 className="flex items-center gap-2 border-b border-[#f1f5f9] px-4 py-[14px] text-[16px] font-semibold text-[#1d293d] sm:gap-3 sm:px-7 sm:py-[21px] sm:text-[19px]">
                     <Bell className="size-[22px] text-[#45556c]" />
                     Recent Activity
                   </h3>

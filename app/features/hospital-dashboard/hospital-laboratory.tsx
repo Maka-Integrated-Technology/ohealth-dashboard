@@ -197,14 +197,14 @@ function LabDetails({
       <button
         type="button"
         onClick={onBack}
-        className="mb-9 inline-flex items-center gap-2 text-[13px] sm:text-[16px] font-semibold text-[#155eef] hover:underline"
+        className="mb-9 inline-flex items-center gap-2 text-[13px] font-semibold text-[#155eef] hover:underline sm:text-[16px]"
       >
         <ArrowLeft className="size-5" />
         Back to Laboratory
       </button>
       <div className="mb-7 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-[21px] sm:text-[27px] font-semibold text-[#1f2a37]">
+          <h2 className="text-[21px] font-semibold text-[#1f2a37] sm:text-[27px]">
             Lab Request #{record.id}
           </h2>
           <p className="mt-2 text-[#6c737f]">Requested {record.date}</p>
@@ -217,24 +217,24 @@ function LabDetails({
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.85fr)]">
         <div className="space-y-6">
           <section className="rounded-[23px] border border-[#f1f5f9] bg-white p-4 sm:p-7">
-            <h3 className="mb-6 text-[16px] sm:text-[20px] font-semibold text-[#1f2a37]">
+            <h3 className="mb-6 text-[16px] font-semibold text-[#1f2a37] sm:text-[20px]">
               Patient
             </h3>
             <div className="flex items-center gap-4">
               <div className="flex size-12 items-center justify-center rounded-full bg-[#0891b2] font-semibold text-white">
                 {record.initials}
               </div>
-              <p className="text-[15px] sm:text-lg font-semibold text-[#1f2a37]">
+              <p className="text-[15px] font-semibold text-[#1f2a37] sm:text-lg">
                 {record.patient}
               </p>
             </div>
             <p className="mt-6 text-sm text-[#6c737f]">Requesting Doctor</p>
-            <p className="mt-1 text-[14px] sm:text-[18px] font-medium text-[#1f2a37]">
+            <p className="mt-1 text-[14px] font-medium text-[#1f2a37] sm:text-[18px]">
               {record.doctor}
             </p>
           </section>
           <section className="rounded-[23px] border border-[#f1f5f9] bg-white p-4 sm:p-7">
-            <h3 className="mb-5 text-[16px] sm:text-[20px] font-semibold text-[#1f2a37]">
+            <h3 className="mb-5 text-[16px] font-semibold text-[#1f2a37] sm:text-[20px]">
               Requested Tests
             </h3>
             <ul className="space-y-4">
@@ -249,13 +249,15 @@ function LabDetails({
               ))}
             </ul>
             {record.note ? (
-              <p className="mt-5 text-[13px] sm:text-[15px] text-[#6c737f]">{record.note}</p>
+              <p className="mt-5 text-[13px] text-[#6c737f] sm:text-[15px]">
+                {record.note}
+              </p>
             ) : null}
           </section>
         </div>
         <div className="space-y-6">
           <section className="rounded-[23px] border border-[#f1f5f9] bg-white p-4 sm:p-7">
-            <h3 className="mb-6 text-[16px] sm:text-[20px] font-semibold text-[#1f2a37]">
+            <h3 className="mb-6 text-[16px] font-semibold text-[#1f2a37] sm:text-[20px]">
               Status Timeline
             </h3>
             <ol className="space-y-0">
@@ -290,13 +292,13 @@ function LabDetails({
             </ol>
           </section>
           <section className="rounded-[23px] border border-[#f1f5f9] bg-white p-4 sm:p-7">
-            <h3 className="mb-5 text-[16px] sm:text-[20px] font-semibold text-[#1f2a37]">
+            <h3 className="mb-5 text-[16px] font-semibold text-[#1f2a37] sm:text-[20px]">
               Actions
             </h3>
             <button
               type="button"
               onClick={handleAction}
-              className="w-full rounded-xl bg-[#155eef] px-4 py-3 text-[13px] sm:text-[15px] font-semibold text-white hover:bg-[#004eeb]"
+              className="w-full rounded-xl bg-[#155eef] px-4 py-3 text-[13px] font-semibold text-white hover:bg-[#004eeb] sm:text-[15px]"
             >
               {nextActions[currentStage]}
             </button>
@@ -361,7 +363,9 @@ export default function HospitalLaboratory() {
     <div className="mx-auto max-w-[1155px] pb-12">
       <PreviewBanner />
       <div className="mb-7">
-        <h2 className="text-[19px] sm:text-[24px] font-semibold text-[#1f2a37]">Laboratory</h2>
+        <h2 className="text-[19px] font-semibold text-[#1f2a37] sm:text-[24px]">
+          Laboratory
+        </h2>
       </div>
       <div className="mb-8 rounded-[20px] border border-[#f1f5f9] bg-white p-5">
         <label className="flex min-h-12 items-center gap-3 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 text-[#62748e]">
@@ -372,7 +376,7 @@ export default function HospitalLaboratory() {
             placeholder="Search patients or tests..."
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            className="w-full min-w-0 bg-transparent text-[13px] sm:text-[16px] text-[#1f2a37] outline-none placeholder:text-[#90a1b9]"
+            className="w-full min-w-0 bg-transparent text-[13px] text-[#1f2a37] outline-none placeholder:text-[#90a1b9] sm:text-[16px]"
           />
         </label>
       </div>
@@ -389,7 +393,7 @@ export default function HospitalLaboratory() {
               }
               className={`rounded-2xl border bg-white px-4 py-5 text-left transition-colors hover:border-[#155eef] ${selectedStatus === status ? "border-[#155eef] ring-2 ring-[#155eef]/10" : "border-[#f1f5f9]"}`}
             >
-              <span className="block text-[23px] sm:text-[30px] font-semibold text-[#1f2a37]">
+              <span className="block text-[23px] font-semibold text-[#1f2a37] sm:text-[30px]">
                 {count}
               </span>
               <span className="mt-2 block text-[14px] text-[#6c737f]">
@@ -413,19 +417,22 @@ export default function HospitalLaboratory() {
           <table className="w-full min-w-[940px] border-collapse text-left">
             <thead className="border-b border-[#e5e7eb] bg-[#f8fafc] text-[14px] font-semibold text-[#62748e]">
               <tr>
-                <th className="px-4 sm:px-6 py-4">Patient</th>
+                <th className="px-4 py-4 sm:px-6">Patient</th>
                 <th className="px-4 py-4">Tests</th>
                 <th className="px-4 py-4">Doctor</th>
                 <th className="px-4 py-4">Date</th>
                 <th className="px-4 py-4">Priority</th>
                 <th className="px-4 py-4">Status</th>
-                <th className="px-4 sm:px-6 py-4 text-right">Action</th>
+                <th className="px-4 py-4 text-right sm:px-6">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#f1f5f9]">
               {visible.map((record) => (
-                <tr key={record.id} className="text-[13px] sm:text-[15px] hover:bg-[#fbfdff]">
-                  <td className="px-4 sm:px-6 py-[17px]">
+                <tr
+                  key={record.id}
+                  className="text-[13px] hover:bg-[#fbfdff] sm:text-[15px]"
+                >
+                  <td className="px-4 py-[17px] sm:px-6">
                     <span className="inline-flex items-center gap-3">
                       <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#0891b2] font-semibold text-white">
                         {record.initials}
@@ -453,7 +460,7 @@ export default function HospitalLaboratory() {
                   <td className="px-4 py-[17px]">
                     <LabStatusBadge status={record.status} />
                   </td>
-                  <td className="px-4 sm:px-6 py-[17px] text-right">
+                  <td className="px-4 py-[17px] text-right sm:px-6">
                     <button
                       type="button"
                       onClick={() => setSelectedId(record.id)}
@@ -468,7 +475,7 @@ export default function HospitalLaboratory() {
                 <tr>
                   <td
                     colSpan={7}
-                    className="px-4 sm:px-6 py-10 text-center text-[#6c737f]"
+                    className="px-4 py-10 text-center text-[#6c737f] sm:px-6"
                   >
                     No laboratory requests match your search.
                   </td>

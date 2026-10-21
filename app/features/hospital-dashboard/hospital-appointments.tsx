@@ -230,8 +230,8 @@ export function AppointmentDrawer({
         aria-label="Appointment Details"
         className="relative z-10 flex h-full w-full max-w-[757px] flex-col overflow-y-auto bg-white shadow-2xl"
       >
-        <div className="flex items-center justify-between border-b border-[#e5e7eb] px-4 sm:px-6 py-4 sm:py-6 sm:px-9">
-          <h2 className="text-[19px] sm:text-[24px] font-semibold text-[#1f2a37]">
+        <div className="flex items-center justify-between border-b border-[#e5e7eb] px-4 py-4 sm:px-6 sm:px-9 sm:py-6">
+          <h2 className="text-[19px] font-semibold text-[#1f2a37] sm:text-[24px]">
             Appointment Details
           </h2>
           <button
@@ -243,21 +243,21 @@ export function AppointmentDrawer({
             <X className="size-6" />
           </button>
         </div>
-        <div className="flex-1 px-4 sm:px-6 py-4 sm:py-8 sm:px-9">
+        <div className="flex-1 px-4 py-4 sm:px-6 sm:px-9 sm:py-8">
           <div className="flex items-center gap-5 border-b border-[#f1f5f9] pb-8">
-            <div className="flex size-[60px] sm:size-[82px] shrink-0 items-center justify-center rounded-full bg-[#0891b2] text-[21px] sm:text-[27px] font-semibold text-white">
+            <div className="flex size-[60px] shrink-0 items-center justify-center rounded-full bg-[#0891b2] text-[21px] font-semibold text-white sm:size-[82px] sm:text-[27px]">
               {appointment.initials}
             </div>
             <div className="min-w-0">
-              <h3 className="text-[19px] sm:text-[24px] font-semibold text-[#1f2a37]">
+              <h3 className="text-[19px] font-semibold text-[#1f2a37] sm:text-[24px]">
                 {appointment.patient}
               </h3>
-              <p className="mt-1 text-[13px] sm:text-[16px] text-[#6c737f]">
+              <p className="mt-1 text-[13px] text-[#6c737f] sm:text-[16px]">
                 {age.replace("y", " years")} · {gender}
                 {appointment.bloodGroup ? ` · ${appointment.bloodGroup}` : ""}
               </p>
               {appointment.phone ? (
-                <p className="mt-2 flex items-center gap-2 text-[13px] sm:text-[16px] text-[#4d5761]">
+                <p className="mt-2 flex items-center gap-2 text-[13px] text-[#4d5761] sm:text-[16px]">
                   <Phone className="size-4" />
                   {appointment.phone}
                 </p>
@@ -270,7 +270,7 @@ export function AppointmentDrawer({
             </p>
             <AppointmentBadge status={appointment.status} />
           </div>
-          <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-7 text-[14px] sm:text-[17px] sm:grid-cols-2">
+          <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-7 text-[14px] sm:grid-cols-2 sm:text-[17px]">
             {[
               ["Doctor", appointment.doctor],
               ["Department", appointment.department],
@@ -343,7 +343,7 @@ export function AppointmentDrawer({
             </div>
           ) : null}
         </div>
-        <div className="sticky bottom-0 space-y-3 border-t border-[#f1f5f9] bg-white px-4 sm:px-6 py-4 sm:py-6 sm:px-9">
+        <div className="sticky bottom-0 space-y-3 border-t border-[#f1f5f9] bg-white px-4 py-4 sm:px-6 sm:px-9 sm:py-6">
           <button
             type="button"
             onClick={() => changeStatus("Confirmed")}
@@ -439,10 +439,12 @@ export default function HospitalAppointments({
   return (
     <div className="max-w-[1155px] pb-12">
       <div className="mb-8">
-        <h2 className="text-[18px] sm:text-[22px] font-semibold text-[#1f2a37]">
+        <h2 className="text-[18px] font-semibold text-[#1f2a37] sm:text-[22px]">
           Appointments
         </h2>
-        <p className="mt-1 text-[14px] sm:text-[17px] text-[#4d5761]">12 appointments</p>
+        <p className="mt-1 text-[14px] text-[#4d5761] sm:text-[17px]">
+          12 appointments
+        </p>
       </div>
       <div className="mb-8 flex flex-col gap-4 rounded-[19px] border border-[#f1f5f9] bg-white p-[15px] sm:p-[21px] lg:flex-row">
         <label className="flex min-h-[48px] min-w-0 flex-1 items-center gap-3 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 text-[#62748e]">
@@ -456,7 +458,7 @@ export default function HospitalAppointments({
             type="search"
             aria-label="Search patients and doctors"
             placeholder="Search patients, doctors..."
-            className="min-w-0 flex-1 bg-transparent text-[13px] sm:text-[16px] outline-none placeholder:text-[#90a1b9]"
+            className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-[#90a1b9] sm:text-[16px]"
           />
         </label>
         <select
@@ -466,7 +468,7 @@ export default function HospitalAppointments({
             setPage(1);
           }}
           aria-label="Filter by department"
-          className="min-h-[48px] rounded-xl border border-[#e2e8f0] bg-white px-4 text-[13px] sm:text-[16px] text-[#4d5761] lg:w-[211px]"
+          className="min-h-[48px] rounded-xl border border-[#e2e8f0] bg-white px-4 text-[13px] text-[#4d5761] sm:text-[16px] lg:w-[211px]"
         >
           {departments.map((item) => (
             <option key={item} value={item}>
@@ -481,7 +483,7 @@ export default function HospitalAppointments({
             setPage(1);
           }}
           aria-label="Filter by status"
-          className="min-h-[48px] rounded-xl border border-[#e2e8f0] bg-white px-4 text-[13px] sm:text-[16px] text-[#4d5761] lg:w-[172px]"
+          className="min-h-[48px] rounded-xl border border-[#e2e8f0] bg-white px-4 text-[13px] text-[#4d5761] sm:text-[16px] lg:w-[172px]"
         >
           {statuses.map((item) => (
             <option key={item} value={item}>
@@ -495,19 +497,22 @@ export default function HospitalAppointments({
           <table className="w-full min-w-[1050px] border-collapse text-left">
             <thead className="border-b border-[#e5e7eb] bg-[#f8fafc] text-[14px] font-semibold text-[#62748e]">
               <tr>
-                <th className="px-4 sm:px-6 py-4">Patient</th>
+                <th className="px-4 py-4 sm:px-6">Patient</th>
                 <th className="px-4 py-4">Doctor</th>
                 <th className="px-4 py-4">Type</th>
                 <th className="px-4 py-4">Date &amp; Time</th>
                 <th className="px-4 py-4">Status</th>
                 <th className="px-4 py-4">Payment</th>
-                <th className="px-4 sm:px-6 py-4 text-right">Actions</th>
+                <th className="px-4 py-4 text-right sm:px-6">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#f1f5f9]">
               {displayed.map((record) => (
-                <tr key={record.id} className="text-[13px] sm:text-[15px] hover:bg-[#fbfdff]">
-                  <td className="px-4 sm:px-6 py-[17px]">
+                <tr
+                  key={record.id}
+                  className="text-[13px] hover:bg-[#fbfdff] sm:text-[15px]"
+                >
+                  <td className="px-4 py-[17px] sm:px-6">
                     <div className="flex items-center gap-3">
                       <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#0891b2] font-semibold text-white">
                         {record.initials}
@@ -551,7 +556,7 @@ export default function HospitalAppointments({
                       {record.payment}
                     </span>
                   </td>
-                  <td className="px-4 sm:px-6 py-[17px] text-right">
+                  <td className="px-4 py-[17px] text-right sm:px-6">
                     <button
                       type="button"
                       onClick={() => setSelectedId(record.id)}
@@ -572,7 +577,7 @@ export default function HospitalAppointments({
             </tbody>
           </table>
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#f1f5f9] px-4 sm:px-6 py-5">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#f1f5f9] px-4 py-5 sm:px-6">
           <p className="text-[14px] text-[#6c737f]">
             Showing {filtered.length ? (currentPage - 1) * 8 + 1 : 0}–
             {Math.min(currentPage * 8, filtered.length)} of {filtered.length}{" "}

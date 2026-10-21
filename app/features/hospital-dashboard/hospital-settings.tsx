@@ -180,13 +180,13 @@ function Field({
   type?: string;
 }) {
   return (
-    <label className="block text-[13px] sm:text-[15px] font-medium text-[#4d5761]">
+    <label className="block text-[13px] font-medium text-[#4d5761] sm:text-[15px]">
       {label}
       <input
         type={type}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-2 block min-h-11 w-full rounded-xl border border-[#d2d6db] px-4 text-[13px] sm:text-[15px] text-[#1f2a37] outline-none focus:border-[#155eef]"
+        className="mt-2 block min-h-11 w-full rounded-xl border border-[#d2d6db] px-4 text-[13px] text-[#1f2a37] outline-none focus:border-[#155eef] sm:text-[15px]"
       />
     </label>
   );
@@ -295,7 +295,7 @@ export default function HospitalSettings() {
           </p>
         </div>
       </div>
-      <h2 className="mb-7 text-[20px] sm:text-[26px] font-semibold text-[#1d293d]">
+      <h2 className="mb-7 text-[20px] font-semibold text-[#1d293d] sm:text-[26px]">
         Settings
       </h2>
       <div className="grid items-start gap-6 lg:grid-cols-[270px_minmax(0,1fr)]">
@@ -312,7 +312,7 @@ export default function HospitalSettings() {
                 type="button"
                 aria-current={selected ? "page" : undefined}
                 onClick={() => switchTab(id)}
-                className={`flex min-h-[50px] w-full items-center gap-3 rounded-[14px] px-4 text-left text-[13px] sm:text-[16px] font-medium ${selected ? "bg-[#eff4ff] text-[#2970ff]" : "text-[#45556c] hover:bg-[#f8fafc]"}`}
+                className={`flex min-h-[50px] w-full items-center gap-3 rounded-[14px] px-4 text-left text-[13px] font-medium sm:text-[16px] ${selected ? "bg-[#eff4ff] text-[#2970ff]" : "text-[#45556c] hover:bg-[#f8fafc]"}`}
               >
                 <Icon className="size-5 shrink-0" />
                 {label}
@@ -325,7 +325,7 @@ export default function HospitalSettings() {
           {tab === "account" ? (
             <section className="rounded-[20px] border border-[#f1f5f9] bg-white p-6 sm:p-8">
               <div className="mb-7 flex flex-wrap items-center justify-between gap-4">
-                <h3 className="text-[15px] sm:text-[19px] font-semibold text-[#1d293d]">
+                <h3 className="text-[15px] font-semibold text-[#1d293d] sm:text-[19px]">
                   Account Information
                 </h3>
                 {!editing ? (
@@ -390,7 +390,7 @@ export default function HospitalSettings() {
                   ).map(([label, value]) => (
                     <div key={label}>
                       <dt className="text-[14px] text-[#6c737f]">{label}</dt>
-                      <dd className="mt-2 text-[13px] sm:text-[16px] font-medium break-words text-[#1f2a37]">
+                      <dd className="mt-2 text-[13px] font-medium break-words text-[#1f2a37] sm:text-[16px]">
                         {value}
                       </dd>
                     </div>
@@ -421,7 +421,7 @@ export default function HospitalSettings() {
               >
                 ← Account Information
               </button>
-              <h3 className="mb-7 text-[15px] sm:text-[19px] font-semibold text-[#1d293d]">
+              <h3 className="mb-7 text-[15px] font-semibold text-[#1d293d] sm:text-[19px]">
                 Change Password
               </h3>
               <form
@@ -441,7 +441,7 @@ export default function HospitalSettings() {
                 ].map((name) => (
                   <label
                     key={name}
-                    className="block text-[13px] sm:text-[15px] font-medium text-[#4d5761]"
+                    className="block text-[13px] font-medium text-[#4d5761] sm:text-[15px]"
                   >
                     {name}
                     <input
@@ -464,7 +464,7 @@ export default function HospitalSettings() {
                 </button>
               </form>
               <div className="mt-8 border-t border-[#e2e8f0] pt-7">
-                <h4 className="mb-4 text-[14px] sm:text-[17px] font-semibold text-[#1d293d]">
+                <h4 className="mb-4 text-[14px] font-semibold text-[#1d293d] sm:text-[17px]">
                   Two-Factor Authentication
                 </h4>
                 <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl bg-[#f8fafc] p-5">
@@ -494,7 +494,7 @@ export default function HospitalSettings() {
           {tab === "staff" ? (
             <section className="min-w-0">
               <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-                <h3 className="text-[15px] sm:text-[19px] font-semibold text-[#1d293d]">
+                <h3 className="text-[15px] font-semibold text-[#1d293d] sm:text-[19px]">
                   Staff Accounts
                 </h3>
                 <button
@@ -560,7 +560,7 @@ export default function HospitalSettings() {
                   className="mt-6 rounded-[20px] border border-[#e2e8f0] bg-white p-4 sm:p-6"
                 >
                   <div className="mb-5 flex items-center justify-between gap-4">
-                    <h4 className="text-[14px] sm:text-[18px] font-semibold text-[#1d293d]">
+                    <h4 className="text-[14px] font-semibold text-[#1d293d] sm:text-[18px]">
                       Invite Staff
                     </h4>
                     <button
@@ -583,7 +583,7 @@ export default function HospitalSettings() {
                       onChange={setInviteEmail}
                       type="email"
                     />
-                    <label className="block text-[13px] sm:text-[15px] font-medium text-[#4d5761]">
+                    <label className="block text-[13px] font-medium text-[#4d5761] sm:text-[15px]">
                       Role
                       <select
                         value={inviteRole}
@@ -627,7 +627,7 @@ export default function HospitalSettings() {
           ) : null}
           {tab === "notifications" ? (
             <section className="rounded-[20px] border border-[#f1f5f9] bg-white p-6 sm:p-8">
-              <h3 className="mb-6 text-[15px] sm:text-[19px] font-semibold text-[#1d293d]">
+              <h3 className="mb-6 text-[15px] font-semibold text-[#1d293d] sm:text-[19px]">
                 Notification Preferences
               </h3>
               <div className="overflow-x-auto rounded-[19px] border border-[#f1f5f9]">
@@ -644,7 +644,7 @@ export default function HospitalSettings() {
                       <tr key={type}>
                         <th
                           scope="row"
-                          className="px-5 py-5 text-[13px] sm:text-[16px] font-normal text-[#314158]"
+                          className="px-5 py-5 text-[13px] font-normal text-[#314158] sm:text-[16px]"
                         >
                           {type}
                         </th>
@@ -672,7 +672,7 @@ export default function HospitalSettings() {
           ) : null}
           {tab === "security" ? (
             <section className="rounded-[20px] border border-[#f1f5f9] bg-white p-6 sm:p-8">
-              <h3 className="mb-6 text-[15px] sm:text-[19px] font-semibold text-[#1d293d]">
+              <h3 className="mb-6 text-[15px] font-semibold text-[#1d293d] sm:text-[19px]">
                 Security Settings
               </h3>
               <div className="space-y-4">
@@ -705,7 +705,7 @@ export default function HospitalSettings() {
                     <div className="flex min-w-0 flex-1 items-start gap-3">
                       <Icon className="mt-0.5 size-5 shrink-0 text-[#62748e]" />
                       <div>
-                        <h4 className="text-[13px] sm:text-[16px] font-semibold text-[#1f2a37]">
+                        <h4 className="text-[13px] font-semibold text-[#1f2a37] sm:text-[16px]">
                           {title}
                         </h4>
                         <p className="mt-1 text-sm leading-6 text-[#6c737f]">

@@ -29,7 +29,7 @@ const tabs = [
 
 function EmptyPreview({ label }: { label: string }) {
   return (
-    <div className="rounded-[19px] border border-[#f1f5f9] bg-white px-4 sm:px-6 py-16 text-center">
+    <div className="rounded-[19px] border border-[#f1f5f9] bg-white px-4 py-16 text-center sm:px-6">
       <p className="font-medium text-[#1f2a37]">
         No {label} available in this preview
       </p>
@@ -75,7 +75,7 @@ export default function HospitalPatientDetails({
   return (
     <div className="max-w-[1088px] pb-12">
       <button
-        className="mb-8 inline-flex items-center gap-2 text-[14px] sm:text-[17px] font-medium text-[#62748e] hover:text-[#155eef]"
+        className="mb-8 inline-flex items-center gap-2 text-[14px] font-medium text-[#62748e] hover:text-[#155eef] sm:text-[17px]"
         type="button"
         onClick={onBack}
       >
@@ -85,14 +85,14 @@ export default function HospitalPatientDetails({
 
       <section className="rounded-[19px] border border-[#f1f5f9] bg-white p-[18px] sm:p-[29px]">
         <div className="flex flex-wrap items-start gap-6">
-          <span className="flex size-[50px] sm:size-[67px] shrink-0 items-center justify-center rounded-full bg-[#0891b2] text-[18px] sm:text-[22px] font-semibold text-white">
+          <span className="flex size-[50px] shrink-0 items-center justify-center rounded-full bg-[#0891b2] text-[18px] font-semibold text-white sm:size-[67px] sm:text-[22px]">
             {patient.initials}
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className="text-[20px] sm:text-2xl leading-[27px] sm:leading-[34px] font-semibold text-[#0f172b]">
+            <h2 className="text-[20px] leading-[27px] font-semibold text-[#0f172b] sm:text-2xl sm:leading-[34px]">
               {patient.patient}
             </h2>
-            <p className="mt-1 text-[14px] sm:text-[17px] leading-6 text-[#62748e]">
+            <p className="mt-1 text-[14px] leading-6 text-[#62748e] sm:text-[17px]">
               {ageText} · {gender}
               {isFigmaSample ? (
                 <>
@@ -103,7 +103,7 @@ export default function HospitalPatientDetails({
               ) : null}
             </p>
             {isFigmaSample ? (
-              <p className="mt-3 inline-flex items-center gap-2 text-[13px] sm:text-[15px] font-medium text-[#2970ff]">
+              <p className="mt-3 inline-flex items-center gap-2 text-[13px] font-medium text-[#2970ff] sm:text-[15px]">
                 <CalendarDays className="size-4" />
                 Next: 2024-12-20
               </p>
@@ -112,7 +112,7 @@ export default function HospitalPatientDetails({
           {isFigmaSample ? (
             <div className="text-right">
               <p className="text-[14px] text-[#6c737f]">Last visit</p>
-              <p className="mt-1 text-[13px] sm:text-[15px] font-medium text-[#1f2a37]">
+              <p className="mt-1 text-[13px] font-medium text-[#1f2a37] sm:text-[15px]">
                 2025-11-15
               </p>
             </div>
@@ -155,7 +155,7 @@ export default function HospitalPatientDetails({
         {activeTab === "overview" ? (
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
             <section className="rounded-[19px] border border-[#f1f5f9] bg-white p-4 sm:p-6">
-              <h3 className="text-[14px] sm:text-[17px] font-semibold text-[#1f2a37]">
+              <h3 className="text-[14px] font-semibold text-[#1f2a37] sm:text-[17px]">
                 Basic Information
               </h3>
               <dl className="mt-5 space-y-3.5">
@@ -177,10 +177,10 @@ export default function HospitalPatientDetails({
                     className="flex flex-wrap items-baseline justify-between gap-3"
                     key={label}
                   >
-                    <dt className="text-[14px] sm:text-[17px] leading-6 text-[#6c737f]">
+                    <dt className="text-[14px] leading-6 text-[#6c737f] sm:text-[17px]">
                       {label}
                     </dt>
-                    <dd className="text-right text-[14px] sm:text-[17px] leading-6 font-medium text-[#1f2a37]">
+                    <dd className="text-right text-[14px] leading-6 font-medium text-[#1f2a37] sm:text-[17px]">
                       {value}
                     </dd>
                   </div>
@@ -188,7 +188,7 @@ export default function HospitalPatientDetails({
               </dl>
             </section>
             <section className="rounded-[19px] border border-[#f1f5f9] bg-white p-4 sm:p-6">
-              <h3 className="text-[14px] sm:text-[17px] font-semibold text-[#314158]">
+              <h3 className="text-[14px] font-semibold text-[#314158] sm:text-[17px]">
                 Appointment Summary
               </h3>
               <div className="mt-5 grid grid-cols-2 gap-[14px]">
@@ -202,7 +202,7 @@ export default function HospitalPatientDetails({
                     className="rounded-[14px] bg-[#f8fafc] p-[14px] text-center"
                     key={label}
                   >
-                    <p className="text-[20px] sm:text-2xl leading-[27px] sm:leading-[34px] font-bold text-[#1d293d]">
+                    <p className="text-[20px] leading-[27px] font-bold text-[#1d293d] sm:text-2xl sm:leading-[34px]">
                       {value}
                     </p>
                     <p className="mt-1 text-[13px] text-[#62748e]">{label}</p>
@@ -275,7 +275,7 @@ export default function HospitalPatientDetails({
             </span>
           </article>
         ) : (
-          <div className="rounded-[19px] border border-[#f1f5f9] bg-white px-4 sm:px-6 py-16 text-center">
+          <div className="rounded-[19px] border border-[#f1f5f9] bg-white px-4 py-16 text-center sm:px-6">
             <ClipboardList className="mx-auto size-9 text-[#90a1b9]" />
             <h3 className="mt-3 font-semibold text-[#1f2a37]">
               No documents uploaded

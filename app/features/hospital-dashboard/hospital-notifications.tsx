@@ -206,10 +206,12 @@ export default function HospitalNotifications({
     <div className="mx-auto w-full max-w-[1080px] pb-14">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-[19px] sm:text-[24px] leading-[34px] sm:leading-[42px] font-semibold text-[#0f172b]">
+          <h2 className="text-[19px] leading-[34px] font-semibold text-[#0f172b] sm:text-[24px] sm:leading-[42px]">
             Notifications
           </h2>
-          <p className="text-[15px] sm:text-[19px] text-[#62748e]">{unreadCount} unread</p>
+          <p className="text-[15px] text-[#62748e] sm:text-[19px]">
+            {unreadCount} unread
+          </p>
         </div>
         <button
           type="button"
@@ -235,7 +237,7 @@ export default function HospitalNotifications({
               type="button"
               aria-pressed={category === filter}
               onClick={() => setFilter(category)}
-              className={`inline-flex items-center gap-2 rounded-[15px] px-4 py-3 text-[13px] sm:text-[16px] font-medium transition-colors ${filter === category ? "bg-[#2970ff] text-white" : "bg-[#f8fafc] text-[#4d5761] hover:bg-[#eff4ff]"}`}
+              className={`inline-flex items-center gap-2 rounded-[15px] px-4 py-3 text-[13px] font-medium transition-colors sm:text-[16px] ${filter === category ? "bg-[#2970ff] text-white" : "bg-[#f8fafc] text-[#4d5761] hover:bg-[#eff4ff]"}`}
             >
               {category}
               <span
@@ -263,14 +265,14 @@ export default function HospitalNotifications({
               </span>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
-                  <h3 className="text-[14px] sm:text-[18px] font-semibold text-[#1f2a37]">
+                  <h3 className="text-[14px] font-semibold text-[#1f2a37] sm:text-[18px]">
                     {item.title}
                   </h3>
                   <span className="text-[13px] text-[#62748e]">
                     {item.time}
                   </span>
                 </div>
-                <p className="mt-2 text-[13px] sm:text-[15px] leading-6 text-[#4d5761]">
+                <p className="mt-2 text-[13px] leading-6 text-[#4d5761] sm:text-[15px]">
                   {item.description}
                 </p>
                 <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
@@ -281,7 +283,7 @@ export default function HospitalNotifications({
                         onRead(item.id);
                         if (item.destination) onNavigate(item.destination);
                       }}
-                      className="inline-flex items-center gap-1 text-[13px] sm:text-[15px] font-semibold text-[#2970ff] hover:underline"
+                      className="inline-flex items-center gap-1 text-[13px] font-semibold text-[#2970ff] hover:underline sm:text-[15px]"
                     >
                       {item.action}
                       <ChevronRight className="size-4" />

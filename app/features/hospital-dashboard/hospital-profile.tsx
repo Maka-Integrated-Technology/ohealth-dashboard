@@ -79,8 +79,8 @@ function SectionCard({
 }) {
   return (
     <section className="overflow-hidden rounded-[24px] border border-[#f1f5f9] bg-white">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f1f5f9] px-4 sm:px-6 py-4 sm:py-6 sm:px-[30px]">
-        <h3 className="flex items-center gap-[15px] text-[17px] sm:text-[21px] leading-[24px] sm:leading-[30px] font-semibold text-[#1f2a37]">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f1f5f9] px-4 py-4 sm:px-6 sm:px-[30px] sm:py-6">
+        <h3 className="flex items-center gap-[15px] text-[17px] leading-[24px] font-semibold text-[#1f2a37] sm:text-[21px] sm:leading-[30px]">
           <Icon className="size-6 text-[#45556c]" strokeWidth={1.8} />
           {title}
         </h3>
@@ -88,7 +88,7 @@ function SectionCard({
           <button
             onClick={onEdit}
             type="button"
-            className="flex items-center gap-2 rounded-xl border border-[#e2e8f0] px-[18px] py-[9px] text-[14px] sm:text-[17px] text-[#62748e] hover:bg-[#f8fafc]"
+            className="flex items-center gap-2 rounded-xl border border-[#e2e8f0] px-[18px] py-[9px] text-[14px] text-[#62748e] hover:bg-[#f8fafc] sm:text-[17px]"
           >
             <Edit3 className="size-[18px]" />
             Edit
@@ -103,10 +103,10 @@ function SectionCard({
 function ProfileField({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-[14px] sm:text-[17px] leading-[21px] sm:leading-[25px] font-medium text-[#6c737f]">
+      <dt className="text-[14px] leading-[21px] font-medium text-[#6c737f] sm:text-[17px] sm:leading-[25px]">
         {label}
       </dt>
-      <dd className="mt-[3px] text-[16px] sm:text-[20px] leading-[24px] sm:leading-[30px] font-medium text-[#1f2a37]">
+      <dd className="mt-[3px] text-[16px] leading-[24px] font-medium text-[#1f2a37] sm:text-[20px] sm:leading-[30px]">
         {value}
       </dd>
     </div>
@@ -127,7 +127,7 @@ function EditableField({
   const classes =
     "mt-2 block w-full rounded-xl border border-[#d2d6db] bg-white px-4 py-3 text-[14px] sm:text-[17px] text-[#1f2a37] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#155eef]/20";
   return (
-    <label className="block text-[13px] sm:text-[16px] font-medium text-[#4d5761]">
+    <label className="block text-[13px] font-medium text-[#4d5761] sm:text-[16px]">
       {label}
       {multiline ? (
         <textarea
@@ -163,7 +163,7 @@ function EditableTags({
         {items.map((item, index) => (
           <span
             key={`${item}-${index}`}
-            className="inline-flex items-center gap-2 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 py-2.5 text-[13px] sm:text-[16px] text-[#45556c]"
+            className="inline-flex items-center gap-2 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 py-2.5 text-[13px] text-[#45556c] sm:text-[16px]"
           >
             {item}
             <button
@@ -260,13 +260,13 @@ export default function HospitalProfile() {
         <div
           role="img"
           aria-label="Hospital header photo pending original Figma asset"
-          className="size-[60px] sm:size-[85px] shrink-0 rounded-[15px] border-[3px] border-white bg-[#d9d9d9] shadow-[0_0_20px_rgba(119,119,119,0.15)]"
+          className="size-[60px] shrink-0 rounded-[15px] border-[3px] border-white bg-[#d9d9d9] shadow-[0_0_20px_rgba(119,119,119,0.15)] sm:size-[85px]"
         />
         <div className="min-w-0 pb-3">
-          <h2 className="text-[21px] sm:text-[27px] leading-[34px] sm:leading-[42px] font-bold text-[#1f2a37]">
+          <h2 className="text-[21px] leading-[34px] font-bold text-[#1f2a37] sm:text-[27px] sm:leading-[42px]">
             {profile.name}
           </h2>
-          <p className="text-[14px] sm:text-[18px] leading-6 text-[#4d5761]">
+          <p className="text-[14px] leading-6 text-[#4d5761] sm:text-[18px]">
             Hospital Administrator
           </p>
         </div>
@@ -274,7 +274,7 @@ export default function HospitalProfile() {
       {editing ? (
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-white p-4 sm:p-6">
           <div>
-            <h2 className="text-[19px] sm:text-[24px] font-semibold text-[#1f2a37]">
+            <h2 className="text-[19px] font-semibold text-[#1f2a37] sm:text-[24px]">
               Edit Hospital Profile
             </h2>
             <p className="mt-1 flex items-start gap-2 text-sm text-[#6c737f]">
@@ -500,7 +500,7 @@ export default function HospitalProfile() {
               {profile.hours.map((item) => (
                 <div
                   key={item.label}
-                  className="flex flex-wrap items-center justify-between gap-2 py-3 text-[16px] sm:text-[20px] text-[#1f2a37]"
+                  className="flex flex-wrap items-center justify-between gap-2 py-3 text-[16px] text-[#1f2a37] sm:text-[20px]"
                 >
                   <dt>{item.label}</dt>
                   <dd className="font-medium">
@@ -530,7 +530,7 @@ export default function HospitalProfile() {
               {profile.departments.map((name) => (
                 <li
                   key={name}
-                  className="flex items-center gap-3 text-[15px] sm:text-[19px] text-[#1f2a37]"
+                  className="flex items-center gap-3 text-[15px] text-[#1f2a37] sm:text-[19px]"
                 >
                   <span className="size-2 rounded-full bg-[#155eef]" />
                   {name}
@@ -556,7 +556,7 @@ export default function HospitalProfile() {
               {profile.services.map((name) => (
                 <li
                   key={name}
-                  className="flex items-center gap-3 text-[15px] sm:text-[19px] text-[#1f2a37]"
+                  className="flex items-center gap-3 text-[15px] text-[#1f2a37] sm:text-[19px]"
                 >
                   <span className="size-2 rounded-full bg-[#155eef]" />
                   {name}
