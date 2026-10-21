@@ -75,20 +75,20 @@ const DOCUMENTS: {
 
 const FEATURES = [
   {
-    title: "Appointments",
-    description: "Coordinate requests and schedules.",
+    value: "Appointments",
+    description: "Requests and schedules",
   },
   {
-    title: "Patient care",
-    description: "Keep patient workflows organised.",
+    value: "Patients",
+    description: "Connected patient workflows",
   },
   {
-    title: "Lab coordination",
-    description: "Follow test requests and results.",
+    value: "Laboratory",
+    description: "Requests and results",
   },
   {
-    title: "Hospital operations",
-    description: "Manage key tasks in one workspace.",
+    value: "Operations",
+    description: "One hospital workspace",
   },
 ];
 
@@ -319,7 +319,7 @@ export default function HospitalAuthPage() {
   return (
     <div className="min-h-screen bg-[#fcfcfc] lg:grid lg:grid-cols-[minmax(350px,0.99fr)_minmax(500px,1.01fr)]">
       <aside
-        className="relative isolate overflow-hidden bg-[#001338] px-6 py-7 text-white sm:px-10 sm:py-10 lg:flex lg:min-h-screen lg:flex-col lg:justify-between lg:px-16 lg:py-14"
+        className="relative isolate overflow-hidden bg-[#001338] px-6 py-7 text-white sm:px-10 sm:py-10 lg:flex lg:min-h-screen lg:flex-col lg:px-16 lg:py-14"
         style={{
           backgroundImage:
             "linear-gradient(-34.22046568354368deg, rgb(0, 53, 158) 4.8884%, rgb(0, 19, 56) 106.65%)",
@@ -334,11 +334,11 @@ export default function HospitalAuthPage() {
           }}
           aria-hidden="true"
         />
-        <div className="relative z-10 flex items-center">
+        <div className="relative z-10 flex items-center lg:absolute lg:top-14 lg:left-16">
           <Logo size="auth" variant="light" />
         </div>
 
-        <div className="relative z-10 max-w-xl py-9 lg:py-16">
+        <div className="relative z-10 max-w-xl py-9 lg:absolute lg:top-[270px] lg:left-16 lg:w-[586px] lg:py-0">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-medium text-blue-100">
             <Activity className="size-3.5" />
             Hospital workspace
@@ -347,19 +347,19 @@ export default function HospitalAuthPage() {
             <span className="block text-white">Your hospital,</span>
             <span className="block text-[#51a2ff]">connected.</span>
           </h1>
-          <p className="mt-4 max-w-md text-base leading-[26px] text-[#90a1b9]">
-            Coordinate appointments, patient workflows, laboratory requests, and
-            day-to-day hospital operations from one workspace.
+          <p className="mt-4 max-w-[384px] text-base leading-[26px] text-[#90a1b9]">
+            Coordinate appointments, patient records, and laboratory requests
+            from one connected workspace.
           </p>
 
           <div className="mt-10 grid grid-cols-2 gap-4">
             {FEATURES.map((feature) => (
               <div
-                className="min-h-[72px] rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 backdrop-blur-sm sm:px-5 sm:py-4"
-                key={feature.title}
+                className="min-h-[72px] rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 backdrop-blur-sm"
+                key={feature.value}
               >
-                <p className="text-lg leading-7 font-semibold text-white">
-                  {feature.title}
+                <p className="text-[18px] leading-7 font-semibold text-white">
+                  {feature.value}
                 </p>
                 <p className="mt-1 text-xs leading-4 text-[#90a1b9]">
                   {feature.description}
@@ -369,9 +369,6 @@ export default function HospitalAuthPage() {
           </div>
         </div>
 
-        <p className="relative z-10 text-xs text-blue-100/70">
-          A connected workspace for hospital teams.
-        </p>
       </aside>
 
       <main className="flex min-h-[70vh] items-center justify-center px-5 py-10 sm:px-8 lg:min-h-screen lg:px-12 xl:px-16">
