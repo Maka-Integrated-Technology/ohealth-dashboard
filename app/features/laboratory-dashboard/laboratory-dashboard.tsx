@@ -492,8 +492,8 @@ export default function LaboratoryDashboard() {
                 ))}
               </div>
               <p className="mt-4 text-xs text-[#667085]">
-                These values reproduce the screenshot&apos;s preview chart and are
-                not live financial records.
+                These values reproduce the screenshot&apos;s preview chart and
+                are not live financial records.
               </p>
             </div>
           </div>
