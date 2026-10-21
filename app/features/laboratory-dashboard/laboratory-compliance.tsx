@@ -128,7 +128,7 @@ function AuditLogs({ query }: { query: string }) {
                 <td className="px-[15px] py-[8px] text-[12px] text-[#536780] sm:text-[13px]">{log.action}</td>
                 <td className="whitespace-nowrap px-[15px] py-[8px] font-mono text-[11px] sm:text-[12px]">
                   {RECORD_ROUTES[log.category] ? (
-                    <Link className="text-[#155eef] hover:underline" to={RECORD_ROUTES[log.category]} title="Open the related preview section">{log.record}</Link>
+                    <Link className="text-[#155eef] hover:underline" to={RECORD_ROUTES[log.category] ?? "/dashboard"} title="Open the related preview section">{log.record}</Link>
                   ) : (
                     <span className="text-[#155eef]">{log.record}</span>
                   )}
