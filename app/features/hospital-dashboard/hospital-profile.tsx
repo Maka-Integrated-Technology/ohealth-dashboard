@@ -6,7 +6,6 @@ import {
   Contact,
   Edit3,
   Hospital,
-  MapPin,
   Plus,
   ShieldCheck,
   Stethoscope,
@@ -256,7 +255,22 @@ export default function HospitalProfile() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-[1082px] pb-14 lg:pt-[110px]">
+    <div className="mx-auto w-full max-w-[1082px] pb-14 lg:pt-4">
+      <div className="mb-[47px] flex items-center gap-4">
+        <div
+          role="img"
+          aria-label="Hospital header photo pending original Figma asset"
+          className="size-[85px] shrink-0 rounded-[15px] border-[3px] border-white bg-[#d9d9d9] shadow-[0_0_20px_rgba(119,119,119,0.15)]"
+        />
+        <div className="min-w-0 pb-3">
+          <h2 className="text-[27px] leading-[42px] font-bold text-[#1f2a37]">
+            {profile.name}
+          </h2>
+          <p className="text-[18px] leading-6 text-[#4d5761]">
+            Hospital Administrator
+          </p>
+        </div>
+      </div>
       {editing ? (
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-white p-6">
           <div>
@@ -551,15 +565,6 @@ export default function HospitalProfile() {
             </ul>
           )}
         </SectionCard>
-      </div>
-      <div className="mt-12 flex items-center gap-3 border-t border-[#e5e7eb] py-8 text-[#4d5761]">
-        <div className="flex size-12 items-center justify-center rounded-xl bg-[#eff4ff] text-[#155eef]">
-          <MapPin className="size-5" />
-        </div>
-        <div>
-          <p className="font-semibold text-[#1f2a37]">{profile.name}</p>
-          <p className="text-sm">Hospital Administrator · Preview profile</p>
-        </div>
       </div>
     </div>
   );
