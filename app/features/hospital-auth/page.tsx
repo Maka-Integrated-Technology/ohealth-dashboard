@@ -1,20 +1,16 @@
 import {
   Activity,
   ArrowRight,
-  CalendarDays,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  ClipboardCheck,
   Eye,
   EyeOff,
   FileText,
-  FlaskConical,
-  HeartPulse,
   ShieldCheck,
-  Users,
 } from "lucide-react";
 import { useId, useState, type ChangeEvent, type FormEvent } from "react";
+import Logo from "~/components/shared/logo";
 
 type AuthScreen =
   | "sign-in"
@@ -78,22 +74,18 @@ const DOCUMENTS: {
 
 const FEATURES = [
   {
-    icon: CalendarDays,
     title: "Appointments",
     description: "Coordinate requests and schedules.",
   },
   {
-    icon: Users,
     title: "Patient care",
     description: "Keep patient workflows organised.",
   },
   {
-    icon: FlaskConical,
     title: "Lab coordination",
     description: "Follow test requests and results.",
   },
   {
-    icon: ClipboardCheck,
     title: "Hospital operations",
     description: "Manage key tasks in one workspace.",
   },
@@ -142,7 +134,8 @@ function Field({
         value={value}
         placeholder={placeholder}
         autoComplete={autoComplete}
-        required={required}
+        // Preview mode keeps this optional so every screen can be explored.
+        // Native input types (such as email) still validate values when supplied.
         onChange={(event) => onChange(event.currentTarget.value)}
       />
       {hint ? <p className="text-xs text-slate-500">{hint}</p> : null}
@@ -273,11 +266,17 @@ export default function HospitalAuthPage() {
 
   const handleAdministratorDetails = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (administrator.password.length < 8) {
+
+    // The preview can advance with empty fields. Preserve password rules when
+    // the visitor chooses to try them out.
+    if (administrator.password && administrator.password.length < 8) {
       setAdminError("Use at least 8 characters for the password.");
       return;
     }
-    if (administrator.password !== administrator.confirmPassword) {
+    if (
+      (administrator.password || administrator.confirmPassword) &&
+      administrator.password !== administrator.confirmPassword
+    ) {
       setAdminError("The passwords do not match. Please try again.");
       return;
     }
@@ -303,11 +302,7 @@ export default function HospitalAuthPage() {
 
   const handleDocumentSubmission = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (DOCUMENTS.some((document) => !documents[document.key])) {
-      setDocumentError("Please choose all three documents to continue.");
-      return;
-    }
-
+    // File selection is optional while previewing the journey.
     setDocumentError("");
     openScreen("review");
   };
@@ -320,23 +315,25 @@ export default function HospitalAuthPage() {
         : registrationStep;
 
   return (
-    <div className="min-h-screen bg-slate-50 lg:grid lg:grid-cols-[minmax(350px,0.92fr)_minmax(500px,1.08fr)]">
-      <aside className="relative isolate overflow-hidden bg-gradient-to-br from-[#061a49] via-[#083b8f] to-[#0a57d5] px-6 py-7 text-white sm:px-10 sm:py-10 lg:flex lg:min-h-screen lg:flex-col lg:justify-between lg:px-12 lg:py-12">
+    <div className="min-h-screen bg-[#fcfcfc] lg:grid lg:grid-cols-[minmax(350px,0.99fr)_minmax(500px,1.01fr)]">
+      <aside
+        className="relative isolate overflow-hidden bg-[#001338] px-6 py-7 text-white sm:px-10 sm:py-10 lg:flex lg:min-h-screen lg:flex-col lg:justify-between lg:px-16 lg:py-14"
+        style={{
+          backgroundImage:
+            "linear-gradient(-34.22046568354368deg, rgb(0, 53, 158) 4.8884%, rgb(0, 19, 56) 106.65%)",
+        }}
+      >
         <div
-          className="pointer-events-none absolute -top-28 -right-28 size-80 rounded-full border border-white/10"
+          className="pointer-events-none absolute inset-0 opacity-10"
+          style={{
+            backgroundImage:
+              "linear-gradient(180deg, rgba(255,255,255,1) 0.15%, transparent 0.15%), linear-gradient(90deg, rgba(255,255,255,1) 0.14%, transparent 0.14%)",
+            backgroundSize: "28px 28px",
+          }}
           aria-hidden="true"
         />
-        <div
-          className="pointer-events-none absolute top-4 -right-10 size-44 rounded-full border border-white/10"
-          aria-hidden="true"
-        />
-        <div className="relative z-10 flex items-center gap-3">
-          <span className="flex size-10 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/20">
-            <HeartPulse className="size-6" aria-hidden="true" />
-          </span>
-          <span className="text-xl font-bold tracking-tight">
-            OHealth<span className="text-blue-200">+</span>
-          </span>
+        <div className="relative z-10 flex items-center">
+          <Logo size="auth" variant="light" />
         </div>
 
         <div className="relative z-10 max-w-xl py-9 lg:py-16">
@@ -344,26 +341,25 @@ export default function HospitalAuthPage() {
             <Activity className="size-3.5" />
             Hospital workspace
           </div>
-          <h1 className="max-w-lg text-3xl leading-tight font-bold tracking-tight sm:text-4xl xl:text-5xl">
-            Your hospital, connected.
+          <h1 className="max-w-lg font-sans text-4xl leading-[1.25] font-bold tracking-tight">
+            <span className="block text-white">Your hospital,</span>
+            <span className="block text-[#51a2ff]">connected.</span>
           </h1>
-          <p className="mt-4 max-w-md text-sm leading-6 text-blue-100 sm:text-base sm:leading-7">
+          <p className="mt-4 max-w-md text-base leading-[26px] text-[#90a1b9]">
             Coordinate appointments, patient workflows, laboratory requests, and
             day-to-day hospital operations from one workspace.
           </p>
 
-          <div className="mt-8 grid grid-cols-2 gap-3">
+          <div className="mt-10 grid grid-cols-2 gap-4">
             {FEATURES.map((feature) => (
               <div
-                className="rounded-xl border border-white/10 bg-white/[0.07] p-3.5 backdrop-blur-sm sm:p-4"
+                className="min-h-[72px] rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 backdrop-blur-sm sm:px-5 sm:py-4"
                 key={feature.title}
               >
-                <feature.icon
-                  className="mb-3 size-5 text-blue-200"
-                  aria-hidden="true"
-                />
-                <p className="text-sm font-semibold">{feature.title}</p>
-                <p className="mt-1 text-xs leading-5 text-blue-100/80">
+                <p className="text-lg leading-7 font-semibold text-white">
+                  {feature.title}
+                </p>
+                <p className="mt-1 text-xs leading-4 text-[#90a1b9]">
                   {feature.description}
                 </p>
               </div>
@@ -453,7 +449,6 @@ export default function HospitalAuthPage() {
                     value={loginPassword}
                     autoComplete="current-password"
                     placeholder="Enter your password"
-                    required
                     onChange={(event) =>
                       setLoginPassword(event.currentTarget.value)
                     }
@@ -535,6 +530,10 @@ export default function HospitalAuthPage() {
 
           {screen === "register" ? (
             <>
+              <p className="mb-4 rounded-lg border border-blue-100 bg-blue-50 px-3.5 py-2.5 text-xs leading-5 text-blue-800">
+                Preview mode: leave fields blank to move through the steps.
+                Entered email addresses and selected file sizes are still checked.
+              </p>
               <StepProgress activeStep={activeStep} />
 
               {registrationStep === 1 ? (
@@ -670,7 +669,6 @@ export default function HospitalAuthPage() {
                         value={administrator.confirmPassword}
                         autoComplete="new-password"
                         placeholder="Re-enter password"
-                        required
                         onChange={(event) =>
                           updateAdministrator(
                             "confirmPassword",
@@ -795,9 +793,6 @@ export default function HospitalAuthPage() {
                     <button
                       className={primaryButtonClassName}
                       type="submit"
-                      disabled={
-                        Object.values(documents).filter(Boolean).length !== 3
-                      }
                     >
                       Submit for review <ArrowRight className="size-4" />
                     </button>
