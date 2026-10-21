@@ -117,7 +117,7 @@ export default function LaboratoryNotifications() {
       search={headerSearch}
       onSearchChange={setHeaderSearch}
     >
-      <div className="mx-auto w-full max-w-[1500px] px-[15px] pt-[24px] pb-[65px] sm:px-[30px] sm:pt-[43px] sm:pb-[75px]">
+      <div className="w-full px-[15px] pt-[24px] pb-[65px] sm:px-[30px] sm:pt-[43px] sm:pb-[75px]">
         <h1 className="text-[22px] leading-[30px] font-semibold tracking-[-0.4px] text-[#202b3a] sm:text-[29px] sm:leading-[37px]">
           Notifications
         </h1>
@@ -125,7 +125,7 @@ export default function LaboratoryNotifications() {
           Stay updated on bookings, samples, and results
         </p>
 
-        <div className="mt-[33px] w-full max-w-[800px] sm:mt-[42px]">
+        <div className="mt-[33px] w-full sm:mt-[42px]">
           <p className="mb-[17px] text-[13px] leading-[19px] text-[#7185a2] sm:mb-[18px] sm:text-[15px] sm:leading-[22px]">
             <strong className="font-semibold text-[#155eef]">
               {unreadCount} unread
