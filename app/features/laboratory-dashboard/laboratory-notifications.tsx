@@ -1,227 +1,161 @@
-import { useMemo, useState } from "react";
-import { CheckCheck, ChevronRight, Search } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useState } from "react";
 import { LaboratoryShell } from "./laboratory-shell";
 import {
-  markAllLabNotificationsRead,
   markLabNotificationRead,
   useLabNotifications,
-  type LaboratoryNotificationCategory,
+  type LaboratoryNotification,
+  type LaboratoryNotificationBadge,
 } from "./laboratory-notifications-data";
 
-type Category = "All" | "Unread" | LaboratoryNotificationCategory;
-const FILTERS: Category[] = [
-  "All",
-  "Unread",
-  "Bookings",
-  "Samples",
-  "Results",
-  "System",
-];
+const BADGE_STYLE: Record<LaboratoryNotificationBadge, string> = {
+  "Booking Confirmed": "text-[#155eef]",
+  "Appointment Reminder": "bg-[#fff9e9] text-[#c45b00]",
+  "Sample Collected": "bg-[#effaff] text-[#007db9]",
+  "Results Published": "bg-[#ecfbf4] text-[#009873]",
+  "Results Ready": "bg-[#ecfbf4] text-[#009873]",
+  "Test In Progress": "bg-[#f4f0ff] text-[#7632ed]",
+};
+
+function NotificationCard({
+  item,
+}: {
+  item: LaboratoryNotification;
+}) {
+  return (
+    <article
+      className={
+        "flex min-h-[112px] gap-[12px] rounded-[16px] border px-[14px] py-[15px] transition-colors sm:gap-[18px] sm:rounded-[17px] sm:px-[18px] sm:py-[19px] " +
+        (item.unread
+          ? "border-[#afd1ff] bg-[#eef5ff]"
+          : "border-[#e0e8f3] bg-white")
+      }
+    >
+      <span
+        aria-hidden="true"
+        className="flex size-[38px] shrink-0 items-center justify-center rounded-full border border-[#dee6f1] bg-white text-[18px] sm:size-[44px] sm:text-[21px]"
+      >
+        {item.icon}
+      </span>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex flex-wrap items-start justify-between gap-x-[12px] gap-y-[5px]">
+          <h2
+            className={
+              "inline-flex min-w-0 items-center gap-[9px] text-[14px] leading-[20px] font-semibold sm:text-[16px] sm:leading-[22px] " +
+              (item.unread ? "text-[#1e2d44]" : "text-[#596577]")
+            }
+          >
+            {item.title}
+            {item.unread && (
+              <span
+                aria-label="Unread notification"
+                className="size-[8px] shrink-0 rounded-full bg-[#2879ff]"
+              />
+            )}
+          </h2>
+          <span
+            className={
+              "inline-flex shrink-0 items-center rounded-full px-[10px] py-[4px] text-[11px] leading-[15px] font-medium sm:text-[13px] sm:leading-[17px] " +
+              BADGE_STYLE[item.badge]
+            }
+          >
+            {item.badge}
+          </span>
+        </div>
+        <p
+          className={
+            "mt-[3px] text-[12px] leading-[18px] sm:text-[15px] sm:leading-[22px] " +
+            (item.unread ? "text-[#4c5f7b]" : "text-[#7c8ca6]")
+          }
+        >
+          {item.description}
+        </p>
+        <div className="mt-[9px] flex flex-wrap items-center gap-x-[14px] gap-y-[6px] sm:mt-[10px]">
+          <span className="font-mono text-[10px] tracking-[-0.15px] text-[#8fa5c4] sm:text-[12px]">
+            {item.date}
+          </span>
+          <span className="text-[11px] text-[#8fa5c4] sm:text-[12px]">
+            Patient: {item.patient}
+          </span>
+          {item.unread && (
+            <button
+              type="button"
+              onClick={() => markLabNotificationRead(item.id)}
+              aria-label={"Mark " + item.title + " for " + item.patient + " as read"}
+              className="ml-auto whitespace-nowrap rounded-[6px] text-[12px] font-medium text-[#155eef] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#155eef] sm:text-[13px]"
+            >
+              Mark as read
+            </button>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+}
 
 export default function LaboratoryNotifications() {
   const items = useLabNotifications();
-  const navigate = useNavigate();
-  const [filter, setFilter] = useState<Category>("All");
-  const [search, setSearch] = useState("");
-  const [globalSearch, setGlobalSearch] = useState("");
+  const [headerSearch, setHeaderSearch] = useState("");
   const unreadCount = items.filter((item) => item.unread).length;
-  const filteredItems = useMemo(() => {
-    const needle = search.trim().toLowerCase();
-    const globalNeedle = globalSearch.trim().toLowerCase();
-    return items.filter((item) => {
-      const match = [item.title, item.description, item.category, item.date]
-        .join(" ")
-        .toLowerCase();
-      return (
-        (filter === "All" ||
-          (filter === "Unread" ? item.unread : item.category === filter)) &&
-        match.includes(needle) &&
-        match.includes(globalNeedle)
-      );
-    });
-  }, [items, filter, search, globalSearch]);
-
-  const openNotification = (id: string, target: string) => {
-    markLabNotificationRead(id);
-    navigate(target);
-  };
+  const query = headerSearch.trim().toLowerCase();
+  const visibleItems = query
+    ? items.filter((item) =>
+        [
+          item.title,
+          item.badge,
+          item.description,
+          item.patient,
+          item.date,
+          item.category,
+        ]
+          .join(" ")
+          .toLowerCase()
+          .includes(query)
+      )
+    : items;
 
   return (
     <LaboratoryShell
       section="Notifications"
-      search={globalSearch}
-      onSearchChange={setGlobalSearch}
+      search={headerSearch}
+      onSearchChange={setHeaderSearch}
     >
-      <div className="mx-auto w-full max-w-[1500px] px-[15px] pt-[24px] pb-[65px] sm:px-[30px] sm:pt-[45px]">
-        <div className="flex flex-wrap items-start justify-between gap-[14px]">
-          <div>
-            <h1 className="text-[22px] leading-[30px] font-semibold text-[#202b3a] sm:text-[29px] sm:leading-[37px]">
-              Notifications
-            </h1>
-            <p className="mt-[1px] text-[13px] leading-[20px] text-[#566371] sm:text-[17px] sm:leading-[25px]">
-              Stay updated on bookings, samples, and laboratory results
-            </p>
-          </div>
-          <button
-            type="button"
-            disabled={!unreadCount}
-            onClick={markAllLabNotificationsRead}
-            className="inline-flex min-h-[35px] items-center gap-[7px] rounded-[10px] border border-[#d9e4f4] bg-white px-[13px] text-[12px] font-medium text-[#155eef] hover:bg-[#f7faff] disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-[37px] sm:text-[13px]"
-          >
-            <CheckCheck className="size-[15px]" /> Mark all as read
-          </button>
-        </div>
+      <div className="mx-auto w-full max-w-[1500px] px-[15px] pt-[24px] pb-[65px] sm:px-[30px] sm:pt-[43px] sm:pb-[75px]">
+        <h1 className="text-[22px] leading-[30px] font-semibold tracking-[-0.4px] text-[#202b3a] sm:text-[29px] sm:leading-[37px]">
+          Notifications
+        </h1>
+        <p className="mt-[1px] text-[13px] leading-[20px] text-[#566371] sm:text-[17px] sm:leading-[25px]">
+          Stay updated on bookings, samples, and results
+        </p>
 
-        <section className="mt-[28px] overflow-hidden rounded-[15px] border border-[#e5ebf3] bg-white sm:mt-[41px] sm:rounded-[17px]">
-          <div className="flex flex-wrap items-center justify-between gap-[12px] px-[13px] pt-[14px] sm:px-[19px]">
-            <div className="relative min-w-[180px] flex-1 sm:max-w-[300px]">
-              <Search className="pointer-events-none absolute top-[10px] left-[12px] size-[15px] text-[#91a5c1]" />
-              <input
-                type="search"
-                aria-label="Search notifications"
-                placeholder="Search notifications..."
-                value={search}
-                onChange={(event) => setSearch(event.currentTarget.value)}
-                className="h-[36px] w-full rounded-[10px] border border-[#dce4ef] bg-white pr-[10px] pl-[35px] text-[12px] text-[#33445d] outline-none placeholder:text-[#91a5c1] focus:border-[#155eef] sm:text-[13px]"
-              />
-            </div>
-            <div className="flex items-center gap-[6px] text-[12px] text-[#778dab]">
-              <span className="inline-block size-[7px] rounded-full bg-[#155eef]" />
+        <div className="mt-[33px] w-full max-w-[800px] sm:mt-[42px]">
+          <p className="mb-[17px] text-[13px] leading-[19px] text-[#7185a2] sm:mb-[18px] sm:text-[15px] sm:leading-[22px]">
+            <strong className="font-semibold text-[#155eef]">
               {unreadCount} unread
-            </div>
-          </div>
-          <div
-            role="tablist"
-            aria-label="Notification filters"
-            className="mx-[13px] mt-[10px] flex gap-1 overflow-x-auto border-b border-[#e3eaf3] sm:mx-[19px] sm:mt-[13px]"
-          >
-            {FILTERS.map((category) => {
-              const active = filter === category;
-              const count =
-                category === "All"
-                  ? items.length
-                  : category === "Unread"
-                    ? unreadCount
-                    : items.filter((item) => item.category === category).length;
-              return (
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={active}
-                  key={category}
-                  onClick={() => setFilter(category)}
-                  className={
-                    "flex min-h-[39px] shrink-0 items-center gap-[6px] border-b-[2px] px-[10px] text-[12px] sm:min-h-[44px] sm:px-[13px] sm:text-[13px] " +
-                    (active
-                      ? "border-[#155eef] font-medium text-[#155eef]"
-                      : "border-transparent text-[#6980a0] hover:text-[#155eef]")
-                  }
-                >
-                  {category}
-                  <span
-                    className={
-                      "rounded-full px-[6px] py-[2px] text-[10px] " +
-                      (active
-                        ? "bg-[#e8efff] text-[#155eef]"
-                        : "bg-[#f1f4f8] text-[#7287a5]")
-                    }
-                  >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div>
-            {filteredItems.map((item) => (
-              <div
-                key={item.id}
-                className={
-                  "flex items-start gap-[11px] border-b border-[#edf1f6] px-[13px] py-[14px] last:border-b-0 sm:gap-[15px] sm:px-[19px] sm:py-[18px] " +
-                  (item.unread ? "bg-[#fafdff]" : "bg-white")
-                }
-              >
-                <button
-                  type="button"
-                  onClick={() => openNotification(item.id, item.target)}
-                  aria-label={"Open " + item.title}
-                  className="flex min-w-0 flex-1 items-start gap-[11px] text-left sm:gap-[15px]"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="flex size-[35px] shrink-0 items-center justify-center rounded-[11px] bg-[#f1f5fc] text-[16px] sm:size-[41px] sm:text-[19px]"
-                  >
-                    {item.icon}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="flex flex-wrap items-center gap-[8px]">
-                      <span className="text-[12px] leading-[18px] font-semibold text-[#273853] sm:text-[14px] sm:leading-[21px]">
-                        {item.title}
-                      </span>
-                      {item.unread && (
-                        <span
-                          aria-label="Unread"
-                          className="size-[7px] rounded-full bg-[#155eef]"
-                        />
-                      )}
-                    </span>
-                    <span className="mt-[2px] block text-[11px] leading-[17px] text-[#607594] sm:text-[13px] sm:leading-[20px]">
-                      {item.description}
-                    </span>
-                    <span className="mt-[6px] block font-mono text-[10px] text-[#8fa3bd] sm:text-[11px]">
-                      {item.date}
-                    </span>
-                  </span>
-                </button>
-                <div className="flex shrink-0 items-center gap-[8px]">
-                  {item.unread && (
-                    <button
-                      type="button"
-                      onClick={() => markLabNotificationRead(item.id)}
-                      className="rounded-[8px] border border-[#dae5f4] px-[8px] py-[5px] text-[10px] text-[#155eef] hover:bg-[#f0f6ff] sm:text-[11px]"
-                    >
-                      Mark read
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => openNotification(item.id, item.target)}
-                    aria-label={"Go to " + item.category}
-                    className="p-[5px] text-[#8ea2bf] hover:text-[#155eef]"
-                  >
-                    <ChevronRight className="size-[16px]" />
-                  </button>
-                </div>
-              </div>
+            </strong>{" "}
+            notifications
+          </p>
+          <div className="space-y-[14px] sm:space-y-[20px]">
+            {visibleItems.map((item) => (
+              <NotificationCard key={item.id} item={item} />
             ))}
-            {filteredItems.length === 0 && (
-              <div className="px-5 py-[45px] text-center text-[13px] text-[#7890ad]">
-                No notifications match these filters.
+            {visibleItems.length === 0 && (
+              <div className="rounded-[15px] border border-[#e1e8f2] bg-white px-5 py-10 text-center text-[13px] text-[#7185a1]">
+                No notifications match your search.
                 <button
                   type="button"
-                  onClick={() => {
-                    setSearch("");
-                    setGlobalSearch("");
-                    setFilter("All");
-                  }}
-                  className="ml-[7px] font-medium text-[#155eef]"
+                  className="ml-[7px] font-medium text-[#155eef] hover:underline"
+                  onClick={() => setHeaderSearch("")}
                 >
-                  Clear filters
+                  Clear search
                 </button>
               </div>
             )}
           </div>
-          <div className="flex min-h-[48px] items-center border-t border-[#edf1f6] px-[19px] text-[12px] text-[#91a5bf]">
-            {filteredItems.length}{" "}
-            {filteredItems.length === 1 ? "notification" : "notifications"}
-          </div>
-        </section>
-        <p className="mt-[13px] text-[11px] text-[#98a8ba]">
-          Example notifications only. No emails, text messages or push
-          notifications are sent.
-        </p>
+          <p className="mt-[18px] text-[11px] leading-[17px] text-[#99a8bd]">
+            Sample notifications from the reference design, not live messages.
+            No patient SMS or email is sent.
+          </p>
+        </div>
       </div>
     </LaboratoryShell>
   );
