@@ -10,6 +10,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useId, useState, type ChangeEvent, type FormEvent } from "react";
+import { useNavigate } from "react-router";
 import Logo from "~/components/shared/logo";
 
 type AuthScreen =
@@ -171,6 +172,7 @@ function StepProgress({ activeStep }: { activeStep: number }) {
 }
 
 export default function LaboratoryAuthPage() {
+  const navigate = useNavigate();
   const [screen, setScreen] = useState<AuthScreen>("sign-in");
   const [registrationStep, setRegistrationStep] = useState<RegistrationStep>(1);
   const [loginEmail, setLoginEmail] = useState("");
@@ -234,11 +236,9 @@ export default function LaboratoryAuthPage() {
 
   const handleSignIn = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // This preview must not imply credentials were verified or create a session.
-    setFeedback(
-      "Laboratory sign-in is a UI preview only. No account was authenticated and no session was created."
-    );
+    // Preview-only navigation. No credentials are verified and no session is established.
     setLoginPassword("");
+    navigate("/dashboard");
   };
 
   const handlePasswordReset = (event: FormEvent<HTMLFormElement>) => {
