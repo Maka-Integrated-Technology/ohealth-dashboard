@@ -1,0 +1,42 @@
+name: Laboratory Preview
+
+on:
+  pull_request:
+    branches: [dev]
+    paths:
+      - app/features/laboratory-auth/**
+      - app/routes/lb-dashboard/**
+      - app/routes.ts
+      - package.json
+      - package-lock.json
+      - .github/workflows/laboratory-preview.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laboratory-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  laboratory-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --no-audit
+      - name: Check formatting
+        run: npm run format:check
+      - name: Lint
+        run: npm run lint
+      - name: Type-check
+        run: npm run typecheck
+      - name: Build lab portal
+        run: npm run build:lb
