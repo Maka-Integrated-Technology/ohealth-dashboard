@@ -11,7 +11,10 @@ export default function LaboratoryTestBookingsRoute() {
           placeholder deliberately contains no invented booking data, forms, or
           workflow.
         </p>
-        <Link to="/dashboard" className="mt-6 inline-flex rounded-lg bg-[#155eef] px-4 py-2 text-sm font-semibold text-white">
+        <Link
+          to="/dashboard"
+          className="mt-6 inline-flex rounded-lg bg-[#155eef] px-4 py-2 text-sm font-semibold text-white"
+        >
           Back to Overview
         </Link>
       </div>
