@@ -25,7 +25,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useMemo, useState, type ReactNode } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import HospitalPatientDetails from "~/features/hospital-dashboard/patient-details";
 import Logo from "~/components/shared/logo";
 
 type HospitalSection =
@@ -267,13 +268,19 @@ function SectionHeading({
 
 export default function HospitalDashboardPage() {
   const navigate = useNavigate();
-  const [activeSection, setActiveSection] =
-    useState<HospitalSection>("Dashboard");
+  const { id: patientId } = useParams();
+  const [sectionParams] = useSearchParams();
+  const [activeSection, setActiveSection] = useState<HospitalSection>(
+    () =>
+      navigation.find((item) => item.label === sectionParams.get("section"))
+        ?.label ?? "Dashboard"
+  );
   const [search, setSearch] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] =
-    useState<Appointment | null>(null);
-  const [appointments, setAppointments] = useState(initialAppointments);
+  const [appointments] = useState(initialAppointments);
+  const selectedPatient = patientId
+    ? appointments.find((appointment) => appointment.id === patientId)
+    : undefined;
   const [readNotifications, setReadNotifications] = useState(false);
 
   const filteredAppointments = useMemo(() => {
@@ -294,10 +301,18 @@ export default function HospitalDashboardPage() {
     );
   }, [appointments, search]);
 
-  const changeStatus = (id: string, status: Appointment["status"]) => {
-    setAppointments((items) =>
-      items.map((item) => (item.id === id ? { ...item, status } : item))
-    );
+  const selectNavigation = (section: HospitalSection) => {
+    if (patientId) {
+      navigate(
+        section === "Dashboard"
+          ? "/dashboard"
+          : "/dashboard?section=" + encodeURIComponent(section)
+      );
+    } else {
+      setActiveSection(section);
+    }
+    setMenuOpen(false);
+    setSearch("");
   };
 
   return (
@@ -310,7 +325,7 @@ export default function HospitalDashboardPage() {
           <div className="space-y-3.5">
             {navigation.map((item) => {
               const Icon = item.icon;
-              const active = activeSection === item.label;
+              const active = patientId ? item.label === "Patients" : activeSection === item.label;
               return (
                 <button
                   className={`flex h-[44px] w-full items-center gap-3 rounded-lg px-4 text-left text-[13px] transition-colors ${
@@ -321,9 +336,7 @@ export default function HospitalDashboardPage() {
                   key={item.label}
                   type="button"
                   onClick={() => {
-                    setActiveSection(item.label);
-                    setMenuOpen(false);
-                    setSearch("");
+                    selectNavigation(item.label);
                   }}
                 >
                   <Icon className="size-[19px]" strokeWidth={1.8} />
@@ -382,12 +395,10 @@ export default function HospitalDashboardPage() {
                     key={item.label}
                     type="button"
                     onClick={() => {
-                      setActiveSection(item.label);
-                      setMenuOpen(false);
-                      setSearch("");
+                      selectNavigation(item.label);
                     }}
                     className={`flex h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-sm ${
-                      activeSection === item.label
+                      (patientId ? item.label === "Patients" : activeSection === item.label)
                         ? "bg-[#155eef]/[0.08] font-semibold text-[#155eef]"
                         : "text-[#45556c] hover:bg-slate-50"
                     }`}
@@ -418,7 +429,7 @@ export default function HospitalDashboardPage() {
             <Menu className="size-5" />
           </button>
           <h1 className="hidden min-w-[150px] text-[22px] font-semibold tracking-[-0.4px] text-[#0f172b] sm:block">
-            {activeSection}
+            {patientId ? "Patients" : activeSection}
           </h1>
           <label className="relative ml-auto flex h-[42px] w-full max-w-[421px] items-center gap-3 rounded-lg border border-[#e2e8f0] bg-white px-4 text-[#62748e] focus-within:border-[#155eef] focus-within:ring-4 focus-within:ring-[#155eef]/[0.08]">
             <Search className="size-[19px] shrink-0" strokeWidth={1.8} />
@@ -434,7 +445,7 @@ export default function HospitalDashboardPage() {
           <button
             type="button"
             aria-label="Open notifications"
-            onClick={() => setActiveSection("Notifications")}
+            onClick={() => selectNavigation("Notifications")}
             className="relative hidden size-10 shrink-0 items-center justify-center rounded-full text-[#45556c] hover:bg-slate-50 sm:flex"
           >
             <Bell className="size-5" strokeWidth={1.8} />
@@ -453,7 +464,28 @@ export default function HospitalDashboardPage() {
         </header>
 
         <main className="mx-auto w-full max-w-[1440px] px-5 pt-8 pb-12 sm:px-8 lg:pt-[36px] lg:pr-[35px] lg:pl-10">
-          {activeSection === "Dashboard" ? (
+          {patientId ? (
+            selectedPatient ? (
+              <HospitalPatientDetails
+                patient={selectedPatient}
+                onBack={() => navigate("/dashboard?section=Patients")}
+              />
+            ) : (
+              <section className="rounded-2xl border border-[#f1f5f9] bg-white p-6">
+                <h2 className="text-lg font-semibold">Patient not found</h2>
+                <p className="mt-2 text-sm text-[#62748e]">
+                  This patient is not included in the preview data.
+                </p>
+                <button
+                  type="button"
+                  className="mt-4 text-sm font-semibold text-[#155eef]"
+                  onClick={() => navigate("/dashboard")}
+                >
+                  Return to dashboard
+                </button>
+              </section>
+            )
+          ) : activeSection === "Dashboard" ? (
             <>
               <div className="mb-[41px]">
                 <h2 className="text-[28px] leading-[43px] font-semibold tracking-[-0.7px] text-[#0f172b]">
@@ -543,9 +575,7 @@ export default function HospitalDashboardPage() {
                           <td className="px-5 py-4 text-right">
                             <button
                               type="button"
-                              onClick={() =>
-                                setSelectedAppointment(appointment)
-                              }
+                              onClick={() => navigate("/patients/" + encodeURIComponent(appointment.id))}
                               className="inline-flex h-9 items-center justify-center rounded-lg border border-[#d7e0ec] px-3.5 text-xs font-semibold text-[#155eef] hover:bg-[#f5f8ff]"
                             >
                               View
@@ -804,108 +834,6 @@ export default function HospitalDashboardPage() {
         </main>
       </div>
 
-      {selectedAppointment ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-[#0f172b]/35 p-4"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget)
-              setSelectedAppointment(null);
-          }}
-        >
-          <section
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="appointment-dialog-title"
-            className="w-full max-w-xl rounded-2xl bg-white p-6 shadow-2xl"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold tracking-[0.12em] text-[#155eef] uppercase">
-                  Appointment details · {selectedAppointment.id}
-                </p>
-                <h2
-                  id="appointment-dialog-title"
-                  className="mt-2 text-xl font-semibold text-[#0f172b]"
-                >
-                  {selectedAppointment.patient}
-                </h2>
-                <p className="mt-1 text-sm text-[#62748e]">
-                  {selectedAppointment.detail}
-                </p>
-              </div>
-              <button
-                type="button"
-                aria-label="Close appointment details"
-                onClick={() => setSelectedAppointment(null)}
-                className="rounded-lg p-2 text-[#62748e] hover:bg-slate-100"
-              >
-                <X className="size-5" />
-              </button>
-            </div>
-            <div className="mt-5 grid grid-cols-1 gap-4 rounded-xl bg-[#f8fafc] p-4 sm:grid-cols-2">
-              <div>
-                <p className="text-xs text-[#62748e]">Time</p>
-                <p className="mt-1 text-sm font-semibold text-[#1d293d]">
-                  {selectedAppointment.time}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-[#62748e]">Appointment type</p>
-                <p className="mt-1 text-sm font-semibold text-[#1d293d]">
-                  {selectedAppointment.kind}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-[#62748e]">Doctor</p>
-                <p className="mt-1 text-sm font-semibold text-[#1d293d]">
-                  {selectedAppointment.doctor}
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-[#62748e]">Department</p>
-                <p className="mt-1 text-sm font-semibold text-[#1d293d]">
-                  {selectedAppointment.department}
-                </p>
-              </div>
-            </div>
-            <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <StatusBadge status={selectedAppointment.status} />
-                <PaymentBadge payment={selectedAppointment.payment} />
-              </div>
-              <div className="flex gap-2">
-                {selectedAppointment.status === "Pending" ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      changeStatus(selectedAppointment.id, "Confirmed");
-                      setSelectedAppointment({
-                        ...selectedAppointment,
-                        status: "Confirmed",
-                      });
-                    }}
-                    className="rounded-lg bg-[#155eef] px-4 py-2 text-sm font-semibold text-white hover:bg-[#174fc5]"
-                  >
-                    Confirm
-                  </button>
-                ) : null}
-                <button
-                  type="button"
-                  onClick={() => setSelectedAppointment(null)}
-                  className="rounded-lg border border-[#d7e0ec] px-4 py-2 text-sm font-semibold text-[#344256] hover:bg-slate-50"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-            <p className="mt-4 text-xs leading-5 text-[#90a1b9]">
-              Preview only: changing an appointment updates this screen&apos;s
-              sample data, not a live hospital record.
-            </p>
-          </section>
-        </div>
-      ) : null}
     </div>
   );
 }
