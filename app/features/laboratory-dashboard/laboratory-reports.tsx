@@ -85,9 +85,10 @@ export default function LaboratoryReportsAndAnalytics() {
   const matchingCategories = TEST_CATEGORIES.filter((item) =>
     item.category.toLowerCase().includes(headerSearch.trim().toLowerCase())
   );
-  const categoryData = selectedCategory === "All"
-    ? matchingCategories
-    : matchingCategories.filter((item) => item.category === selectedCategory);
+  const categoryData =
+    selectedCategory === "All"
+      ? matchingCategories
+      : matchingCategories.filter((item) => item.category === selectedCategory);
   const csv = [
     "OHealth+ Lab Reports & Analytics — SAMPLE DATA (not live)",
     "Month,Estimated revenue NGN (thousands),Example test volume",
@@ -98,7 +99,11 @@ export default function LaboratoryReportsAndAnalytics() {
   ].join("\n");
 
   return (
-    <LaboratoryShell section="Reports & Analytics" search={headerSearch} onSearchChange={setHeaderSearch}>
+    <LaboratoryShell
+      section="Reports & Analytics"
+      search={headerSearch}
+      onSearchChange={setHeaderSearch}
+    >
       <div className="mx-auto w-full max-w-[1500px] px-[15px] pt-[24px] pb-[70px] sm:px-[30px] sm:pt-[45px]">
         <div className="flex flex-wrap items-start justify-between gap-[14px]">
           <div>
