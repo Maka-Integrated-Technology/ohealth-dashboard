@@ -6,15 +6,15 @@ The laboratory portal is developed on the isolated Git branch `feat/laboratory-a
 
 For a **separate Cloudflare Pages project** connected to this GitHub repository, configure:
 
-| Setting | Value |
-| --- | --- |
-| Repository | `Maka-Integrated-Technology/ohealth-dashboard` |
-| Preview / selected branch | `feat/laboratory-auth-cloudflare-preview` |
-| Build command | `npm run build:lb` |
-| Build output directory | `build/client` |
-| Framework | React / Vite (static SPA) |
-| Root directory | repository root |
-| Runtime requirement | Node.js 20+ |
+| Setting                   | Value                                          |
+| ------------------------- | ---------------------------------------------- |
+| Repository                | `Maka-Integrated-Technology/ohealth-dashboard` |
+| Preview / selected branch | `feat/laboratory-auth-cloudflare-preview`      |
+| Build command             | `npm run build:lb`                             |
+| Build output directory    | `build/client`                                 |
+| Framework                 | React / Vite (static SPA)                      |
+| Root directory            | repository root                                |
+| Runtime requirement       | Node.js 20+                                    |
 
 The `build:lb` script **already exists on `dev`** and runs `cross-env VITE_ROUTE=lb react-router build`. The React Router configuration uses `ssr: false`, so the portal builds as a static single-page application. The lab routes are isolated from the medical-professional and pharmacy route sets.
 
