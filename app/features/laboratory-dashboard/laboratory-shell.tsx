@@ -17,7 +17,7 @@ const NAV_ITEMS: NavEntry[] = [
   { label: "Notifications", icon: "🔔", href: "/notifications" },
   { label: "Reports & Analytics", icon: "📊", href: "/reports-analytics" },
   { label: "Laboratory Profile", icon: "🏥", href: "/laboratory-profile" },
-  { label: "Staff Management", icon: "👥" },
+  { label: "Staff Management", icon: "👥", href: "/staff-management" },
   { label: "Compliance & Audit", icon: "🛡️", href: "/compliance-audit" },
 ];
 
