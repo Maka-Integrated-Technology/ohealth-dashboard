@@ -27,6 +27,8 @@ import {
 import { useMemo, useState, type ReactNode } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import HospitalPatientDetails from "~/features/hospital-dashboard/patient-details";
+import HospitalProfile from "~/features/hospital-dashboard/hospital-profile";
+import HospitalAppointments from "~/features/hospital-dashboard/hospital-appointments";
 import HospitalPatientsList, {
   hospitalPatientRecords,
 } from "~/features/hospital-dashboard/patients-list";
@@ -764,27 +766,10 @@ export default function HospitalDashboardPage() {
             <HospitalPatientsList
               onView={(id) => navigate("/patients/" + encodeURIComponent(id))}
             />
+          ) : activeSection === "Hospital Profile" ? (
+            <HospitalProfile />
           ) : activeSection === "Appointments" ? (
-            <section className="rounded-2xl border border-[#e2e8f0] bg-white p-6">
-              <SectionHeading
-                title="Appointments"
-                description="Manage upcoming and recent hospital appointments."
-                action={
-                  <button
-                    type="button"
-                    onClick={() => setActiveSection("Dashboard")}
-                    className="rounded-lg border border-[#d7e0ec] px-4 py-2 text-sm font-semibold text-[#155eef] hover:bg-[#f5f8ff]"
-                  >
-                    Back to dashboard
-                  </button>
-                }
-              />
-              <p className="mt-5 text-sm text-[#62748e]">
-                The appointment management screen is next in the Figma
-                implementation sequence. The search above already filters the
-                sample appointments on the dashboard.
-              </p>
-            </section>
+            <HospitalAppointments />
           ) : activeSection === "Notifications" ? (
             <section className="rounded-2xl border border-[#e2e8f0] bg-white p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
