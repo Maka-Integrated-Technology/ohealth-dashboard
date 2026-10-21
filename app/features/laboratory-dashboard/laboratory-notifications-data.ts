@@ -1,9 +1,6 @@
 import { useSyncExternalStore } from "react";
 
-export type LaboratoryNotificationCategory =
-  | "Bookings"
-  | "Samples"
-  | "Results";
+export type LaboratoryNotificationCategory = "Bookings" | "Samples" | "Results";
 
 export type LaboratoryNotificationBadge =
   | "Booking Confirmed"

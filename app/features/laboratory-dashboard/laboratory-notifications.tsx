@@ -16,11 +16,7 @@ const BADGE_STYLE: Record<LaboratoryNotificationBadge, string> = {
   "Test In Progress": "bg-[#f4f0ff] text-[#7632ed]",
 };
 
-function NotificationCard({
-  item,
-}: {
-  item: LaboratoryNotification;
-}) {
+function NotificationCard({ item }: { item: LaboratoryNotification }) {
   return (
     <article
       className={
@@ -80,8 +76,10 @@ function NotificationCard({
             <button
               type="button"
               onClick={() => markLabNotificationRead(item.id)}
-              aria-label={"Mark " + item.title + " for " + item.patient + " as read"}
-              className="ml-auto whitespace-nowrap rounded-[6px] text-[12px] font-medium text-[#155eef] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#155eef] sm:text-[13px]"
+              aria-label={
+                "Mark " + item.title + " for " + item.patient + " as read"
+              }
+              className="ml-auto rounded-[6px] text-[12px] font-medium whitespace-nowrap text-[#155eef] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#155eef] sm:text-[13px]"
             >
               Mark as read
             </button>
