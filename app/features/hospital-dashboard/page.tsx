@@ -217,7 +217,7 @@ function MetricCard({ metric }: { metric: (typeof metrics)[number] }) {
       >
         <Icon className="size-[23px]" strokeWidth={1.8} />
       </div>
-      <p className="mt-1 text-[36px] leading-[1.5] font-semibold tracking-[-1.2px] text-[#0f172b]">
+      <p className="h-[59px] text-[36px] leading-[59px] font-semibold tracking-[-1.2px] text-[#0f172b]">
         {metric.value}
       </p>
       <p className="text-[15px] font-medium leading-6 text-[#344256]">
@@ -300,7 +300,7 @@ export default function HospitalDashboardPage() {
           <Logo size="auth" to="/dashboard" />
         </div>
         <nav className="flex-1 px-6 py-6" aria-label="Hospital navigation">
-          <div className="space-y-2.5">
+          <div className="space-y-3.5">
             {navigation.map((item) => {
               const Icon = item.icon;
               const active = activeSection === item.label;
@@ -445,25 +445,25 @@ export default function HospitalDashboardPage() {
           </button>
         </header>
 
-        <main className="mx-auto w-full max-w-[1440px] px-5 pb-12 pt-8 sm:px-8 lg:px-[35px] lg:pt-[36px]">
+        <main className="mx-auto w-full max-w-[1440px] px-5 pb-12 pt-8 sm:px-8 lg:pr-[35px] lg:pl-10 lg:pt-[36px]">
           {activeSection === "Dashboard" ? (
             <>
-              <div className="mb-9">
-                <h2 className="text-[28px] leading-[1.35] font-semibold tracking-[-0.7px] text-[#0f172b]">
+              <div className="mb-[41px]">
+                <h2 className="text-[28px] leading-[43px] font-semibold tracking-[-0.7px] text-[#0f172b]">
                   Good afternoon, St. Mary&apos;s
                 </h2>
-                <p className="mt-1 text-[15px] leading-6 text-[#62748e]">
+                <p className="text-[15px] leading-[29px] text-[#62748e]">
                   Here&apos;s what&apos;s happening at your hospital today.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 xl:gap-7">
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 xl:gap-x-[30px] xl:gap-y-7">
                 {metrics.map((metric) => (
                   <MetricCard key={metric.label} metric={metric} />
                 ))}
               </div>
 
-              <section className="mt-20 rounded-2xl border border-[#e2e8f0] bg-white">
+              <section className="mt-32 rounded-2xl border border-[#e2e8f0] bg-white">
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f1f5f9] px-6 py-5">
                   <SectionHeading
                     title="Today’s Appointments"
