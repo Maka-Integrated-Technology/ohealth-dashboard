@@ -164,11 +164,11 @@ export default function LaboratoryDashboard() {
           <h1 className="text-[25px] leading-[33px] font-semibold tracking-[-0.55px] text-[#202b3a]">Good afternoon, MedCore Diagnostics</h1>
           <p className="mt-[1px] text-[15px] leading-[23px] text-[#525e6d]">Saturday, 13 september</p>
         </div>
-        <div className="mt-[41px] grid grid-cols-1 gap-x-[18px] gap-y-[19px] sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-[41px] grid grid-cols-1 gap-x-[18px] gap-y-[19px] sm:grid-cols-2 lg:grid-cols-4">
           {METRICS.map((metric) => <MetricCard key={metric.label} metric={metric} />)}
         </div>
 
-        <div className="mt-[52px] grid grid-cols-1 items-stretch gap-[25px] xl:grid-cols-[minmax(0,1.025fr)_minmax(0,1fr)]">
+        <div className="mt-[52px] grid grid-cols-1 items-stretch gap-[25px] lg:grid-cols-[minmax(0,1.025fr)_minmax(0,1fr)]">
           <section className="overflow-hidden rounded-[15px] border border-[#e9eef5] bg-white">
             <div className="flex h-[46px] items-center justify-between px-[17px] pt-[9px]">
               <h2 className="text-[12px] font-semibold text-[#23324b]">Today's Schedule</h2>
@@ -206,7 +206,7 @@ export default function LaboratoryDashboard() {
           </section>
         </div>
 
-        <div className="mt-[20px] grid grid-cols-1 gap-[23px] xl:grid-cols-[minmax(0,2.08fr)_minmax(0,1fr)]">
+        <div className="mt-[20px] grid grid-cols-1 gap-[23px] lg:grid-cols-[minmax(0,2.08fr)_minmax(0,1fr)]">
           <RevenueChart onReport={() => setReportOpen(true)} />
           <CategoryChart />
         </div>
