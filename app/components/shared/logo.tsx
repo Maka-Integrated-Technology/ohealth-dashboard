@@ -25,29 +25,35 @@ export default function Logo({
 
   return (
     <Link to="/" className={linkClass}>
-      <svg
-        width={svgSize}
-        height={svgSize}
-        viewBox="0 0 32 32"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="shrink-0"
-      >
-        {size === "auth" ? (
-          <circle cx="16" cy="16" r="14" fill="#155dfc" />
-        ) : (
+      {size === "auth" ? (
+        <img
+          src="/icons/ohealth-plus-mark.svg"
+          alt=""
+          width={30}
+          height={30}
+          className="size-[30px] shrink-0"
+        />
+      ) : (
+        <svg
+          width={svgSize}
+          height={svgSize}
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="shrink-0"
+        >
           <path
             d="M16 28.5S3 20.5 3 11.5C3 7.36 6.36 4 10.5 4c2.55 0 4.8 1.27 5.5 3.22C16.7 5.27 18.95 4 21.5 4 25.64 4 29 7.36 29 11.5c0 9-13 17-13 17z"
             fill="#1D4ED8"
           />
-        )}
-        <path
-          d="M16 9.5v8M12 13.5h8"
-          stroke="#FFFFFF"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-      </svg>
+          <path
+            d="M16 9.5v8M12 13.5h8"
+            stroke="#FFFFFF"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+        </svg>
+      )}
       <span className={textClass}>
         OHealth
         <span className={variant === "light" ? "text-[#f5f7f7]" : "text-blue-600"}>
