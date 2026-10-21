@@ -1,0 +1,41 @@
+name: Validate Test Catalogue preview (temporary)
+on:
+  push:
+    branches: [feat/laboratory-auth-cloudflare-preview]
+    paths:
+      - .github/workflows/laboratory-catalogue-validate-temp.yml
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/laboratory-auth-cloudflare-preview
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --no-audit
+      - name: Format Test Catalogue screens
+        run: npx prettier --write app/features/laboratory-dashboard/laboratory-catalogue-data.ts app/features/laboratory-dashboard/laboratory-catalogue.tsx app/features/laboratory-dashboard/laboratory-shell.tsx app/routes/lb-dashboard/test-catalogue/page.tsx
+      - name: Lint
+        run: npm run lint
+      - name: Type-check
+        run: npm run typecheck
+      - name: Build laboratory portal
+        run: npm run build:lb
+      - name: Commit formatted Test Catalogue sources
+        if: success()
+        run: |
+          if ! git diff --quiet -- app/features/laboratory-dashboard/laboratory-catalogue-data.ts app/features/laboratory-dashboard/laboratory-catalogue.tsx app/features/laboratory-dashboard/laboratory-shell.tsx app/routes/lb-dashboard/test-catalogue/page.tsx; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add app/features/laboratory-dashboard/laboratory-catalogue-data.ts app/features/laboratory-dashboard/laboratory-catalogue.tsx app/features/laboratory-dashboard/laboratory-shell.tsx app/routes/lb-dashboard/test-catalogue/page.tsx
+            git commit -m 'style(lab): format screenshot-based Test Catalogue preview'
+            git push origin HEAD:feat/laboratory-auth-cloudflare-preview
+          fi
