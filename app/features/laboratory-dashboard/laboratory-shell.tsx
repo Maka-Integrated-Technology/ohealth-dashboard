@@ -1,7 +1,10 @@
 import { useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router";
 import { ChevronDown, LayoutGrid, Menu, Search, X } from "lucide-react";
-import { markAllLabNotificationsRead, useLabNotifications } from "./laboratory-notifications-data";
+import {
+  markAllLabNotificationsRead,
+  useLabNotifications,
+} from "./laboratory-notifications-data";
 
 type NavEntry = { label: string; icon: string; href?: string };
 const NAV_ITEMS: NavEntry[] = [
@@ -209,7 +212,8 @@ export function LaboratoryShell({
                   <p className="mt-3 text-[13px] leading-5 text-[#65758d]">
                     {unreadCount === 0
                       ? "All preview notifications marked as read."
-                      : unreadCount + " unread preview notifications. No live notification service is connected."}
+                      : unreadCount +
+                        " unread preview notifications. No live notification service is connected."}
                   </p>
                   {unreadCount > 0 && (
                     <button
@@ -220,7 +224,13 @@ export function LaboratoryShell({
                       Mark all as read
                     </button>
                   )}
-                  <Link to="/notifications" onClick={() => setShowAlerts(false)} className="mt-3 block text-xs font-semibold text-[#155eef]">View all notifications</Link>
+                  <Link
+                    to="/notifications"
+                    onClick={() => setShowAlerts(false)}
+                    className="mt-3 block text-xs font-semibold text-[#155eef]"
+                  >
+                    View all notifications
+                  </Link>
                 </div>
               )}
             </div>

@@ -36,19 +36,13 @@ function StatusBadge({ status }: { status: LaboratoryResult["status"] }) {
   );
 }
 
-function ResultInformation({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
+function ResultInformation({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex min-h-[62px] min-w-0 flex-col justify-center rounded-[13px] bg-[#f7f9fb] px-[12px] py-[10px] sm:min-h-[66px]">
       <span className="text-[11px] leading-[17px] text-[#91a5c3] sm:text-[13px] sm:leading-[19px]">
         {label}
       </span>
-      <span className="mt-[2px] break-words text-[13px] leading-[19px] font-medium text-[#1c2b43] sm:text-[15px] sm:leading-[21px]">
+      <span className="mt-[2px] text-[13px] leading-[19px] font-medium break-words text-[#1c2b43] sm:text-[15px] sm:leading-[21px]">
         {value}
       </span>
     </div>
@@ -72,7 +66,9 @@ export function LaboratoryResultDrawer({
   const chooseFile = (file: File | undefined) => {
     if (!file) return;
     const extension = /\.(pdf|jpg|jpeg|png)$/i.test(file.name);
-    const mime = ["application/pdf", "image/jpeg", "image/png"].includes(file.type);
+    const mime = ["application/pdf", "image/jpeg", "image/png"].includes(
+      file.type
+    );
     if (!extension || (file.type && !mime) || file.size > 10 * 1024 * 1024) {
       setSelectedFile(null);
       setFileError("Select a PDF, JPG or PNG file of 10 MB or less.");
@@ -97,7 +93,9 @@ export function LaboratoryResultDrawer({
     if (!selectedFile) return;
     onFileUpload(result.id, selectedFile.name);
     setSelectedFile(null);
-    setNotice("Preview only: the file name was recorded locally. No file was uploaded.");
+    setNotice(
+      "Preview only: the file name was recorded locally. No file was uploaded."
+    );
     setFileError("");
   };
 
@@ -142,8 +140,9 @@ export function LaboratoryResultDrawer({
                     : "Result Published (Sample Data)"}
                 </p>
                 <p className="mt-[7px] pl-[23px]">
-                  In a connected portal, this result could become available to the patient and authorized professionals.
-                  No SMS, email, or patient record update occurs in this preview.
+                  In a connected portal, this result could become available to
+                  the patient and authorized professionals. No SMS, email, or
+                  patient record update occurs in this preview.
                 </p>
               </div>
               <p className="mt-[12px] text-[11px] text-[#91a4c0]">
@@ -154,7 +153,9 @@ export function LaboratoryResultDrawer({
               <button
                 type="button"
                 className="mt-[13px] rounded-[10px] bg-[#f0f3f7] px-[14px] py-[9px] text-[12px] font-medium text-[#40516b] hover:bg-[#e5eaf2]"
-                onClick={() => setNotice("Preview only: no result was shared with a doctor.")}
+                onClick={() =>
+                  setNotice("Preview only: no result was shared with a doctor.")
+                }
               >
                 Share With Doctor
               </button>
@@ -175,7 +176,9 @@ export function LaboratoryResultDrawer({
                         onPublishRequest();
                       } else {
                         onApprove(result.id);
-                        setNotice("Result approved in this preview only. No clinical approval was recorded.");
+                        setNotice(
+                          "Result approved in this preview only. No clinical approval was recorded."
+                        );
                       }
                     }}
                     className={
@@ -197,14 +200,18 @@ export function LaboratoryResultDrawer({
                 {result.fileName && (
                   <div className="mt-[9px] flex min-h-[38px] items-center gap-[9px] rounded-[11px] border border-[#a7f0d3] bg-[#e9fcf4] px-[12px] text-[12px] text-[#007e5c]">
                     <Check className="size-[13px] shrink-0" />
-                    <span className="min-w-0 flex-1 break-all">{result.fileName}</span>
+                    <span className="min-w-0 flex-1 break-all">
+                      {result.fileName}
+                    </span>
                     <span className="text-[10px] text-[#247c68]">Preview</span>
                   </div>
                 )}
                 {selectedFile ? (
                   <div className="mt-[9px] flex min-h-[85px] flex-wrap items-center justify-center gap-[9px] rounded-[15px] border border-dashed border-[#22c98e] bg-[#edfcf5] px-3 text-[13px] text-[#007b52]">
                     <Check className="size-[17px]" />
-                    <span className="max-w-[240px] break-all">{selectedFile.name}</span>
+                    <span className="max-w-[240px] break-all">
+                      {selectedFile.name}
+                    </span>
                     <button
                       type="button"
                       className="ml-2 text-[11px] font-medium text-[#df3042] hover:underline"
@@ -219,7 +226,11 @@ export function LaboratoryResultDrawer({
                     onDrop={handleDrop}
                     className="mt-[9px] flex min-h-[136px] cursor-pointer flex-col items-center justify-center rounded-[16px] border border-dashed border-[#b6cce6] bg-[#f8fafc] px-[12px] text-center hover:border-[#155eef]"
                   >
-                    <Upload className="size-[26px] text-[#8da3bf]" fill="currentColor" strokeWidth={1.2} />
+                    <Upload
+                      className="size-[26px] text-[#8da3bf]"
+                      fill="currentColor"
+                      strokeWidth={1.2}
+                    />
                     <span className="mt-[13px] text-[13px] text-[#3a4e6c]">
                       Drop file here or click to upload
                     </span>
@@ -235,7 +246,11 @@ export function LaboratoryResultDrawer({
                     />
                   </label>
                 )}
-                {fileError && <p role="alert" className="mt-2 text-[12px] text-[#ce2845]">{fileError}</p>}
+                {fileError && (
+                  <p role="alert" className="mt-2 text-[12px] text-[#ce2845]">
+                    {fileError}
+                  </p>
+                )}
                 {selectedFile && (
                   <button
                     type="button"
@@ -250,7 +265,10 @@ export function LaboratoryResultDrawer({
           )}
 
           {notice && (
-            <p role="status" className="mt-[14px] rounded-[11px] border border-[#bfdbfe] bg-[#eff6ff] px-[12px] py-[10px] text-[12px] leading-5 text-[#245acb]">
+            <p
+              role="status"
+              className="mt-[14px] rounded-[11px] border border-[#bfdbfe] bg-[#eff6ff] px-[12px] py-[10px] text-[12px] leading-5 text-[#245acb]"
+            >
               {notice}
             </p>
           )}
@@ -266,7 +284,11 @@ export function LaboratoryResultDrawer({
               <ResultInformation label="Test Date" value={result.date} />
               <ResultInformation
                 label="Reviewed By"
-                value={result.reviewedBy === "—" ? "Pending review" : result.reviewedBy}
+                value={
+                  result.reviewedBy === "—"
+                    ? "Pending review"
+                    : result.reviewedBy
+                }
               />
               <ResultInformation label="Result ID" value={result.id} />
             </div>
@@ -282,7 +304,9 @@ export function LaboratoryResultDrawer({
                   key={entry.stamp + entry.action + index}
                   className="flex flex-wrap items-start gap-x-[12px] gap-y-[4px] text-[11px] leading-[17px] text-[#4d6080]"
                 >
-                  <span className="shrink-0 font-mono text-[#93a8c5]">{entry.stamp}</span>
+                  <span className="shrink-0 font-mono text-[#93a8c5]">
+                    {entry.stamp}
+                  </span>
                   <span className="min-w-[165px] flex-1">{entry.action}</span>
                   <span className="text-[#91a6c2]">{entry.actor}</span>
                 </div>
@@ -290,7 +314,8 @@ export function LaboratoryResultDrawer({
             </div>
           </section>
           <p className="mt-[27px] text-[11px] text-[#9aabc1]">
-            This is an interactive, local-only design preview. No file or result is transmitted.
+            This is an interactive, local-only design preview. No file or result
+            is transmitted.
           </p>
         </div>
       </aside>
@@ -322,15 +347,25 @@ export function PublishResultDialog({
         onMouseDown={(event) => event.stopPropagation()}
       >
         <div className="flex min-h-[65px] items-center justify-between border-b border-[#f0f2f5] px-[22px]">
-          <h2 id="lab-publish-heading" className="text-[17px] font-semibold text-[#172039]">
+          <h2
+            id="lab-publish-heading"
+            className="text-[17px] font-semibold text-[#172039]"
+          >
             Publish Result
           </h2>
-          <button type="button" aria-label="Close publication dialog" onClick={onCancel}>
+          <button
+            type="button"
+            aria-label="Close publication dialog"
+            onClick={onCancel}
+          >
             <X className="size-[18px] text-[#8ba0bd]" />
           </button>
         </div>
         <div className="px-[22px] pt-[20px] pb-[26px]">
-          <p id="lab-publish-description" className="text-[15px] leading-[22px] text-[#425976]">
+          <p
+            id="lab-publish-description"
+            className="text-[15px] leading-[22px] text-[#425976]"
+          >
             You are about to publish the result for{" "}
             <strong>{result.patient}</strong> ({result.test}).
           </p>
@@ -343,10 +378,12 @@ export function PublishResultDialog({
             </ul>
           </div>
           <p className="mt-[14px] text-[14px] leading-[22px] text-[#405672]">
-            Confirm you are satisfied with the accuracy of this result before publishing.
+            Confirm you are satisfied with the accuracy of this result before
+            publishing.
           </p>
           <p className="mt-[10px] text-[11px] leading-5 text-[#7d8fa7]">
-            Preview only — confirming does not actually notify anyone or publish medical data.
+            Preview only — confirming does not actually notify anyone or publish
+            medical data.
           </p>
         </div>
         <div className="flex justify-end gap-[9px] border-t border-[#f0f2f5] bg-[#f8fafc] px-[22px] py-[18px]">

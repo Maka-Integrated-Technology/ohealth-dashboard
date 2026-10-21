@@ -14,7 +14,8 @@ import {
 } from "./laboratory-result-drawer";
 
 export default function LaboratoryResults() {
-  const [results, setResults] = useState<LaboratoryResult[]>(INITIAL_LAB_RESULTS);
+  const [results, setResults] =
+    useState<LaboratoryResult[]>(INITIAL_LAB_RESULTS);
   const [activeTab, setActiveTab] = useState<ResultsTab>("All");
   const [search, setSearch] = useState("");
   const [headerSearch, setHeaderSearch] = useState("");
@@ -55,9 +56,14 @@ export default function LaboratoryResults() {
     if (pending) {
       openResult(pending.id);
     } else {
-      const underReview = results.find((result) => result.status === "Under Review");
+      const underReview = results.find(
+        (result) => result.status === "Under Review"
+      );
       if (underReview) openResult(underReview.id);
-      else setNotice("There are no pending or reviewable results in this preview.");
+      else
+        setNotice(
+          "There are no pending or reviewable results in this preview."
+        );
     }
   };
 
@@ -88,7 +94,9 @@ export default function LaboratoryResults() {
   const approveResult = (id: string) => {
     setResults((current) =>
       current.map((result) =>
-        result.id === id && result.status === "Under Review" && !!result.fileName
+        result.id === id &&
+        result.status === "Under Review" &&
+        !!result.fileName
           ? {
               ...result,
               approved: true,
@@ -108,7 +116,12 @@ export default function LaboratoryResults() {
   };
 
   const publishResult = () => {
-    if (!selected || selected.status !== "Under Review" || !selected.approved || !selected.fileName) {
+    if (
+      !selected ||
+      selected.status !== "Under Review" ||
+      !selected.approved ||
+      !selected.fileName
+    ) {
       setConfirmPublish(false);
       return;
     }
@@ -161,9 +174,16 @@ export default function LaboratoryResults() {
         </div>
 
         {notice && (
-          <div role="status" className="mt-4 flex items-center justify-between gap-3 rounded-[11px] border border-[#d1dfff] bg-[#f0f6ff] px-4 py-3 text-[12px] text-[#245acb]">
+          <div
+            role="status"
+            className="mt-4 flex items-center justify-between gap-3 rounded-[11px] border border-[#d1dfff] bg-[#f0f6ff] px-4 py-3 text-[12px] text-[#245acb]"
+          >
             <span>{notice}</span>
-            <button type="button" aria-label="Dismiss message" onClick={() => setNotice("")}>
+            <button
+              type="button"
+              aria-label="Dismiss message"
+              onClick={() => setNotice("")}
+            >
               <X className="size-[14px]" />
             </button>
           </div>
@@ -185,10 +205,16 @@ export default function LaboratoryResults() {
                 className="h-[35px] w-full rounded-[11px] border border-[#dfe7f1] bg-white pr-[10px] pl-[36px] text-[12px] text-[#314561] outline-none placeholder:text-[#8fa5c3] focus:border-[#155eef] focus:ring-2 focus:ring-[#e6efff] sm:h-[37px] sm:text-[13px]"
               />
             </div>
-            <div role="tablist" aria-label="Result status filters" className="mt-[14px] flex items-center gap-[7px] overflow-x-auto border-b border-[#dfe7f0] sm:mt-[16px] sm:gap-[12px]">
+            <div
+              role="tablist"
+              aria-label="Result status filters"
+              className="mt-[14px] flex items-center gap-[7px] overflow-x-auto border-b border-[#dfe7f0] sm:mt-[16px] sm:gap-[12px]"
+            >
               {RESULTS_TABS.map((tab) => {
                 const isActive = activeTab === tab;
-                const count = results.filter((result) => tab === "All" || result.status === tab).length;
+                const count = results.filter(
+                  (result) => tab === "All" || result.status === tab
+                ).length;
                 return (
                   <button
                     type="button"
@@ -224,13 +250,27 @@ export default function LaboratoryResults() {
             <table className="w-full min-w-[920px] border-collapse text-left">
               <thead>
                 <tr className="h-[40px] border-b border-[#e5ebf3] bg-[#f7f9fc] text-[11px] font-semibold tracking-[0.15px] text-[#60738f]">
-                  <th scope="col" className="w-[12%] px-[15px]">PATIENT</th>
-                  <th scope="col" className="w-[22%] px-[15px]">TEST</th>
-                  <th scope="col" className="w-[11%] px-[15px]">TEST DATE</th>
-                  <th scope="col" className="w-[13%] px-[15px]">STATUS</th>
-                  <th scope="col" className="w-[20%] px-[15px]">REPORT FILE</th>
-                  <th scope="col" className="w-[13%] px-[15px]">REVIEWED BY</th>
-                  <th scope="col" className="w-[13%] px-[15px]">RESULT ID</th>
+                  <th scope="col" className="w-[12%] px-[15px]">
+                    PATIENT
+                  </th>
+                  <th scope="col" className="w-[22%] px-[15px]">
+                    TEST
+                  </th>
+                  <th scope="col" className="w-[11%] px-[15px]">
+                    TEST DATE
+                  </th>
+                  <th scope="col" className="w-[13%] px-[15px]">
+                    STATUS
+                  </th>
+                  <th scope="col" className="w-[20%] px-[15px]">
+                    REPORT FILE
+                  </th>
+                  <th scope="col" className="w-[13%] px-[15px]">
+                    REVIEWED BY
+                  </th>
+                  <th scope="col" className="w-[13%] px-[15px]">
+                    RESULT ID
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -239,7 +279,9 @@ export default function LaboratoryResults() {
                     key={result.id}
                     role="button"
                     tabIndex={0}
-                    aria-label={"View result " + result.id + " for " + result.patient}
+                    aria-label={
+                      "View result " + result.id + " for " + result.patient
+                    }
                     onClick={() => openResult(result.id)}
                     onKeyDown={(event) => {
                       if (event.key === "Enter" || event.key === " ") {
@@ -264,7 +306,12 @@ export default function LaboratoryResults() {
                       {result.date}
                     </td>
                     <td className="px-[15px] py-[9px]">
-                      <span className={"inline-flex items-center rounded-[9px] px-[9px] py-[3px] text-[11px] leading-[16px] font-medium sm:text-[12px] " + resultStatusStyles(result.status)}>
+                      <span
+                        className={
+                          "inline-flex items-center rounded-[9px] px-[9px] py-[3px] text-[11px] leading-[16px] font-medium sm:text-[12px] " +
+                          resultStatusStyles(result.status)
+                        }
+                      >
                         {result.status}
                       </span>
                     </td>
@@ -307,11 +354,13 @@ export default function LaboratoryResults() {
           </div>
 
           <div className="flex min-h-[47px] items-center border-t border-[#edf1f6] px-[19px] text-[12px] text-[#8fa5c1] sm:min-h-[49px]">
-            {visibleResults.length} {visibleResults.length === 1 ? "result" : "results"}
+            {visibleResults.length}{" "}
+            {visibleResults.length === 1 ? "result" : "results"}
           </div>
         </section>
         <p className="mt-[13px] text-[11px] text-[#96a4b5]">
-          Preview-only records. Selected files, reviews and publications stay in this browser session and are never sent to patients.
+          Preview-only records. Selected files, reviews and publications stay in
+          this browser session and are never sent to patients.
         </p>
       </div>
 

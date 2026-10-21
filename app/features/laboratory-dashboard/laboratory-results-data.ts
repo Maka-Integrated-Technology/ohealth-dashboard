@@ -31,7 +31,13 @@ export const INITIAL_LAB_RESULTS: LaboratoryResult[] = [
     fileName: "malaria_result_amina_sule.pdf",
     reviewedBy: "Dr. Chiamaka Eze",
     approved: false,
-    history: [{ stamp: "12 Sept", action: "Result on file; review pending", actor: "Preview" }],
+    history: [
+      {
+        stamp: "12 Sept",
+        action: "Result on file; review pending",
+        actor: "Preview",
+      },
+    ],
     newlyPublished: false,
   },
   {
@@ -44,7 +50,13 @@ export const INITIAL_LAB_RESULTS: LaboratoryResult[] = [
     fileName: "psa_result_oluwaseun_ojo.pdf",
     reviewedBy: "Dr. Yetunde Afolabi",
     approved: true,
-    history: [{ stamp: "11 Sept", action: "Published in example design", actor: "Preview" }],
+    history: [
+      {
+        stamp: "11 Sept",
+        action: "Published in example design",
+        actor: "Preview",
+      },
+    ],
     newlyPublished: false,
   },
   {
@@ -57,12 +69,23 @@ export const INITIAL_LAB_RESULTS: LaboratoryResult[] = [
     fileName: null,
     reviewedBy: "—",
     approved: false,
-    history: [{ stamp: "13 Sept, 11:00", action: "Result record created", actor: "System" }],
+    history: [
+      {
+        stamp: "13 Sept, 11:00",
+        action: "Result record created",
+        actor: "System",
+      },
+    ],
     newlyPublished: false,
   },
 ];
 
-export const RESULTS_TABS = ["All", "Pending", "Under Review", "Published"] as const;
+export const RESULTS_TABS = [
+  "All",
+  "Pending",
+  "Under Review",
+  "Published",
+] as const;
 export type ResultsTab = (typeof RESULTS_TABS)[number];
 
 export function resultStatusStyles(status: ResultStatus): string {
