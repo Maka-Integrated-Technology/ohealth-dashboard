@@ -1,5 +1,4 @@
 import {
-  ArrowUpRight,
   Bell,
   Building2,
   CalendarCheck,
@@ -30,6 +29,11 @@ import HospitalPatientDetails from "~/features/hospital-dashboard/patient-detail
 import HospitalProfile from "~/features/hospital-dashboard/hospital-profile";
 import HospitalLaboratory from "~/features/hospital-dashboard/hospital-laboratory";
 import HospitalPrescriptions from "~/features/hospital-dashboard/hospital-prescriptions";
+import HospitalReviews from "~/features/hospital-dashboard/hospital-reviews";
+import HospitalSettings from "~/features/hospital-dashboard/hospital-settings";
+import HospitalNotifications, {
+  hospitalNotificationSamples,
+} from "~/features/hospital-dashboard/hospital-notifications";
 import HospitalAppointments, {
   AppointmentDrawer,
   appointmentSamples,
@@ -245,7 +249,18 @@ export default function HospitalDashboardPage() {
         (patient) => patient.id === patientId
       )
     : undefined;
-  const [readNotifications, setReadNotifications] = useState(false);
+  const [readNotificationIds, setReadNotificationIds] = useState<string[]>(() =>
+    hospitalNotificationSamples.filter((item) => !item.unread).map((item) => item.id)
+  );
+  const unreadNotificationCount = hospitalNotificationSamples.filter(
+    (item) => !readNotificationIds.includes(item.id)
+  ).length;
+  const markNotificationRead = (id: string) =>
+    setReadNotificationIds((current) =>
+      current.includes(id) ? current : [...current, id]
+    );
+  const markAllNotificationsRead = () =>
+    setReadNotificationIds(hospitalNotificationSamples.map((item) => item.id));
 
   const filteredAppointments = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -307,9 +322,9 @@ export default function HospitalDashboardPage() {
                 >
                   <Icon className="size-[19px]" strokeWidth={1.8} />
                   <span className="flex-1">{item.label}</span>
-                  {item.count ? (
+                  {(item.label === "Notifications" ? unreadNotificationCount > 0 : Boolean(item.count)) ? (
                     <span className="flex size-5 items-center justify-center rounded-full bg-[#155eef] text-[10px] font-semibold text-white">
-                      {item.count}
+                      {item.label === "Notifications" ? unreadNotificationCount : item.count}
                     </span>
                   ) : null}
                 </button>
@@ -375,9 +390,9 @@ export default function HospitalDashboardPage() {
                   >
                     <Icon className="size-5" />
                     {item.label}
-                    {item.count ? (
+                    {(item.label === "Notifications" ? unreadNotificationCount > 0 : Boolean(item.count)) ? (
                       <span className="ml-auto rounded-full bg-[#155eef] px-2 py-0.5 text-xs text-white">
-                        {item.count}
+                        {item.label === "Notifications" ? unreadNotificationCount : item.count}
                       </span>
                     ) : null}
                   </button>
@@ -419,7 +434,9 @@ export default function HospitalDashboardPage() {
             className="relative hidden size-10 shrink-0 items-center justify-center rounded-full text-[#45556c] hover:bg-slate-50 sm:flex"
           >
             <Bell className="size-5" strokeWidth={1.8} />
-            <span className="absolute top-2 right-2 size-2 rounded-full bg-[#155eef] ring-2 ring-white" />
+            {unreadNotificationCount > 0 ? (
+              <span className="absolute top-2 right-2 size-2 rounded-full bg-[#155eef] ring-2 ring-white" />
+            ) : null}
           </button>
           <button
             type="button"
@@ -731,84 +748,18 @@ export default function HospitalDashboardPage() {
             <HospitalLaboratory />
           ) : activeSection === "Prescriptions" ? (
             <HospitalPrescriptions />
+          ) : activeSection === "Reviews" ? (
+            <HospitalReviews />
           ) : activeSection === "Notifications" ? (
-            <section className="rounded-2xl border border-[#e2e8f0] bg-white p-6">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <SectionHeading
-                  title="Notifications"
-                  description="Hospital requests, results, reviews, and account updates."
-                />
-                <button
-                  type="button"
-                  onClick={() => setReadNotifications(true)}
-                  className="rounded-lg border border-[#d7e0ec] px-4 py-2 text-sm font-semibold text-[#155eef] hover:bg-[#f5f8ff]"
-                >
-                  {readNotifications ? "All caught up" : "Mark all as read"}
-                </button>
-              </div>
-              <div className="mt-5 space-y-3">
-                {[
-                  [
-                    "Appointment request received",
-                    "Four appointment requests are waiting for confirmation.",
-                    "8 min ago",
-                  ],
-                  [
-                    "Laboratory result ready",
-                    "A result is ready for the attending doctor to review.",
-                    "38 min ago",
-                  ],
-                  [
-                    "New patient review",
-                    "A patient has shared feedback about their visit.",
-                    "2 hours ago",
-                  ],
-                ].map(([title, description, time], index) => (
-                  <div
-                    key={title}
-                    className={`flex items-start gap-3 rounded-xl border border-[#e2e8f0] p-4 ${!readNotifications && index === 0 ? "bg-[#f5f8ff]" : "bg-white"}`}
-                  >
-                    <span className="mt-1 size-2 shrink-0 rounded-full bg-[#155eef]" />
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-[#1d293d]">
-                        {title}
-                      </p>
-                      <p className="mt-1 text-sm leading-5 text-[#62748e]">
-                        {description}
-                      </p>
-                      <p className="mt-2 text-xs text-[#90a1b9]">{time}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          ) : (
-            <section className="rounded-2xl border border-[#e2e8f0] bg-white p-6">
-              <span className="mb-4 flex size-11 items-center justify-center rounded-xl bg-[#eef4ff] text-[#155eef]">
-                {activeSection === "Reviews" ? (
-                  <Star className="size-5" />
-                ) : null}
-                {activeSection === "Settings" ? (
-                  <Settings className="size-5" />
-                ) : null}
-              </span>
-              <h2 className="text-lg font-semibold text-[#0f172b]">
-                {activeSection}
-              </h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#62748e]">
-                This area is included in the hospital navigation. Its full
-                screen will be implemented against the corresponding Figma frame
-                next. This preview currently uses sample data only.
-              </p>
-              <button
-                type="button"
-                onClick={() => setActiveSection("Dashboard")}
-                className="mt-5 inline-flex h-10 items-center gap-2 rounded-lg bg-[#155eef] px-4 text-sm font-semibold text-white hover:bg-[#174fc5]"
-              >
-                Return to dashboard <ArrowUpRight className="size-4" />
-              </button>
-            </section>
-          )}
+            <HospitalNotifications
+              readIds={readNotificationIds}
+              onRead={markNotificationRead}
+              onReadAll={markAllNotificationsRead}
+              onNavigate={selectNavigation}
+            />
+          ) : activeSection === "Settings" ? (
+            <HospitalSettings />
+          ) : null}
         </main>
       </div>
       {selectedAppointment ? (
