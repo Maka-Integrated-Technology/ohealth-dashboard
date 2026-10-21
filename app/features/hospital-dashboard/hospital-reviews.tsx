@@ -162,19 +162,19 @@ export default function HospitalReviews() {
           </p>
         </div>
       </div>
-      <h2 className="mb-6 text-[25px] font-semibold text-[#1f2a37]">
+      <h2 className="mb-6 text-[20px] sm:text-[25px] font-semibold text-[#1f2a37]">
         Reviews and Ratings
       </h2>
       <section
-        className="mb-8 grid gap-6 rounded-[20px] border border-[#f1f5f9] bg-white p-6 sm:grid-cols-[240px_minmax(0,1fr)_168px] sm:p-8"
+        className="mb-8 grid gap-6 rounded-[20px] border border-[#f1f5f9] bg-white p-4 sm:p-6 sm:grid-cols-[240px_minmax(0,1fr)_168px] sm:p-8"
         aria-label="Rating summary"
       >
         <div className="flex flex-col items-center justify-center gap-2">
-          <span className="text-[52px] leading-none font-bold text-[#1f2a37]">
+          <span className="text-[34px] sm:text-[52px] leading-none font-bold text-[#1f2a37]">
             {average}
           </span>
           <StarRating rating={5} size="size-[22px]" />
-          <span className="text-[15px] text-[#6c737f]">{count} reviews</span>
+          <span className="text-[13px] sm:text-[15px] text-[#6c737f]">{count} reviews</span>
         </div>
         <div className="space-y-3">
           {distribution.map(({ stars, count: starCount }) => (
@@ -221,7 +221,7 @@ export default function HospitalReviews() {
         {reviews.map((review) => (
           <article
             key={review.id}
-            className="rounded-[19px] border border-[#f1f5f9] bg-white p-6"
+            className="rounded-[19px] border border-[#f1f5f9] bg-white p-4 sm:p-6"
           >
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="flex items-center gap-4">
@@ -229,7 +229,7 @@ export default function HospitalReviews() {
                   {review.initials}
                 </div>
                 <div>
-                  <h3 className="text-[18px] font-semibold text-[#1f2a37]">
+                  <h3 className="text-[14px] sm:text-[18px] font-semibold text-[#1f2a37]">
                     {review.patient}
                   </h3>
                   <p className="mt-1 text-[14px] text-[#90a1b9]">
@@ -247,7 +247,7 @@ export default function HospitalReviews() {
                 </p>
               </div>
             </div>
-            <p className="mt-4 text-[17px] leading-7 text-[#45556c]">
+            <p className="mt-4 text-[14px] sm:text-[17px] leading-7 text-[#45556c]">
               {review.comment}
             </p>
             {review.response ? (
@@ -255,7 +255,7 @@ export default function HospitalReviews() {
                 <p className="text-[13px] font-semibold text-[#0092b8]">
                   Hospital Response
                 </p>
-                <p className="mt-1 text-[15px] leading-6 text-[#005f78]">
+                <p className="mt-1 text-[13px] sm:text-[15px] leading-6 text-[#005f78]">
                   {review.response}
                 </p>
               </div>
@@ -274,7 +274,7 @@ export default function HospitalReviews() {
                   value={replyText}
                   onChange={(event) => setReplyText(event.target.value)}
                   placeholder="Write a thoughtful response to this patient's review..."
-                  className="w-full resize-y rounded-xl border border-[#d2d6db] bg-white p-3 text-[15px] text-[#1f2a37] outline-none focus:border-[#155eef]"
+                  className="w-full resize-y rounded-xl border border-[#d2d6db] bg-white p-3 text-[13px] sm:text-[15px] text-[#1f2a37] outline-none focus:border-[#155eef]"
                 />
                 <div className="mt-3 flex flex-wrap justify-end gap-3">
                   <button
@@ -306,7 +306,7 @@ export default function HospitalReviews() {
               <button
                 type="button"
                 onClick={() => beginReply(review.id)}
-                className="mt-4 inline-flex items-center gap-2 text-[15px] font-medium text-[#0092b8] hover:underline"
+                className="mt-4 inline-flex items-center gap-2 text-[13px] sm:text-[15px] font-medium text-[#0092b8] hover:underline"
               >
                 <MessageSquareText className="size-4" />
                 Respond to this review
