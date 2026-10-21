@@ -1,4 +1,5 @@
 import { Check, X } from "lucide-react";
+import type { ReactNode } from "react";
 import type { Booking, BookingStatus } from "./laboratory-bookings-data";
 import { LIFECYCLE, lifecycleIndex } from "./laboratory-bookings-data";
 
@@ -73,7 +74,7 @@ export function LaboratoryBookingDrawer({
   const neutralClass = "min-h-[42px] rounded-[13px] border border-[#c4d1e4] bg-white px-[17px] text-[15px] font-medium text-[#344760] hover:bg-[#f7faff]";
   const cancelled = booking.status === "Cancelled";
   const completed = booking.status === "Completed";
-  let actions: React.ReactNode;
+  let actions: ReactNode;
 
   if (completed) {
     actions = (
