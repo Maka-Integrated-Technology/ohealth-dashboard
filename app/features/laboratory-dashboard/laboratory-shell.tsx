@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router";
-import { Bell, ChevronDown, LayoutGrid, Menu, Search, X } from "lucide-react";
+import { ChevronDown, LayoutGrid, Menu, Search, X } from "lucide-react";
 
 type NavEntry = { label: string; icon: string; href?: string };
 const NAV_ITEMS: NavEntry[] = [
