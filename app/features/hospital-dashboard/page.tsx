@@ -28,6 +28,8 @@ import { useMemo, useState, type ReactNode } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import HospitalPatientDetails from "~/features/hospital-dashboard/patient-details";
 import HospitalProfile from "~/features/hospital-dashboard/hospital-profile";
+import HospitalLaboratory from "~/features/hospital-dashboard/hospital-laboratory";
+import HospitalPrescriptions from "~/features/hospital-dashboard/hospital-prescriptions";
 import HospitalAppointments, {
   AppointmentDrawer,
   appointmentSamples,
@@ -725,6 +727,10 @@ export default function HospitalDashboardPage() {
               records={appointments}
               onUpdate={updateAppointment}
             />
+          ) : activeSection === "Laboratory" ? (
+            <HospitalLaboratory />
+          ) : activeSection === "Prescriptions" ? (
+            <HospitalPrescriptions />
           ) : activeSection === "Notifications" ? (
             <section className="rounded-2xl border border-[#e2e8f0] bg-white p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -779,12 +785,6 @@ export default function HospitalDashboardPage() {
           ) : (
             <section className="rounded-2xl border border-[#e2e8f0] bg-white p-6">
               <span className="mb-4 flex size-11 items-center justify-center rounded-xl bg-[#eef4ff] text-[#155eef]">
-                {activeSection === "Laboratory" ? (
-                  <FlaskConical className="size-5" />
-                ) : null}
-                {activeSection === "Prescriptions" ? (
-                  <Pill className="size-5" />
-                ) : null}
                 {activeSection === "Reviews" ? (
                   <Star className="size-5" />
                 ) : null}
