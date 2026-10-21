@@ -29,6 +29,7 @@ export function LaboratoryShell({
   onSearchChange?: (value: string) => void;
 }) {
   const navigate = useNavigate();
+  const bookingPage = section === "Test Bookings";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notice, setNotice] = useState("");
   const [showAlerts, setShowAlerts] = useState(false);
@@ -47,11 +48,11 @@ export function LaboratoryShell({
   };
 
   const sidebar = (
-    <aside className="flex h-full w-[195px] shrink-0 flex-col border-r border-[#e9edf3] bg-white">
+    <aside className={"flex h-full shrink-0 flex-col border-r border-[#e9edf3] bg-white " + (bookingPage ? "w-[222px]" : "w-[195px]")}>
       <Link
         to="/dashboard"
         onClick={() => setMobileOpen(false)}
-        className="flex h-[69px] shrink-0 items-center border-b border-[#e9edf3] px-[19px]"
+        className={"flex shrink-0 items-center border-b border-[#e9edf3] " + (bookingPage ? "h-[78px] px-[22px]" : "h-[69px] px-[19px]")}
         aria-label="OHealth+ laboratory overview"
       >
         <img
@@ -66,7 +67,7 @@ export function LaboratoryShell({
         </span>
       </Link>
       <nav
-        className="flex flex-1 flex-col gap-[14px] overflow-y-auto px-[18px] py-[18px]"
+        className={"flex flex-1 flex-col overflow-y-auto " + (bookingPage ? "gap-[13px] px-[21px] py-[20px]" : "gap-[14px] px-[18px] py-[18px]")}
         aria-label="Laboratory navigation"
       >
         {NAV_ITEMS.map((item) => {
@@ -87,7 +88,7 @@ export function LaboratoryShell({
             </>
           );
           const className =
-            "flex h-[35px] min-h-[35px] w-full items-center gap-[8px] rounded-[7px] px-[12px] text-left text-[12px] tracking-[-0.2px] transition-colors " +
+            (bookingPage ? "flex h-[43px] min-h-[43px] w-full items-center gap-[8px] rounded-[8px] px-[13px] text-left text-[14px] tracking-[-0.2px] transition-colors " : "flex h-[35px] min-h-[35px] w-full items-center gap-[8px] rounded-[7px] px-[12px] text-left text-[12px] tracking-[-0.2px] transition-colors ") +
             (selected
               ? "bg-[#f1f5fc] font-medium text-[#155eef]"
               : "text-[#101828] hover:bg-[#f5f7fb]");
@@ -131,11 +132,11 @@ export function LaboratoryShell({
             aria-label="Close navigation"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="relative h-full w-[195px] shadow-xl">{sidebar}</div>
+          <div className={"relative h-full shadow-xl " + (bookingPage ? "w-[222px]" : "w-[195px]")}>{sidebar}</div>
         </div>
       )}
-      <div className="min-h-screen lg:pl-[195px]">
-        <header className="sticky top-0 z-30 flex h-[69px] items-center gap-4 border-b border-[#ebedf1] bg-white px-[22px] sm:px-[26px]">
+      <div className={"min-h-screen " + (bookingPage ? "lg:pl-[222px]" : "lg:pl-[195px]")}>
+        <header className={"sticky top-0 z-30 flex items-center gap-4 border-b border-[#ebedf1] bg-white px-[22px] sm:px-[26px] " + (bookingPage ? "h-[78px]" : "h-[69px]")}>
           <button
             type="button"
             aria-label="Open navigation"
@@ -145,7 +146,7 @@ export function LaboratoryShell({
             <Menu className="size-5" />
           </button>
           <h2 className="min-w-0 flex-1 text-[16px] font-semibold text-[#202b3a]">
-            {section}
+            {bookingPage ? "" : section}
           </h2>
           <div className="relative hidden w-[327px] shrink-0 items-center text-[#7386a4] md:flex">
             <Search
