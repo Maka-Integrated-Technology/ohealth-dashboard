@@ -33,7 +33,7 @@ Open `http://localhost:5102/` for the lab sign-in. For a production-like build:
 npm run build:lb
 ```
 
-The root route `/` renders the laboratory sign-in screen, **not** the old four-card dashboard placeholder. Registration includes the lab-details, administrator, documents, verification and setup screens in preview state. This stage is intended for visual review and feedback before implementing the actual laboratory dashboard.
+The root route `/` renders the laboratory sign-in screen, **not** the old four-card dashboard placeholder. The laboratory authentication page now directly reuses the hospital authentication page's split-screen layout, blue gradient, typography, form styling, five-step progress display, and shared OHealth+ SVG logo from the existing hospital feature branch. Only the laboratory copy, fields, example figures, and preview actions differ. Registration includes the lab-details, administrator, documents, verification and setup screens in preview state. This stage is intended for visual review and feedback before implementing the actual laboratory dashboard.
 
 ## Preview-only warning
 
@@ -41,5 +41,5 @@ The root route `/` renders the laboratory sign-in screen, **not** the old four-c
 - Registration, administrative credentials and document selections are only temporary in React component state. No file is uploaded, no application submitted, and no verification or approval occurs.
 - The left-side metrics (`12,400+`, `340+`, `99.8%`, `<4h`) are **Figma design copy**, not live laboratory performance data.
 - The original Figma artboard: https://www.figma.com/design/GXjleSLcTnSKrfDDxW024Q/OHealth---Copy---Copy---Copy---Copy-?node-id=8003-2132
-- Full high-fidelity screenshot comparison is **still pending**. The Figma MCP Starter plan rate limit was reached after node metadata was inspected, so this implementation uses the available screen structure and copy and is not claimed to be a pixel-perfect visual match.
+- Full high-fidelity screenshot comparison is **still pending** due to the Figma MCP Starter plan rate limit. The visual structure and shared logo are copied directly from the hospital authentication implementation, while lab-specific text and fields use the supplied lab Figma node metadata. No pixel-perfect browser comparison has been completed.
 - Do not deploy for real users, transmit patient data, or rely on these sign-in controls for access control.
