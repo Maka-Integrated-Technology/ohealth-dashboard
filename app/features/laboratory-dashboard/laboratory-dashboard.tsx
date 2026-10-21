@@ -171,18 +171,18 @@ const categoryGradient =
 
 function MetricCard({ metric }: { metric: Metric }) {
   return (
-    <div className="relative flex min-h-[151px] flex-col rounded-[16px] border border-[#e9eef5] bg-white px-[17px] pt-[26px] pb-[17px]">
+    <div className="relative flex min-h-[126px] flex-col rounded-[13px] border border-[#e9eef5] bg-white px-[13px] pt-[17px] pb-[12px] sm:min-h-[151px] sm:rounded-[16px] sm:px-[17px] sm:pt-[26px] sm:pb-[17px]">
       <div
-        className="absolute top-[17px] right-[17px] flex size-[33px] items-center justify-center rounded-[12px] bg-[#f7f8fa] text-[14px] text-[#2563eb]"
+        className="absolute top-[12px] right-[12px] flex size-[28px] sm:top-[17px] sm:right-[17px] sm:size-[33px] items-center justify-center rounded-[12px] bg-[#f7f8fa] text-[14px] text-[#2563eb]"
         aria-hidden="true"
       >
         {metric.icon}
       </div>
-      <p className="max-w-[138px] pr-1 text-[11px] leading-[14px] font-bold tracking-[0.15px] text-[#607594]">
+      <p className="max-w-[138px] pr-[26px] text-[11px] sm:pr-1 leading-[14px] font-bold tracking-[0.15px] text-[#607594]">
         {metric.label}
       </p>
-      <div className="mt-[22px]">
-        <p className="text-[22px] leading-[25px] font-bold tracking-[-0.55px] text-[#0e1830]">
+      <div className="mt-[15px] sm:mt-[22px]">
+        <p className="text-[19px] leading-[23px] font-bold tracking-[-0.45px] sm:text-[22px] sm:leading-[25px] sm:tracking-[-0.55px] text-[#0e1830]">
           {metric.value}
         </p>
         <p className="mt-[3px] text-[11px] leading-[16px] text-[#8ea2bf]">
@@ -203,7 +203,7 @@ function MetricCard({ metric }: { metric: Metric }) {
 
 function RevenueChart({ onReport }: { onReport: () => void }) {
   return (
-    <section className="min-w-0 rounded-[16px] border border-[#e9eef5] bg-white px-[25px] pt-[27px] pb-[17px]">
+    <section className="min-w-0 rounded-[13px] border border-[#e9eef5] bg-white px-[16px] pt-[18px] pb-[14px] sm:rounded-[16px] sm:px-[25px] sm:pt-[27px] sm:pb-[17px]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="text-[12px] leading-[17px] font-semibold text-[#23324b]">
@@ -221,7 +221,7 @@ function RevenueChart({ onReport }: { onReport: () => void }) {
           View full report <ArrowRight className="size-[12px]" />
         </button>
       </div>
-      <div className="mt-[9px] h-[178px] w-full text-[10px]">
+      <div className="mt-[9px] h-[156px] w-full sm:h-[178px] text-[10px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={REVENUE}
@@ -279,7 +279,7 @@ function RevenueChart({ onReport }: { onReport: () => void }) {
 
 function CategoryChart() {
   return (
-    <section className="min-w-0 rounded-[16px] border border-[#e9eef5] bg-white px-[17px] pt-[18px] pb-[15px]">
+    <section className="min-w-0 rounded-[13px] border border-[#e9eef5] bg-white px-[13px] pt-[16px] pb-[13px] sm:rounded-[16px] sm:px-[17px] sm:pt-[18px] sm:pb-[15px]">
       <h3 className="text-[12px] leading-[17px] font-semibold text-[#23324b]">
         Tests by Category
       </h3>
@@ -287,12 +287,12 @@ function CategoryChart() {
         This month
       </p>
       <div
-        className="mx-auto mt-[21px] flex size-[125px] items-center justify-center rounded-full"
+        className="mx-auto mt-[18px] flex size-[110px] sm:mt-[21px] sm:size-[125px] items-center justify-center rounded-full"
         style={{ background: categoryGradient }}
         role="img"
         aria-label="Tests by category: Blood 142, Urinalysis 58, Hormonal 34, Infectious Disease 67, Cardiology 22, Preventive 15"
       >
-        <div className="size-[84px] rounded-full bg-white" />
+        <div className="size-[74px] rounded-full bg-white sm:size-[84px]" />
       </div>
       <div className="mt-[9px] grid grid-cols-2 gap-x-[9px] gap-y-[7px]">
         {[0, 2, 4].map((index) => (
@@ -343,22 +343,22 @@ export default function LaboratoryDashboard() {
       search={search}
       onSearchChange={setSearch}
     >
-      <div className="px-[20px] pt-[29px] pb-14 sm:px-[32px] lg:pr-[60px] lg:pl-[43px]">
+      <div className="px-[15px] pt-[20px] pb-10 sm:px-[32px] sm:pt-[29px] sm:pb-14 lg:pr-[60px] lg:pl-[43px]">
         <div>
-          <h1 className="text-[25px] leading-[33px] font-semibold tracking-[-0.55px] text-[#202b3a]">
+          <h1 className="text-[21px] leading-[29px] font-semibold tracking-[-0.4px] sm:text-[25px] sm:leading-[33px] sm:tracking-[-0.55px] text-[#202b3a]">
             Good afternoon, MedCore Diagnostics
           </h1>
-          <p className="mt-[1px] text-[15px] leading-[23px] text-[#525e6d]">
+          <p className="mt-[1px] text-[13px] leading-[20px] text-[#525e6d] sm:text-[15px] sm:leading-[23px]">
             Saturday, 13 september
           </p>
         </div>
-        <div className="mt-[41px] grid grid-cols-1 gap-x-[18px] gap-y-[19px] sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-[24px] grid grid-cols-1 gap-x-[12px] gap-y-[12px] min-[360px]:grid-cols-2 sm:mt-[41px] sm:gap-x-[18px] sm:gap-y-[19px] sm:grid-cols-2 lg:grid-cols-4">
           {METRICS.map((metric) => (
             <MetricCard key={metric.label} metric={metric} />
           ))}
         </div>
 
-        <div className="mt-[52px] grid grid-cols-1 items-stretch gap-[25px] lg:grid-cols-[minmax(0,1.025fr)_minmax(0,1fr)]">
+        <div className="mt-[28px] grid grid-cols-1 items-stretch gap-[16px] sm:mt-[52px] sm:gap-[25px] lg:grid-cols-[minmax(0,1.025fr)_minmax(0,1fr)]">
           <section className="overflow-hidden rounded-[15px] border border-[#e9eef5] bg-white">
             <div className="flex h-[46px] items-center justify-between px-[17px] pt-[9px]">
               <h2 className="text-[12px] font-semibold text-[#23324b]">
@@ -379,10 +379,10 @@ export default function LaboratoryDashboard() {
                     type="button"
                     key={entry.name}
                     onClick={() => setSelectedAppointment(entry)}
-                    className="flex min-h-[70px] w-full items-start justify-between gap-3 border-b border-[#f1f4f8] px-[17px] py-[12px] text-left last:border-b-0 hover:bg-[#fbfcff]"
+                    className="flex min-h-[60px] w-full items-start justify-between gap-3 border-b border-[#f1f4f8] px-[12px] py-[9px] sm:min-h-[70px] sm:px-[17px] sm:py-[12px] text-left last:border-b-0 hover:bg-[#fbfcff]"
                   >
                     <span className="min-w-0">
-                      <span className="block text-[13px] leading-[17px] font-medium text-[#293854]">
+                      <span className="block text-[12px] leading-[16px] font-medium text-[#293854] sm:text-[13px] sm:leading-[17px]">
                         {entry.name}
                       </span>
                       <span className="mt-[1px] block truncate text-[11px] leading-[14px] text-[#6d82a3]">
@@ -421,7 +421,7 @@ export default function LaboratoryDashboard() {
                 filteredActivity.map((entry) => (
                   <div
                     key={entry.summary}
-                    className="flex min-h-[70px] items-start gap-[12px] border-b border-[#f1f4f8] px-[17px] py-[12px] last:border-b-0"
+                    className="flex min-h-[60px] items-start gap-[10px] border-b border-[#f1f4f8] px-[12px] py-[9px] sm:min-h-[70px] sm:gap-[12px] sm:px-[17px] sm:py-[12px] last:border-b-0"
                   >
                     <span
                       aria-hidden="true"
@@ -448,7 +448,7 @@ export default function LaboratoryDashboard() {
           </section>
         </div>
 
-        <div className="mt-[20px] grid grid-cols-1 gap-[23px] lg:grid-cols-[minmax(0,2.08fr)_minmax(0,1fr)]">
+        <div className="mt-[16px] grid grid-cols-1 gap-[16px] sm:mt-[20px] sm:gap-[23px] lg:grid-cols-[minmax(0,2.08fr)_minmax(0,1fr)]">
           <RevenueChart onReport={() => setReportOpen(true)} />
           <CategoryChart />
         </div>
