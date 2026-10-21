@@ -581,146 +581,111 @@ export default function HospitalDashboardPage() {
                 </div>
               </section>
 
-              <div className="mt-7 grid grid-cols-1 gap-7 xl:grid-cols-[1.1fr_0.9fr]">
-                <section className="rounded-2xl border border-[#e2e8f0] bg-white p-6">
-                  <SectionHeading
-                    title="Needs Your Attention"
-                    description="A few items may need your review."
-                    action={
-                      <span className="rounded-full bg-[#fff7e8] px-2.5 py-1 text-xs font-semibold text-[#9a5b00]">
-                        6 pending
-                      </span>
-                    }
-                  />
-                  <div className="mt-5 divide-y divide-[#edf1f6]">
-                    <button
-                      type="button"
-                      onClick={() => setActiveSection("Appointments")}
-                      className="flex w-full items-center gap-3 py-4 text-left hover:bg-[#fbfdff]"
+              <div className="mt-7 space-y-8">
+                <section className="overflow-hidden rounded-[22px] border border-[#f1f5f9] bg-white">
+                  <h3 className="flex items-center gap-3 border-b border-[#f1f5f9] px-7 py-[21px] text-[19px] font-semibold text-[#1f2a37]">
+                    <CalendarClock className="size-[22px] text-[#45556c]" />
+                    Needs Your Attention
+                  </h3>
+                  {[
+                    {
+                      title: "4 appointment requests awaiting confirmation",
+                      time: "5 min ago",
+                      action: "Review Requests",
+                      destination: "Appointments" as HospitalSection,
+                      Icon: CalendarClock,
+                      color: "bg-[#ecfeff] text-[#0891b2]",
+                    },
+                    {
+                      title: "2 laboratory requests awaiting action",
+                      time: "1 hr ago",
+                      action: "View Lab Requests",
+                      destination: "Laboratory" as HospitalSection,
+                      Icon: FlaskConical,
+                      color: "bg-[#faf5ff] text-[#9333ea]",
+                    },
+                    {
+                      title: "1 unread patient reviews",
+                      time: "2 hrs ago",
+                      action: "View Reviews",
+                      destination: "Reviews" as HospitalSection,
+                      Icon: MessageSquareText,
+                      color: "bg-[#fff7ed] text-[#ea580c]",
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.title}
+                      className="flex items-start gap-4 border-b border-[#f8fafc] px-7 py-[21px] last:border-0"
                     >
-                      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#fff7e8] text-[#b76a00]">
-                        <CalendarClock className="size-5" />
+                      <span
+                        className={`flex size-[43px] shrink-0 items-center justify-center rounded-2xl ${item.color}`}
+                      >
+                        <item.Icon className="size-5" strokeWidth={1.8} />
                       </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-semibold text-[#1d293d]">
-                          Appointment requests
-                        </span>
-                        <span className="mt-1 block text-xs text-[#62748e]">
-                          4 appointment requests awaiting confirmation
-                        </span>
-                      </span>
-                      <ChevronRight className="size-4 text-[#90a1b9]" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setActiveSection("Laboratory")}
-                      className="flex w-full items-center gap-3 py-4 text-left hover:bg-[#fbfdff]"
-                    >
-                      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#eef4ff] text-[#155eef]">
-                        <FlaskConical className="size-5" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-semibold text-[#1d293d]">
-                          Laboratory requests
-                        </span>
-                        <span className="mt-1 block text-xs text-[#62748e]">
-                          1 laboratory request awaiting action
-                        </span>
-                      </span>
-                      <ChevronRight className="size-4 text-[#90a1b9]" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setActiveSection("Reviews")}
-                      className="flex w-full items-center gap-3 py-4 text-left hover:bg-[#fbfdff]"
-                    >
-                      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#f3edff] text-[#7247bf]">
-                        <MessageSquareText className="size-5" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-semibold text-[#1d293d]">
-                          Patient reviews
-                        </span>
-                        <span className="mt-1 block text-xs text-[#62748e]">
-                          1 review has not received a response
-                        </span>
-                      </span>
-                      <ChevronRight className="size-4 text-[#90a1b9]" />
-                    </button>
-                  </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-base font-semibold leading-[22px] text-[#1f2a37]">
+                          {item.title}
+                        </p>
+                        <p className="mt-1 text-[15px] text-[#90a1b9]">
+                          {item.time}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setActiveSection(item.destination)}
+                          className="mt-2 inline-flex items-center gap-1 text-[15px] font-medium text-[#2970ff] hover:underline"
+                        >
+                          {item.action} <ChevronRight className="size-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </section>
 
-                <section className="rounded-2xl border border-[#e2e8f0] bg-white p-6">
-                  <SectionHeading
-                    title="Recent Activity"
-                    description="Recent updates across your hospital."
-                    action={
-                      <button
-                        type="button"
-                        onClick={() => setActiveSection("Notifications")}
-                        className="text-xs font-semibold text-[#155eef] hover:underline"
+                <section className="overflow-hidden rounded-[22px] border border-[#f1f5f9] bg-white">
+                  <h3 className="flex items-center gap-3 border-b border-[#f1f5f9] px-7 py-[21px] text-[19px] font-semibold text-[#1d293d]">
+                    <Bell className="size-[22px] text-[#45556c]" />
+                    Recent Activity
+                  </h3>
+                  <div className="px-7 py-4">
+                    {[
+                      ["Appointment confirmed", "John Doe — Cardiology", "9:02 AM"],
+                      ["Patient marked as arrived", "David Lee — Neurology", "11:00 AM"],
+                      ["New review received", "John Doe — 5 stars", "11:30 AM"],
+                      ["Lab results uploaded", "Emma Williams — Cardiac Panel", "12:15 PM"],
+                      ["Appointment cancelled", "Sarah Johnson — General Medicine", "1:45 PM"],
+                      ["Prescription created", "Ahmed Hassan — Dr. Patel", "2:20 PM"],
+                      ["Consultation completed", "Carlos Martinez — Neurology", "4:30 PM"],
+                    ].map(([title, detail, time], index) => (
+                      <div
+                        key={title}
+                        className="flex items-start gap-4 border-b border-[#f8fafc] py-4 last:border-0"
                       >
-                        View all
-                      </button>
-                    }
-                  />
-                  <div className="mt-5 space-y-5">
-                    <div className="flex gap-3">
-                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#eafaf1] text-emerald-700">
-                        <CheckCircle2 className="size-4" />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm leading-5 text-[#344256]">
-                          Appointment{" "}
-                          <strong className="font-semibold text-[#1d293d]">
-                            APT-2038
-                          </strong>{" "}
-                          was confirmed.
-                        </p>
-                        <p className="mt-1 text-xs text-[#90a1b9]">
-                          12 minutes ago
-                        </p>
+                        <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-xl bg-[#f8fafc] text-[#62748e]">
+                          {index === 2 ? (
+                            <Star className="size-4" />
+                          ) : index === 3 ? (
+                            <FlaskConical className="size-4" />
+                          ) : index === 5 ? (
+                            <Pill className="size-4" />
+                          ) : index === 1 ? (
+                            <Users className="size-4" />
+                          ) : (
+                            <CalendarDays className="size-4" />
+                          )}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-base font-medium leading-[22px] text-[#314158]">
+                            {title}
+                          </p>
+                          <p className="text-[15px] leading-[22px] text-[#90a1b9]">
+                            {detail}
+                          </p>
+                        </div>
+                        <time className="shrink-0 font-mono text-[15px] text-[#90a1b9]">
+                          {time}
+                        </time>
                       </div>
-                    </div>
-                    <div className="flex gap-3">
-                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#eef4ff] text-[#155eef]">
-                        <Users className="size-4" />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm leading-5 text-[#344256]">
-                          A new patient profile was added to the hospital.
-                        </p>
-                        <p className="mt-1 text-xs text-[#90a1b9]">
-                          38 minutes ago
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex gap-3">
-                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#fff7e8] text-[#b76a00]">
-                        <FlaskConical className="size-4" />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm leading-5 text-[#344256]">
-                          A laboratory result is ready to review.
-                        </p>
-                        <p className="mt-1 text-xs text-[#90a1b9]">
-                          1 hour ago
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex gap-3">
-                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#f3edff] text-[#7247bf]">
-                        <Star className="size-4" />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm leading-5 text-[#344256]">
-                          A patient left a new review.
-                        </p>
-                        <p className="mt-1 text-xs text-[#90a1b9]">
-                          2 hours ago
-                        </p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </section>
               </div>
