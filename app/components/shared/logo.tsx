@@ -3,11 +3,13 @@ import { Link } from "react-router";
 interface LogoProps {
   size?: "sm" | "md" | "lg" | "auth";
   variant?: "default" | "light";
+  to?: string;
 }
 
 export default function Logo({
   size = "md",
   variant = "default",
+  to = "/",
 }: LogoProps) {
   const linkClass =
     size === "auth"
@@ -24,7 +26,7 @@ export default function Logo({
   const svgSize = size === "sm" ? 24 : size === "auth" ? 30 : 32;
 
   return (
-    <Link to="/" className={linkClass}>
+    <Link to={to} className={linkClass}>
       {size === "auth" ? (
         <img
           src="/icons/ohealth-plus-mark.svg"
