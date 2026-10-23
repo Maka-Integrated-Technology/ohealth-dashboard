@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 import { useId, useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { nextLabRegistrationStep, labAdministratorPasswordError } from "~/features/laboratory-auth/laboratory-registration-flow";
 import Logo from "~/components/shared/logo";
 
 type AuthScreen =
@@ -175,30 +178,48 @@ export default function LaboratoryAuthPage() {
   const navigate = useNavigate();
   const [screen, setScreen] = useState<AuthScreen>("sign-in");
   const [registrationStep, setRegistrationStep] = useState<RegistrationStep>(1);
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
   const [showLoginPassword, setShowLoginPassword] = useState(false);
-  const [forgotEmail, setForgotEmail] = useState("");
   const [feedback, setFeedback] = useState("");
   const [adminError, setAdminError] = useState("");
   const [documentError, setDocumentError] = useState("");
-  const [laboratory, setLaboratory] = useState<LaboratoryDetails>({
-    name: "",
-    registrationNumber: "",
-    licenseNumber: "",
-    address: "",
-    state: "",
-    phone: "",
-    email: "",
-  });
-  const [administrator, setAdministrator] = useState<AdministratorDetails>({
-    fullName: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-  });
   const [showAdminPassword, setShowAdminPassword] = useState(false);
+  const loginForm = useFormik({
+    initialValues: { email: "", password: "" },
+    validationSchema: Yup.object({ email: Yup.string().email("Enter a valid email address.") }),
+    onSubmit: () => navigate("/dashboard"),
+  });
+  const resetForm = useFormik({
+    initialValues: { email: "" },
+    validationSchema: Yup.object({ email: Yup.string().email("Enter a valid email address.") }),
+    onSubmit: () => setFeedback("Password-reset is a preview state only. No reset email was sent."),
+  });
+  const labForm = useFormik<LaboratoryDetails>({
+    initialValues: {
+      name: "", registrationNumber: "", licenseNumber: "", address: "", state: "", phone: "", email: "",
+    },
+    validationSchema: Yup.object({ email: Yup.string().email("Enter a valid laboratory email.") }),
+    onSubmit: () => {
+      setFeedback("");
+      setRegistrationStep(nextLabRegistrationStep(1) as RegistrationStep);
+    },
+  });
+  const adminForm = useFormik<AdministratorDetails>({
+    initialValues: {
+      fullName: "", email: "", phone: "", password: "", confirmPassword: "",
+    },
+    validationSchema: Yup.object({ email: Yup.string().email("Enter a valid administrator email.") }),
+    onSubmit: (values) => {
+      const error = labAdministratorPasswordError(values);
+      if (error) {
+        setAdminError(error);
+        return;
+      }
+      setAdminError("");
+      setRegistrationStep(nextLabRegistrationStep(2) as RegistrationStep);
+    },
+  });
+  const laboratory = labForm.values;
+  const administrator = adminForm.values;
   const [documents, setDocuments] = useState<Record<DocumentKey, File | null>>({
     license: null,
     registration: null,
@@ -212,14 +233,10 @@ export default function LaboratoryAuthPage() {
   ]);
 
   const updateLaboratory = (key: keyof LaboratoryDetails, value: string) => {
-    setLaboratory((current) => ({ ...current, [key]: value }));
+    void labForm.setFieldValue(key, value);
   };
-
-  const updateAdministrator = (
-    key: keyof AdministratorDetails,
-    value: string
-  ) => {
-    setAdministrator((current) => ({ ...current, [key]: value }));
+  const updateAdministrator = (key: keyof AdministratorDetails, value: string) => {
+    void adminForm.setFieldValue(key, value);
   };
 
   const openScreen = (nextScreen: AuthScreen) => {
@@ -232,47 +249,6 @@ export default function LaboratoryAuthPage() {
     setAdminError("");
     setDocumentError("");
     openScreen("register");
-  };
-
-  const handleSignIn = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Preview-only navigation. No credentials are verified and no session is established.
-    setLoginPassword("");
-    navigate("/dashboard");
-  };
-
-  const handlePasswordReset = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setFeedback(
-      "Password-reset is a preview state only. No reset email was sent."
-    );
-  };
-
-  const handleLaboratoryDetails = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setFeedback("");
-    setRegistrationStep(2);
-  };
-
-  const handleAdministratorDetails = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    // The preview can advance with empty fields. Preserve password rules when
-    // the visitor chooses to try them out.
-    if (administrator.password && administrator.password.length < 8) {
-      setAdminError("Use at least 8 characters for the password.");
-      return;
-    }
-    if (
-      (administrator.password || administrator.confirmPassword) &&
-      administrator.password !== administrator.confirmPassword
-    ) {
-      setAdminError("The passwords do not match. Please try again.");
-      return;
-    }
-
-    setAdminError("");
-    setRegistrationStep(3);
   };
 
   const handleDocumentChange = (
@@ -402,11 +378,11 @@ export default function LaboratoryAuthPage() {
           </div>
 
           {screen === "sign-in" ? (
-            <form className="space-y-5" onSubmit={handleSignIn}>
+            <form className="space-y-5" onSubmit={loginForm.handleSubmit}>
               <Field
                 label="Email address"
-                value={loginEmail}
-                onChange={setLoginEmail}
+                value={loginForm.values.email}
+                onChange={(value) => void loginForm.setFieldValue("email", value)}
                 type="email"
                 autoComplete="email"
                 placeholder="admin@laboratory.ng"
@@ -432,11 +408,11 @@ export default function LaboratoryAuthPage() {
                     id="laboratory-login-password"
                     className={inputClassName + " pr-12"}
                     type={showLoginPassword ? "text" : "password"}
-                    value={loginPassword}
+                    value={loginForm.values.password}
                     autoComplete="current-password"
                     placeholder="Enter your password"
                     onChange={(event) =>
-                      setLoginPassword(event.currentTarget.value)
+                      void loginForm.setFieldValue("password", event.currentTarget.value)
                     }
                   />
                   <button
@@ -484,11 +460,11 @@ export default function LaboratoryAuthPage() {
           ) : null}
 
           {screen === "forgot-password" ? (
-            <form className="space-y-5" onSubmit={handlePasswordReset}>
+            <form className="space-y-5" onSubmit={resetForm.handleSubmit}>
               <Field
                 label="Email address"
-                value={forgotEmail}
-                onChange={setForgotEmail}
+                value={resetForm.values.email}
+                onChange={(value) => void resetForm.setFieldValue("email", value)}
                 type="email"
                 autoComplete="email"
                 placeholder="admin@laboratory.ng"
@@ -524,7 +500,7 @@ export default function LaboratoryAuthPage() {
               <StepProgress activeStep={activeStep} />
 
               {registrationStep === 1 ? (
-                <form className="space-y-4" onSubmit={handleLaboratoryDetails}>
+                <form className="space-y-4" onSubmit={labForm.handleSubmit}>
                   <div className="mb-1">
                     <h3 className="font-semibold text-slate-900">
                       Laboratory details
@@ -599,7 +575,7 @@ export default function LaboratoryAuthPage() {
               {registrationStep === 2 ? (
                 <form
                   className="space-y-4"
-                  onSubmit={handleAdministratorDetails}
+                  onSubmit={adminForm.handleSubmit}
                 >
                   <div className="mb-1">
                     <h3 className="font-semibold text-slate-900">
