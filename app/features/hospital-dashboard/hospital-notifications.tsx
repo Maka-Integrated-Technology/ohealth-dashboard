@@ -12,7 +12,9 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useSearchParams } from "react-router";
+import { hospitalFilterParams } from "~/features/hospital-dashboard/hospital-preview-state";
 import {
   hospitalNotificationSamples,
   hospitalNotificationFilters,
@@ -50,9 +52,12 @@ export default function HospitalNotifications({
   onReadAll: () => void;
   onNavigate: (destination: NotificationDestination) => void;
 }) {
-  const [filter, setFilter] = useState<"All" | HospitalNotificationCategory>(
-    "All"
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const category = searchParams.get("category");
+  const filter: "All" | HospitalNotificationCategory =
+    hospitalNotificationFilters.find((value) => value === category) ?? "All";
+  const setFilter = (value: "All" | HospitalNotificationCategory) =>
+    setSearchParams((current) => hospitalFilterParams(current, "category", value, "All"));
   const unreadCount = hospitalNotificationSamples.filter(
     (item) => !readIds.includes(item.id)
   ).length;
