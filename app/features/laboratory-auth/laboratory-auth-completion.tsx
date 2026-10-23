@@ -10,6 +10,7 @@ export function LaboratoryAuthCompletion({
   selectedModules,
   onToggleModule,
   onOpenScreen,
+  onOpenDashboard,
 }: {
   screen: string;
   activeStep: number;
@@ -195,8 +196,8 @@ export function LaboratoryAuthCompletion({
             Finish setup preview <ArrowRight className="size-4" />
           </button>
           <div className="rounded-lg border border-blue-100 bg-blue-50 px-3.5 py-3 text-xs leading-5 text-blue-800">
-            The laboratory dashboard will be implemented after this
-            authentication preview and the Cloudflare setup are reviewed.
+            This is a preview workflow. You can explore the laboratory dashboard
+            now, but no account, staff access or backend data is changed.
           </div>
           <button
             className="w-full py-2 text-sm font-semibold text-slate-600 hover:text-slate-900"
@@ -226,9 +227,9 @@ export function LaboratoryAuthCompletion({
           <button
             className={primaryButtonClassName}
             type="button"
-            onClick={() => onOpenScreen("sign-in")}
+            onClick={onOpenDashboard}
           >
-            Return to lab sign in <ArrowRight className="size-4" />
+            Open laboratory dashboard <ArrowRight className="size-4" />
           </button>
           <button
             className="w-full py-2 text-sm font-semibold text-slate-600 hover:text-slate-900"
