@@ -43,11 +43,11 @@ const [
   { default: LaboratoryBookings },
   { default: LaboratoryResults },
 ] = await Promise.all([
-  import("../../app/features/laboratory-auth/page.tsx"),
-  import("../../app/features/laboratory-dashboard/laboratory-catalogue.tsx"),
-  import("../../app/features/laboratory-dashboard/laboratory-staff.tsx"),
-  import("../../app/features/laboratory-dashboard/laboratory-bookings.tsx"),
-  import("../../app/features/laboratory-dashboard/laboratory-results.tsx"),
+  import("../../app/features/laboratory-auth/page"),
+  import("../../app/features/laboratory-dashboard/laboratory-catalogue"),
+  import("../../app/features/laboratory-dashboard/laboratory-staff"),
+  import("../../app/features/laboratory-dashboard/laboratory-bookings"),
+  import("../../app/features/laboratory-dashboard/laboratory-results"),
 ]);
 
 afterEach(() => cleanup());
@@ -113,12 +113,13 @@ test("staff Invite Staff modal submits a new local record and prevents duplicate
     target: { value: "ngozi.preview@ohealthplus.ng" },
   });
   fireEvent.submit(form);
-  await waitFor(() =>
-    assert.equal(
-      screen.queryByRole("dialog", { name: "Invite Staff Member" }),
-      null
-    )
-  );
+  await waitFor(() => {
+    const open = screen.queryByRole("dialog", { name: "Invite Staff Member" });
+    if (open) {
+      const alerts = within(open).queryAllByRole("alert").map((item) => item.textContent);
+      throw new Error("Staff modal did not close after submit. Errors: " + JSON.stringify(alerts));
+    }
+  });
   assert.ok(screen.getByText("Dr. Ngozi Adeyemi"));
   fireEvent.click(screen.getByRole("button", { name: /Invite Staff/i }));
   const duplicate = screen.getByRole("dialog", { name: "Invite Staff Member" });
