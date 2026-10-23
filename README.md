@@ -69,6 +69,7 @@ you and run each dashboard on its own port so they can run side by side:
 | Lint       | `npm run lint`         | ✓   |
 | Type-check | `npm run typecheck`    | ✓   |
 | Build      | `npm run build`        | ✓   |
+| Hospital regression tests | `npm run test:hospital` | ✓ |
 
 CI runs on pull requests to `dev`, `staging`, or `main` via `.github/workflows/ci.yml`.
 Opt-in SSH deploys run on pushes to `staging` and `main` via
@@ -80,6 +81,7 @@ Opt-in SSH deploys run on pushes to `staging` and `main` via
   next.
 - [Setup & Local Development](docs/setup.md) — prerequisites, environment
   variables, dashboard selection, dev server, build, CI, and Docker.
+- [Environment](docs/environment.md) — all four build targets and deployment ports.
 - [Architecture](docs/architecture.md) — the per-dashboard `VITE_ROUTE` routing
   model, providers, API layer, and data-fetching patterns.
 - [Folder Structure](docs/folder-structure.md) — repository layout and what
