@@ -11,7 +11,7 @@ Each portal is a separate build selected at build time by `VITE_ROUTE`:
 | Medical Professional | `mp-dashboard` (default) |
 | Pharmacy             | `ph-dashboard`           |
 | Laboratory           | `lb-dashboard`           |
-| Hospital             | `hs-dashboard`           |
+| Hospital             | `hospital-dashboard`           |
 
 ## Stack
 
@@ -46,7 +46,7 @@ one you can either **set the route in your env file** and run `npm run dev`:
 
 ```dotenv
 # .env.local
-VITE_ROUTE=ph-dashboard   # mp-dashboard | ph-dashboard | lb-dashboard | hs-dashboard
+VITE_ROUTE=ph-dashboard   # mp-dashboard | ph-dashboard | lb-dashboard | hospital-dashboard
 ```
 
 …or use the **per-dashboard scripts** in `package.json`, which set the route for
