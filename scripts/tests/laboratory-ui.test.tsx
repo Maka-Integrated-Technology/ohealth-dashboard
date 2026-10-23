@@ -31,6 +31,7 @@ for (const name of [
 Object.defineProperty(globalThis, "IS_REACT_ACT_ENVIRONMENT", {
   configurable: true,
   value: true,
+  writable: true,
 });
 
 const { render, screen, fireEvent, cleanup, waitFor, within } =
