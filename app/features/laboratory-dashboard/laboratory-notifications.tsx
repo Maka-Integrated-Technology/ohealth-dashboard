@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router";
+import { labListParams, labParam } from "./laboratory-list-state";
 import { LaboratoryShell } from "./laboratory-shell";
 import {
   markLabNotificationRead,
@@ -92,7 +94,9 @@ function NotificationCard({ item }: { item: LaboratoryNotification }) {
 
 export default function LaboratoryNotifications() {
   const items = useLabNotifications();
-  const [headerSearch, setHeaderSearch] = useState("");
+  const [params, setParams] = useSearchParams();
+  const headerSearch = labParam(params, "q");
+  const setHeaderSearch = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
   const unreadCount = items.filter((item) => item.unread).length;
   const query = headerSearch.trim().toLowerCase();
   const visibleItems = query
