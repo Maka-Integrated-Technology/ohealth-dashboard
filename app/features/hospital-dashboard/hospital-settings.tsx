@@ -16,7 +16,9 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
-import { useState, type FormEvent } from "react";
+import { useFormik } from "formik";
+import { useState } from "react";
+import * as Yup from "yup";
 
 type SettingsTab =
   "account" | "password" | "staff" | "notifications" | "security";
@@ -195,13 +197,9 @@ function Field({
 export default function HospitalSettings() {
   const [tab, setTab] = useState<SettingsTab>("account");
   const [account, setAccount] = useState(sampleAccount);
-  const [draft, setDraft] = useState(sampleAccount);
   const [editing, setEditing] = useState(false);
   const [staff, setStaff] = useState(sampleStaff);
   const [inviting, setInviting] = useState(false);
-  const [inviteName, setInviteName] = useState("");
-  const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteRole, setInviteRole] = useState("Doctor");
   const [prefs, setPrefs] = useState<Preferences>(samplePreferences);
   const [security, setSecurity] = useState({
     timeout: true,
@@ -210,62 +208,102 @@ export default function HospitalSettings() {
   });
   const [notice, setNotice] = useState("");
 
+  const accountForm = useFormik<Account>({
+    initialValues: sampleAccount,
+    validationSchema: Yup.object({
+      name: Yup.string().trim().required("Full name is required."),
+      email: Yup.string()
+        .trim()
+        .email("Enter a valid email address.")
+        .required("Email address is required."),
+    }),
+    onSubmit: (values) => {
+      setAccount({ ...values });
+      setEditing(false);
+      setNotice(
+        "Account details changed in this local preview only. No account record was updated."
+      );
+    },
+  });
+  const passwordForm = useFormik({
+    initialValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+    validationSchema: Yup.object({
+      currentPassword: Yup.string().required("Current password is required."),
+      newPassword: Yup.string()
+        .min(8, "Use at least 8 characters.")
+        .required("New password is required."),
+      confirmPassword: Yup.string()
+        .oneOf([Yup.ref("newPassword")], "Passwords must match.")
+        .required("Confirm your new password."),
+    }),
+    onSubmit: (_values, helpers) => {
+      setNotice(
+        "Password updates require live authentication and are unavailable in this preview. No password was sent or saved."
+      );
+      helpers.resetForm();
+    },
+  });
+  const inviteForm = useFormik({
+    initialValues: { name: "", email: "", role: "Doctor" },
+    validationSchema: Yup.object({
+      name: Yup.string().trim().required("Full name is required."),
+      email: Yup.string()
+        .trim()
+        .email("Enter a valid email address.")
+        .required("Email address is required."),
+      role: Yup.string().required("Select a role."),
+    }),
+    onSubmit: (values, helpers) => {
+      const name = values.name.trim();
+      const email = values.email.trim();
+      if (
+        staff.some((item) => item.email.toLowerCase() === email.toLowerCase())
+      ) {
+        setNotice("That email address is already in the preview staff list.");
+        return;
+      }
+      setStaff((current) => [
+        ...current,
+        {
+          name,
+          email,
+          role: values.role,
+          initials: name
+            .split(" ")
+            .map((item) => item[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2),
+          status: "pending",
+          active: "Preview invitation — not sent",
+        },
+      ]);
+      setInviting(false);
+      helpers.resetForm();
+      setNotice(
+        "Staff member added as pending in this preview only. No invitation email was sent."
+      );
+    },
+  });
+
   const switchTab = (next: SettingsTab) => {
     setTab(next);
     setNotice("");
     setEditing(false);
     setInviting(false);
+    accountForm.resetForm({ values: { ...account } });
+    passwordForm.resetForm();
+    inviteForm.resetForm();
   };
 
   const startEdit = () => {
-    setDraft({ ...account });
+    accountForm.resetForm({ values: { ...account } });
     setEditing(true);
-  };
-  const saveAccount = () => {
-    if (!draft.name.trim() || !draft.email.trim()) {
-      setNotice("Please provide a name and an email address.");
-      return;
-    }
-    setAccount({ ...draft });
-    setEditing(false);
-    setNotice(
-      "Account details changed in this local preview only. No account record was updated."
-    );
-  };
-  const inviteStaff = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const name = inviteName.trim();
-    const email = inviteEmail.trim();
-    if (!name || !email) return;
-    if (
-      staff.some((item) => item.email.toLowerCase() === email.toLowerCase())
-    ) {
-      setNotice("That email address is already in the preview staff list.");
-      setInviting(false);
-      return;
-    }
-    setStaff((current) => [
-      ...current,
-      {
-        name,
-        email,
-        role: inviteRole,
-        initials: name
-          .split(" ")
-          .map((item) => item[0])
-          .join("")
-          .toUpperCase()
-          .slice(0, 2),
-        status: "pending",
-        active: "Preview invitation — not sent",
-      },
-    ]);
-    setInviting(false);
-    setInviteName("");
-    setInviteEmail("");
-    setNotice(
-      "Staff member added as pending in this preview only. No invitation email was sent."
-    );
+    setNotice("");
   };
   const togglePref = (type: PrefType, channel: Channel, next: boolean) => {
     setPrefs((current) => ({
@@ -340,22 +378,28 @@ export default function HospitalSettings() {
                 ) : null}
               </div>
               {editing ? (
-                <div className="space-y-5">
+                <form onSubmit={accountForm.handleSubmit} className="space-y-5">
                   <Field
                     label="Full Name"
-                    value={draft.name}
-                    onChange={(name) =>
-                      setDraft((current) => ({ ...current, name }))
-                    }
+                    value={accountForm.values.name}
+                    onChange={(name) => {
+                      void accountForm.setFieldValue("name", name);
+                    }}
                   />
                   <Field
                     label="Email"
-                    value={draft.email}
+                    value={accountForm.values.email}
                     type="email"
-                    onChange={(email) =>
-                      setDraft((current) => ({ ...current, email }))
+                    onChange={(email) => {
+                      void accountForm.setFieldValue("email", email);
                     }
                   />
+                  {accountForm.submitCount > 0 &&
+                  (accountForm.errors.name || accountForm.errors.email) ? (
+                    <p role="alert" className="text-sm text-[#b42318]">
+                      {accountForm.errors.name ?? accountForm.errors.email}
+                    </p>
+                  ) : null}
                   <p className="text-sm text-[#62748e]">Role: {account.role}</p>
                   <p className="text-sm text-[#62748e]">
                     Hospital: {account.hospital}
@@ -363,21 +407,23 @@ export default function HospitalSettings() {
                   <div className="flex flex-wrap justify-end gap-3">
                     <button
                       type="button"
-                      onClick={() => setEditing(false)}
+                      onClick={() => {
+                        accountForm.resetForm({ values: { ...account } });
+                        setEditing(false);
+                      }}
                       className="rounded-xl border border-[#d2d6db] px-5 py-2.5 text-[#4d5761]"
                     >
                       Cancel
                     </button>
                     <button
-                      type="button"
-                      onClick={saveAccount}
+                      type="submit"
                       className="inline-flex items-center gap-2 rounded-xl bg-[#155eef] px-5 py-2.5 text-white"
                     >
                       <Check className="size-4" />
                       Save Changes
                     </button>
                   </div>
-                </div>
+                </form>
               ) : (
                 <dl className="grid gap-x-8 gap-y-5 sm:grid-cols-2">
                   {(
@@ -425,35 +471,36 @@ export default function HospitalSettings() {
                 Change Password
               </h3>
               <form
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  setNotice(
-                    "Password updates require live authentication and are unavailable in this preview. No password was sent or saved."
-                  );
-                  event.currentTarget.reset();
-                }}
+                onSubmit={passwordForm.handleSubmit}
                 className="max-w-[500px] space-y-5"
               >
-                {[
-                  "Current Password",
-                  "New Password",
-                  "Confirm New Password",
-                ].map((name) => (
+                {(
+                  [
+                    ["Current Password", "currentPassword", "current-password"],
+                    ["New Password", "newPassword", "new-password"],
+                    ["Confirm New Password", "confirmPassword", "new-password"],
+                  ] as const
+                ).map(([label, key, autocomplete]) => (
                   <label
-                    key={name}
+                    key={key}
                     className="block text-[13px] font-medium text-[#4d5761] sm:text-[15px]"
                   >
-                    {name}
+                    {label}
                     <input
-                      required
+                      name={key}
+                      value={passwordForm.values[key]}
+                      onChange={passwordForm.handleChange}
+                      onBlur={passwordForm.handleBlur}
                       type="password"
-                      autoComplete={
-                        name === "Current Password"
-                          ? "current-password"
-                          : "new-password"
-                      }
+                      autoComplete={autocomplete}
                       className="mt-2 block min-h-11 w-full rounded-xl border border-[#d2d6db] px-4 outline-none focus:border-[#155eef]"
                     />
+                    {(passwordForm.touched[key] || passwordForm.submitCount > 0) &&
+                    passwordForm.errors[key] ? (
+                      <span role="alert" className="mt-1 block text-xs text-[#b42318]">
+                        {passwordForm.errors[key]}
+                      </span>
+                    ) : null}
                   </label>
                 ))}
                 <button
@@ -556,7 +603,7 @@ export default function HospitalSettings() {
               </div>
               {inviting ? (
                 <form
-                  onSubmit={inviteStaff}
+                  onSubmit={inviteForm.handleSubmit}
                   className="mt-6 rounded-[20px] border border-[#e2e8f0] bg-white p-4 sm:p-6"
                 >
                   <div className="mb-5 flex items-center justify-between gap-4">
@@ -574,20 +621,26 @@ export default function HospitalSettings() {
                   <div className="grid gap-4 sm:grid-cols-2">
                     <Field
                       label="Full Name"
-                      value={inviteName}
-                      onChange={setInviteName}
+                      value={inviteForm.values.name}
+                      onChange={(name) => {
+                        void inviteForm.setFieldValue("name", name);
+                      }
                     />
                     <Field
                       label="Email"
-                      value={inviteEmail}
-                      onChange={setInviteEmail}
+                      value={inviteForm.values.email}
+                      onChange={(email) => {
+                        void inviteForm.setFieldValue("email", email);
+                      }
                       type="email"
                     />
                     <label className="block text-[13px] font-medium text-[#4d5761] sm:text-[15px]">
                       Role
                       <select
-                        value={inviteRole}
-                        onChange={(event) => setInviteRole(event.target.value)}
+                        value={inviteForm.values.role}
+                        onChange={(event) => {
+                          void inviteForm.setFieldValue("role", event.target.value);
+                        }
                         className="mt-2 block min-h-11 w-full rounded-xl border border-[#d2d6db] bg-white px-4 text-[#1f2a37]"
                       >
                         {[
@@ -602,6 +655,16 @@ export default function HospitalSettings() {
                       </select>
                     </label>
                   </div>
+                  {inviteForm.submitCount > 0 &&
+                  (inviteForm.errors.name ||
+                    inviteForm.errors.email ||
+                    inviteForm.errors.role) ? (
+                    <p role="alert" className="mt-4 text-sm text-[#b42318]">
+                      {inviteForm.errors.name ??
+                        inviteForm.errors.email ??
+                        inviteForm.errors.role}
+                    </p>
+                  ) : null}
                   <p className="mt-4 text-xs text-[#62748e]">
                     This adds a pending preview row; no invitation email will be
                     sent.
