@@ -24,10 +24,10 @@ cp .env.example .env.local
 
 The app reads the following variables (client-side, prefixed with `VITE_`):
 
-| Variable            | Required | Description                                                                                                                                 |
-| ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `VITE_API_BASE_URL` | Yes      | Base URL for all API requests. Read by `app/lib/config/axios.ts`.                                                                           |
-| `VITE_ROUTE`        | No       | Which dashboard surface to build/serve: `mp-dashboard` (`mp`), `ph-dashboard` (`ph`), or `lb-dashboard` (`lb`). Defaults to `mp-dashboard`. |
+| Variable            | Required | Description                                                                                                                                                              |
+| ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `VITE_API_BASE_URL` | Yes      | Base URL for all API requests. Read by `app/lib/config/axios.ts`.                                                                                                        |
+| `VITE_ROUTE`        | No       | Which dashboard surface to build/serve: `mp-dashboard` (`mp`), `ph-dashboard` (`ph`), `lb-dashboard` (`lb`), or `hospital-dashboard` (`hs`). Defaults to `mp-dashboard`. |
 
 > Both are **build-time** variables — Vite inlines them into the bundle. See
 > [Selecting a dashboard](#selecting-a-dashboard) and the Docker note below.
@@ -48,7 +48,7 @@ http://localhost:5100
 
 ## Selecting a dashboard
 
-The app ships three dashboard surfaces and builds one at a time. `VITE_ROUTE`
+The app ships four dashboard surfaces and builds one at a time. `VITE_ROUTE`
 picks which; it defaults to `mp-dashboard`. Either set it in `.env.local`, pass
 it inline, or use the per-dashboard scripts (which also assign distinct ports so
 dashboards can run side by side):
@@ -57,12 +57,13 @@ dashboards can run side by side):
 npm run dev:mp   # Medical Professional → http://localhost:5100 (default)
 npm run dev:ph   # Pharmacy             → http://localhost:5101
 npm run dev:lb   # Laboratory           → http://localhost:5102
+npm run dev:hs   # Hospital             → http://localhost:5103
 
 # equivalent to, e.g.:
 VITE_ROUTE=ph npm run dev
 ```
 
-`build:mp` / `build:ph` / `build:lb` do the same for `npm run build`. See
+`build:mp` / `build:ph` / `build:lb` / `build:hs` do the same for `npm run build`. See
 [architecture.md](./architecture.md#routing--one-build-per-dashboard) for how
 the selection works and how to add a new surface.
 
@@ -164,7 +165,7 @@ npm run build          # production bundle (build/client)
 
 All four must pass before a PR can be merged. The build step builds the default
 surface (`mp-dashboard`); to also verify the others, add build steps with
-`VITE_ROUTE=ph` / `VITE_ROUTE=lb`.
+`VITE_ROUTE=ph` / `VITE_ROUTE=lb` / `VITE_ROUTE=hs`.
 
 ## Deployment
 
@@ -197,5 +198,5 @@ Available at **http://localhost:3000**.
 
 A separate `docker-compose.prod.yml` is used by the deploy workflow on the
 server. It defines one service per dashboard (`mp-dashboard`, `ph-dashboard`,
-`lb-dashboard`), each built with its own `VITE_ROUTE` and published on its own
-port. See [deployment.md](./deployment.md).
+`lb-dashboard`, `hs-dashboard`), each built with its own `VITE_ROUTE` and published on its own
+port (hospital defaults to host port 3003). See [deployment.md](./deployment.md).

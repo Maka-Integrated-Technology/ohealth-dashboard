@@ -18,7 +18,10 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "audit:dependencies": "node scripts/security/dependency-audit-policy.mjs",
-    "test:audit-policy": "node --test scripts/security/dependency-audit-policy.test.mjs"
+    "test:audit-policy": "node --test scripts/security/dependency-audit-policy.test.mjs",
+    "build:hs": "cross-env VITE_ROUTE=hs react-router build",
+    "dev:hs": "cross-env VITE_ROUTE=hs react-router dev -p 5103",
+    "test:hospital": "node --test scripts/tests/hospital-preview.test.mjs"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.2.8",
@@ -71,18 +74,27 @@
     "tailwindcss": "^4.1.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.61.1",
-    "vite": "^8.0.3"
+    "vite": "^8.2.4"
   },
   "overrides": {
     "brace-expansion@1": "1.1.21",
     "brace-expansion@5": "5.0.12",
     "fast-uri": "^3.1.6",
-    "hono": "^4.13.5",
-    "ip-address": "10.7.3",
+    "hono": "^4.13.11",
+    "ip-address": "10.7.4",
     "js-yaml": "^4.3.2",
     "qs": "^6.16.0",
     "morgan": "^1.12.0",
-    "undici": "7.29.1"
+    "undici": "7.29.1",
+    "@modelcontextprotocol/sdk": "^1.32.0",
+    "compression": "^1.8.2",
+    "follow-redirects": "^1.16.1",
+    "postcss-selector-parser": "^7.1.6",
+    "proxy-addr": "^2.0.8",
+    "source-map-js": "^1.2.2",
+    "vite-node": {
+      "vite": "^7.3.7"
+    }
   },
   "msw": {
     "workerDirectory": [
