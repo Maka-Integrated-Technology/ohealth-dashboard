@@ -52,7 +52,7 @@ jobs:
           fi
       - name: Test lab helpers
         run: npm run test:lab
-      - name: Test rendered UI (writable act flag)
+      - name: Test rendered UI (strict TS imports)
         run: npm run test:lab:ui
       - name: Audit dependency policy
         if: success() || failure()
