@@ -116,8 +116,13 @@ test("staff Invite Staff modal submits a new local record and prevents duplicate
   await waitFor(() => {
     const open = screen.queryByRole("dialog", { name: "Invite Staff Member" });
     if (open) {
-      const alerts = within(open).queryAllByRole("alert").map((item) => item.textContent);
-      throw new Error("Staff modal did not close after submit. Errors: " + JSON.stringify(alerts));
+      const alerts = within(open)
+        .queryAllByRole("alert")
+        .map((item) => item.textContent);
+      throw new Error(
+        "Staff modal did not close after submit. Errors: " +
+          JSON.stringify(alerts)
+      );
     }
   });
   assert.ok(screen.getByText("Dr. Ngozi Adeyemi"));
