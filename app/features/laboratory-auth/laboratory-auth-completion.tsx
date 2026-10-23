@@ -10,7 +10,6 @@ export function LaboratoryAuthCompletion({
   selectedModules,
   onToggleModule,
   onOpenScreen,
-  onOpenDashboard,
 }: {
   screen: string;
   activeStep: number;
@@ -19,7 +18,6 @@ export function LaboratoryAuthCompletion({
   onOpenScreen: (
     next: "approved" | "setup-complete" | "ready" | "sign-in"
   ) => void;
-  onOpenDashboard: () => void;
 }) {
   return (
     <>
