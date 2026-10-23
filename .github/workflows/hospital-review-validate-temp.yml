@@ -1,0 +1,66 @@
+name: Hospital review validation (temporary)
+on:
+  push:
+    branches: [feat/hospital-auth-cloudflare-preview]
+    paths:
+      - .github/workflows/hospital-review-validate-temp.yml
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: feat/hospital-auth-cloudflare-preview
+          persist-credentials: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit
+      - name: Format hospital review changes
+        run: |
+          npx prettier --write \
+            app/features/hospital-auth/page.tsx \
+            app/features/hospital-auth/hospital-auth-hero.tsx \
+            app/features/hospital-auth/auth-fields.tsx \
+            app/features/hospital-auth/registration-flow.ts \
+            app/features/hospital-dashboard/page.tsx \
+            app/features/hospital-dashboard/hospital-overview.tsx \
+            app/features/hospital-dashboard/hospital-preview-state.ts \
+            app/features/hospital-dashboard/hospital-appointments.tsx \
+            app/features/hospital-dashboard/hospital-appointment-data.ts \
+            app/features/hospital-dashboard/hospital-notifications.tsx \
+            app/features/hospital-dashboard/hospital-notification-data.ts \
+            app/features/hospital-dashboard/patients-list.tsx \
+            app/features/hospital-dashboard/hospital-patient-data.ts \
+            app/features/hospital-dashboard/patient-details.tsx \
+            scripts/tests/hospital-preview.test.mjs \
+            package.json README.md docker-compose.prod.yml \
+            docs/architecture.md docs/setup.md docs/deployment.md docs/folder-structure.md \
+            .github/workflows/ci.yml
+      - name: Commit automatic formatting
+        run: |
+          if ! git diff --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -u
+            git commit -m 'style(hospital): format review fixes'
+            git push origin HEAD:feat/hospital-auth-cloudflare-preview
+          fi
+      - name: Audit policy tests
+        run: npm run test:audit-policy
+      - name: Hospital behavior tests
+        run: npm run test:hospital
+      - name: Dependency audit
+        run: npm run audit:dependencies
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Build hospital
+        run: npm run build:hs
+      - name: Build other portals
+        run: npm run build && npm run build:ph && npm run build:lb
