@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { Plus, Search, X } from "lucide-react";
 import { useSearchParams } from "react-router";
 import {
@@ -106,32 +108,53 @@ function ModalFrame({
 
 function StaffFormModal({
   staff,
+  members,
   onCancel,
   onSubmit,
 }: {
   staff: LabStaffMember | null;
+  members: LabStaffMember[];
   onCancel: () => void;
   onSubmit: (draft: FormData) => string | null;
 }) {
-  const [draft, setDraft] = useState<FormData>({
-    name: staff?.name ?? "",
-    email: staff?.email ?? "",
-    phone: staff?.phone ?? "",
-    role: staff?.role ?? "Lab Technician",
-  });
-  const [error, setError] = useState("");
   const editing = staff !== null;
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const message = onSubmit({
-      name: draft.name.trim(),
-      email: draft.email.trim().toLowerCase(),
-      phone: draft.phone.trim(),
-      role: draft.role,
-    });
-    if (message) setError(message);
-  };
+  const formik = useFormik<FormData>({
+    enableReinitialize: true,
+    initialValues: {
+      name: staff?.name ?? "",
+      email: staff?.email ?? "",
+      phone: staff?.phone ?? "",
+      role: staff?.role ?? "Lab Technician",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().trim().required("Full name is required.").max(120),
+      email: Yup.string()
+        .trim()
+        .email("Enter a valid email address.")
+        .required("Email address is required.")
+        .max(160)
+        .test(
+          "unique-staff-email",
+          "A staff member with this email address already exists in this preview.",
+          (value) => !value || labUniqueEmail(members, value, staff?.id ?? null)
+        ),
+      phone: Yup.string().max(40),
+      role: Yup.string().oneOf([...LAB_STAFF_ROLES]).required(),
+    }),
+    onSubmit: (values, helpers) => {
+      const message = onSubmit({
+        name: values.name.trim(),
+        email: values.email.trim().toLowerCase(),
+        phone: values.phone.trim(),
+        role: values.role,
+      });
+      if (message) helpers.setFieldError("email", message);
+    },
+  });
+  const draft = formik.values;
+  const error = formik.submitCount > 0
+    ? Object.values(formik.errors).find((message) => Boolean(message))
+    : null;
 
   return (
     <ModalFrame
@@ -146,7 +169,7 @@ function StaffFormModal({
             type="submit"
             form="lab-staff-form"
             className={BLUE_BUTTON}
-            disabled={!draft.name.trim() || !draft.email.trim()}
+            disabled={formik.isSubmitting}
           >
             {editing ? "Save Changes" : "Send Invitation"}
           </button>
@@ -155,7 +178,7 @@ function StaffFormModal({
     >
       <form
         id="lab-staff-form"
-        onSubmit={handleSubmit}
+        onSubmit={formik.handleSubmit}
         className="space-y-[15px]"
       >
         <div>
@@ -174,7 +197,7 @@ function StaffFormModal({
             placeholder="e.g. Dr. Ngozi Adeyemi"
             value={draft.name}
             onChange={(event) =>
-              setDraft({ ...draft, name: event.currentTarget.value })
+              void formik.setFieldValue("name", event.currentTarget.value)
             }
           />
         </div>
@@ -194,7 +217,7 @@ function StaffFormModal({
             placeholder="staff@ohealthplus.ng"
             value={draft.email}
             onChange={(event) =>
-              setDraft({ ...draft, email: event.currentTarget.value })
+              void formik.setFieldValue("email", event.currentTarget.value)
             }
           />
         </div>
@@ -213,7 +236,7 @@ function StaffFormModal({
             placeholder="+234 800 000 0000"
             value={draft.phone}
             onChange={(event) =>
-              setDraft({ ...draft, phone: event.currentTarget.value })
+              void formik.setFieldValue("phone", event.currentTarget.value)
             }
           />
         </div>
@@ -229,10 +252,7 @@ function StaffFormModal({
             className={INPUT_CLASS}
             value={draft.role}
             onChange={(event) =>
-              setDraft({
-                ...draft,
-                role: event.currentTarget.value as LabStaffRole,
-              })
+              void formik.setFieldValue("role", event.currentTarget.value)
             }
           >
             {LAB_STAFF_ROLES.map((role) => (
@@ -733,6 +753,7 @@ export default function LaboratoryStaffManagement() {
       </div>
       {dialog?.kind === "invite" && (
         <StaffFormModal
+          members={staff}
           key="invite"
           staff={null}
           onCancel={() => setDialog(null)}
@@ -741,6 +762,7 @@ export default function LaboratoryStaffManagement() {
       )}
       {dialog?.kind === "edit" && selectedStaff && (
         <StaffFormModal
+          members={staff}
           key={selectedStaff.id}
           staff={selectedStaff}
           onCancel={() => setDialog(null)}
