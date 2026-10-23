@@ -213,3 +213,47 @@ test("notification category filters survive refresh and reset across sections", 
     false
   );
 });
+
+test("hospital Compose build argument uses an accepted VITE_ROUTE", () => {
+  const compose = readFileSync(
+    new URL("../../docker-compose.prod.yml", import.meta.url),
+    "utf8"
+  );
+  const router = readFileSync(new URL("../../app/routes.ts", import.meta.url), "utf8");
+  assert.match(
+    compose,
+    /hs-dashboard:\\s*\\n(?:.|\\n)*?VITE_ROUTE: hospital-dashboard/
+  );
+  assert.match(router, /"hospital-dashboard"/);
+  assert.doesNotMatch(compose, /VITE_ROUTE: hs-dashboard/);
+});
+
+test("laboratory search and status filters round-trip through the URL", () => {
+  const initial = new URLSearchParams("section=Laboratory");
+  const searched = state.hospitalFilterParams(initial, "q", "blood");
+  const filtered = state.hospitalFilterParams(searched, "status", "Processing", "All");
+  const restored = new URLSearchParams(filtered.toString());
+  assert.equal(restored.get("q"), "blood");
+  assert.equal(restored.get("status"), "Processing");
+  assert.equal(
+    state.hospitalFilterParams(restored, "status", "All", "All").has("status"),
+    false
+  );
+  const navigated = state.hospitalNavigationParams(restored, "Prescriptions");
+  assert.equal(navigated.has("q"), false);
+  assert.equal(navigated.has("status"), false);
+});
+
+test("prescription search survives a URL refresh but clears on section change", () => {
+  const query = state.hospitalFilterParams(
+    new URLSearchParams("section=Prescriptions"),
+    "q",
+    "amoxicillin"
+  );
+  assert.equal(new URLSearchParams(query.toString()).get("q"), "amoxicillin");
+  assert.equal(
+    state.hospitalFilterParams(query, "q", "").has("q"),
+    false
+  );
+  assert.equal(state.hospitalNavigationParams(query, "Laboratory").has("q"), false);
+});
