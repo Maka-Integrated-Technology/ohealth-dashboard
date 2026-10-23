@@ -167,6 +167,14 @@ All four must pass before a PR can be merged. The build step builds the default
 surface (`mp-dashboard`); to also verify the others, add build steps with
 `VITE_ROUTE=ph` / `VITE_ROUTE=lb` / `VITE_ROUTE=hs`.
 
+## Laboratory preview regression checks
+
+Run `npm run test:lab` for laboratory behavior tests, and
+`npm run test:lab:ui` for rendered component interactions. The Laboratory
+Preview workflow also runs the dependency audit, the supply-chain security
+scanner before installation, and warning-free lint. See
+[laboratory-review.md](./laboratory-review.md).
+
 ## Deployment
 
 `.github/workflows/deploy.yml` deploys over SSH on pushes to `staging` and
