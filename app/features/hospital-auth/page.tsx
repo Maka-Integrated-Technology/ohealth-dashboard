@@ -1,4 +1,5 @@
 import {
+  Activity,
   ArrowRight,
   CheckCircle2,
   ChevronLeft,
