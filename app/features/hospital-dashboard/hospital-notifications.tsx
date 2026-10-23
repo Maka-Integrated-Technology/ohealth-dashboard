@@ -21,6 +21,8 @@ const notificationFilters: ("All" | HospitalNotificationCategory)[] = [
   "Verification",
   "Laboratory",
   "Reviews",
+  "Prescriptions",
+  "Patients",
   "System",
 ];
 const categoryIcons: Record<HospitalNotificationCategory, LucideIcon> = {
