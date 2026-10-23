@@ -59,8 +59,8 @@ jobs:
         run: npm run test:hospital
       - name: Dependency audit
         run: npm run audit:dependencies
-      - name: Lint
-        run: npm run lint
+      - name: Lint without warnings
+        run: npm run lint -- --max-warnings=0
       - name: Typecheck
         run: npm run typecheck
       - name: Build hospital
