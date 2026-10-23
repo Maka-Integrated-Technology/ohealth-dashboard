@@ -11,7 +11,7 @@ Each portal is a separate build selected at build time by `VITE_ROUTE`:
 | Medical Professional | `mp-dashboard` (default) |
 | Pharmacy             | `ph-dashboard`           |
 | Laboratory           | `lb-dashboard`           |
-| Hospital             | `hospital-dashboard`           |
+| Hospital             | `hospital-dashboard`     |
 
 ## Stack
 

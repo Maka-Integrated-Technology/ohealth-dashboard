@@ -18,11 +18,11 @@ This app ships **four independent dashboard surfaces**, one per user role, and
 builds exactly one of them at a time. Which surface is active is selected at
 config time by the `VITE_ROUTE` environment variable.
 
-| Surface              | `VITE_ROUTE` (alias)  | Route folder               |
-| -------------------- | --------------------- | -------------------------- |
-| Medical Professional | `mp-dashboard` (`mp`) | `app/routes/mp-dashboard/` |
-| Pharmacy             | `ph-dashboard` (`ph`) | `app/routes/ph-dashboard/` |
-| Laboratory           | `lb-dashboard` (`lb`) | `app/routes/lb-dashboard/` |
+| Surface              | `VITE_ROUTE` (alias)        | Route folder                     |
+| -------------------- | --------------------------- | -------------------------------- |
+| Medical Professional | `mp-dashboard` (`mp`)       | `app/routes/mp-dashboard/`       |
+| Pharmacy             | `ph-dashboard` (`ph`)       | `app/routes/ph-dashboard/`       |
+| Laboratory           | `lb-dashboard` (`lb`)       | `app/routes/lb-dashboard/`       |
 | Hospital             | `hospital-dashboard` (`hs`) | `app/routes/hospital-dashboard/` |
 
 `VITE_ROUTE` defaults to `mp-dashboard` when unset.
