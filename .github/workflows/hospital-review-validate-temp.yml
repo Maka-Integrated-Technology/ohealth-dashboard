@@ -26,6 +26,7 @@ jobs:
             app/features/hospital-auth/page.tsx \
             app/features/hospital-auth/hospital-auth-hero.tsx \
             app/features/hospital-auth/auth-fields.tsx \
+            app/features/hospital-auth/auth-completion.tsx \
             app/features/hospital-auth/registration-flow.ts \
             app/features/hospital-dashboard/page.tsx \
             app/features/hospital-dashboard/hospital-overview.tsx \
@@ -50,6 +51,8 @@ jobs:
             git commit -m 'style(hospital): format review fixes'
             git push origin HEAD:feat/hospital-auth-cloudflare-preview
           fi
+      - name: Verify formatting
+        run: npm run format:check
       - name: Audit policy tests
         run: npm run test:audit-policy
       - name: Hospital behavior tests
