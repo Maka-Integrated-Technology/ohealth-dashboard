@@ -1,4 +1,6 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { X } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router";
 import { labListParams, labParam } from "./laboratory-list-state";
@@ -120,23 +122,29 @@ function BranchDialog({
   onClose: () => void;
   onSave: (draft: BranchDraft) => void;
 }) {
-  const [draft, setDraft] = useState<BranchDraft>({
-    name: initial?.name ?? "",
-    address: initial?.address ?? "",
-    phone: initial?.phone ?? "",
-    active: initial?.active ?? true,
+  const formik = useFormik<BranchDraft>({
+    enableReinitialize: true,
+    initialValues: {
+      name: initial?.name ?? "",
+      address: initial?.address ?? "",
+      phone: initial?.phone ?? "",
+      active: initial?.active ?? true,
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().trim().required("Branch name is required.").max(120),
+      address: Yup.string().trim().required("Branch address is required.").max(250),
+      phone: Yup.string().trim().required("Branch phone is required.").max(40),
+      active: Yup.boolean().required(),
+    }),
+    onSubmit: (values) =>
+      onSave({
+        name: values.name.trim(),
+        address: values.address.trim(),
+        phone: values.phone.trim(),
+        active: values.active,
+      }),
   });
-  const submit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!draft.name.trim() || !draft.address.trim() || !draft.phone.trim())
-      return;
-    onSave({
-      name: draft.name.trim(),
-      address: draft.address.trim(),
-      phone: draft.phone.trim(),
-      active: draft.active,
-    });
-  };
+  const draft = formik.values;
   return (
     <div
       role="presentation"
@@ -167,37 +175,37 @@ function BranchDialog({
             <X className="size-[19px]" />
           </button>
         </div>
-        <form onSubmit={submit} className="space-y-[15px] px-[20px] py-[21px]">
+        <form onSubmit={formik.handleSubmit} className="space-y-[15px] px-[20px] py-[21px]">
           <ProfileField
             label="Branch Name"
             value={draft.name}
-            onChange={(name) => setDraft((prev) => ({ ...prev, name }))}
+            onChange={(name) => void formik.setFieldValue("name", name)}
           />
           <ProfileField
             label="Branch Address"
             value={draft.address}
-            onChange={(address) => setDraft((prev) => ({ ...prev, address }))}
+            onChange={(address) => void formik.setFieldValue("address", address)}
           />
           <ProfileField
             label="Branch Phone"
             type="tel"
             value={draft.phone}
-            onChange={(phone) => setDraft((prev) => ({ ...prev, phone }))}
+            onChange={(phone) => void formik.setFieldValue("phone", phone)}
           />
           <label className="flex items-center gap-2 text-[13px] text-[#405570]">
             <input
               type="checkbox"
               checked={draft.active}
-              onChange={(event) =>
-                setDraft((prev) => ({
-                  ...prev,
-                  active: event.currentTarget.checked,
-                }))
-              }
+              onChange={(event) => void formik.setFieldValue("active", event.currentTarget.checked)}
               className="size-[16px] accent-[#155eef]"
             />
             Branch active
           </label>
+          {formik.submitCount > 0 && Object.keys(formik.errors).length > 0 && (
+            <p role="alert" className="text-[12px] text-red-600">
+              {Object.values(formik.errors).find(Boolean)}
+            </p>
+          )}
           <p className="text-[11px] leading-[17px] text-[#8ca0ba]">
             Preview only: branch changes are not sent to a server.
           </p>
@@ -290,8 +298,45 @@ export default function LaboratoryProfile() {
   const tab = labParam(params, "tab", TABS, "Lab Details") as ProfileTab;
   const setTab = (value: ProfileTab) =>
     setParams((current) => labListParams(current, "tab", value, "Lab Details"));
-  const [details, setDetails] = useState<ProfileDetails>(INITIAL_DETAILS);
-  const [hours, setHours] = useState<OpeningDay[]>(INITIAL_HOURS);
+  const detailsForm = useFormik<ProfileDetails>({
+    initialValues: INITIAL_DETAILS,
+    validationSchema: Yup.object({
+      laboratoryName: Yup.string().trim().required("Laboratory name is required.").max(160),
+      registrationNumber: Yup.string().trim().required("Registration number is required.").max(80),
+      licenseNumber: Yup.string().trim().required("License number is required.").max(80),
+      contactEmail: Yup.string().trim().email("Enter a valid contact email.").required("Contact email is required."),
+      phoneNumber: Yup.string().trim().required("Phone number is required.").max(40),
+      region: Yup.string().trim().required("Region is required.").max(100),
+      address: Yup.string().trim().required("Address is required.").max(250),
+    }),
+    onSubmit: () => setNotice(
+      "Lab details saved in this preview only. No laboratory account was updated."
+    ),
+  });
+  const hoursForm = useFormik<{ days: OpeningDay[] }>({
+    initialValues: { days: INITIAL_HOURS },
+    validationSchema: Yup.object({
+      days: Yup.array().of(
+        Yup.object({
+          day: Yup.string().required(),
+          open: Yup.boolean().required(),
+          hours: Yup.string().required().test(
+            "valid-time-range",
+            "Use a time range such as 08:00–18:00 for every open day.",
+            function(value) {
+              if (!this.parent.open) return true;
+              return /^([01]\\d|2[0-3]):[0-5]\\d[–-]([01]\\d|2[0-3]):[0-5]\\d$/.test(value?.trim() ?? "");
+            }
+          ),
+        })
+      ).required(),
+    }),
+    onSubmit: () => setNotice(
+      "Operating hours saved in this preview only. No live scheduling was changed."
+    ),
+  });
+  const details = detailsForm.values;
+  const hours = hoursForm.values.days;
   const [branches, setBranches] = useState<Branch[]>(INITIAL_BRANCHES);
   const [editingBranch, setEditingBranch] = useState<Branch | null | "new">(
     null
@@ -312,53 +357,27 @@ export default function LaboratoryProfile() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [editingBranch, securityDialog]);
 
-  const updateDetails = (field: keyof ProfileDetails, value: string) =>
-    setDetails((previous) => ({ ...previous, [field]: value }));
+  const updateDetails = (field: keyof ProfileDetails, value: string) => {
+    void detailsForm.setFieldValue(field, value);
+  };
+  const saveDetails = detailsForm.handleSubmit;
 
-  const saveDetails = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setNotice(
-      "Lab details saved in this preview only. No laboratory account was updated."
-    );
+  const updateHours = (index: number, value: string) => {
+    void hoursForm.setFieldValue("days", hours.map((day, i) =>
+      i === index ? { ...day, hours: value } : day
+    ));
   };
 
-  const updateHours = (index: number, value: string) =>
-    setHours((previous) =>
-      previous.map((item, i) =>
-        i === index ? { ...item, hours: value } : item
-      )
-    );
-
-  const toggleDay = (index: number) =>
-    setHours((previous) =>
-      previous.map((item, i) =>
-        i !== index
-          ? item
-          : {
-              ...item,
-              open: !item.open,
-              hours: item.open
-                ? "Closed"
-                : item.day === "Sat"
-                  ? "09:00–14:00"
-                  : "08:00–18:00",
-            }
-      )
-    );
-
-  const saveHours = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const timePattern = /^([01]\d|2[0-3]):[0-5]\d[–-]([01]\d|2[0-3]):[0-5]\d$/;
-    if (
-      hours.some((item) => item.open && !timePattern.test(item.hours.trim()))
-    ) {
-      setNotice("Use a time range such as 08:00–18:00 for every open day.");
-      return;
-    }
-    setNotice(
-      "Operating hours saved in this preview only. No live scheduling was changed."
-    );
+  const toggleDay = (index: number) => {
+    void hoursForm.setFieldValue("days", hours.map((item, i) =>
+      i !== index ? item : {
+        ...item,
+        open: !item.open,
+        hours: item.open ? "Closed" : item.day === "Sat" ? "09:00–14:00" : "08:00–18:00",
+      }
+    ));
   };
+  const saveHours = hoursForm.handleSubmit;
 
   const saveBranch = (draft: BranchDraft) => {
     if (editingBranch && editingBranch !== "new") {
@@ -508,6 +527,11 @@ export default function LaboratoryProfile() {
                 />
               </div>
             </div>
+            {detailsForm.submitCount > 0 && Object.keys(detailsForm.errors).length > 0 && (
+              <p role="alert" className="mt-3 text-[12px] text-red-600">
+                {Object.values(detailsForm.errors).find(Boolean)}
+              </p>
+            )}
             <div className="mt-[21px] flex justify-end">
               <button type="submit" className={PRIMARY_CLASS}>
                 Save Changes
@@ -567,6 +591,11 @@ export default function LaboratoryProfile() {
                 </div>
               ))}
             </div>
+            {hoursForm.submitCount > 0 && hoursForm.errors.days && (
+              <p role="alert" className="mt-3 text-[12px] text-red-600">
+                Use a time range such as 08:00–18:00 for every open day.
+              </p>
+            )}
             <div className="mt-[21px] flex justify-end">
               <button type="submit" className={PRIMARY_CLASS}>
                 Save Hours
