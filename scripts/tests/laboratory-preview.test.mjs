@@ -8,19 +8,20 @@ import ts from "typescript";
 // Execute the same pure TypeScript modules imported by the laboratory UI.
 // This runs in Node 20 without altering the frontend's production dependency tree.
 async function loadTs(path) {
-  const file = new URL("../../app/features/laboratory-dashboard/" + path, import.meta.url);
+  const file = new URL("../../app/features/" + path, import.meta.url);
   const output = ts.transpileModule(readFileSync(file, "utf8"), {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
   }).outputText;
   return import("data:text/javascript;base64," + Buffer.from(output).toString("base64"));
 }
 
-const [state, staff, catalogue, bookings, results] = await Promise.all([
-  loadTs("laboratory-list-state.ts"),
-  loadTs("laboratory-staff-data.ts"),
-  loadTs("laboratory-catalogue-data.ts"),
-  loadTs("laboratory-bookings-data.ts"),
-  loadTs("laboratory-results-data.ts"),
+const [state, staff, catalogue, bookings, results, auth] = await Promise.all([
+  loadTs("laboratory-dashboard/laboratory-list-state.ts"),
+  loadTs("laboratory-dashboard/laboratory-staff-data.ts"),
+  loadTs("laboratory-dashboard/laboratory-catalogue-data.ts"),
+  loadTs("laboratory-dashboard/laboratory-bookings-data.ts"),
+  loadTs("laboratory-dashboard/laboratory-results-data.ts"),
+  loadTs("laboratory-auth/laboratory-registration-flow.ts"),
 ]);
 
 test("laboratory searches survive refresh and remove empty/default params", () => {
@@ -100,4 +101,17 @@ test("notification read helper is idempotent and doesn't mutate original list", 
   assert.deepEqual(next.map((item) => item.unread), [false, true]);
   assert.deepEqual(list.map((item) => item.unread), [true, true]);
   assert.equal(state.labWithNotificationRead(next, "n1")[0].unread, false);
+});
+
+test("onboarding stage progression stays sequential without calling a backend", () => {
+  assert.equal(auth.nextLabRegistrationStep(1), 2);
+  assert.equal(auth.nextLabRegistrationStep(2), 3);
+  assert.equal(auth.nextLabRegistrationStep(3), "review");
+});
+
+test("administrator onboarding rejects short and mismatched passwords", () => {
+  assert.match(auth.labAdministratorPasswordError({ password: "123", confirmPassword: "123" }), /at least 8/);
+  assert.match(auth.labAdministratorPasswordError({ password: "verysecure", confirmPassword: "different" }), /do not match/);
+  assert.equal(auth.labAdministratorPasswordError({ password: "verysecure", confirmPassword: "verysecure" }), null);
+  assert.equal(auth.labAdministratorPasswordError({ password: "", confirmPassword: "" }), null);
 });
