@@ -38,7 +38,10 @@ import { hospitalNotificationSamples } from "~/features/hospital-dashboard/hospi
 import HospitalAppointments, {
   AppointmentDrawer,
 } from "~/features/hospital-dashboard/hospital-appointments";
-import { appointmentSamples, type PreviewAppointment } from "~/features/hospital-dashboard/hospital-appointment-data";
+import {
+  appointmentSamples,
+  type PreviewAppointment,
+} from "~/features/hospital-dashboard/hospital-appointment-data";
 import HospitalPatientsList from "~/features/hospital-dashboard/patients-list";
 import { hospitalPatientRecords } from "~/features/hospital-dashboard/hospital-patient-data";
 import Logo from "~/components/shared/logo";
@@ -68,10 +71,9 @@ export default function HospitalDashboardPage() {
   const activeSection = getHospitalSection(sectionParams);
   const search = sectionParams.get("q") ?? "";
   const setSearch = (value: string) =>
-    setSectionParams(
-      (current) => hospitalFilterParams(current, "q", value),
-      { replace: true }
-    );
+    setSectionParams((current) => hospitalFilterParams(current, "q", value), {
+      replace: true,
+    });
   const [menuOpen, setMenuOpen] = useState(false);
   const [appointments, setAppointments] =
     useState<Appointment[]>(appointmentSamples);
@@ -97,7 +99,9 @@ export default function HospitalDashboardPage() {
     (item) => !readNotificationIds.includes(item.id)
   ).length;
   const markNotificationRead = (id: string) =>
-    setReadNotificationIds((current) => markPreviewNotificationRead(current, id));
+    setReadNotificationIds((current) =>
+      markPreviewNotificationRead(current, id)
+    );
   const markAllNotificationsRead = () =>
     setReadNotificationIds(hospitalNotificationSamples.map((item) => item.id));
 
@@ -262,7 +266,9 @@ export default function HospitalDashboardPage() {
               value={search}
               disabled={
                 Boolean(patientId) ||
-                !["Dashboard", "Patients", "Appointments"].includes(activeSection)
+                !["Dashboard", "Patients", "Appointments"].includes(
+                  activeSection
+                )
               }
               onChange={(event) => setSearch(event.currentTarget.value)}
               className="min-w-0 flex-1 bg-transparent text-sm text-[#1d293d] outline-none placeholder:text-[#90a1b9]"

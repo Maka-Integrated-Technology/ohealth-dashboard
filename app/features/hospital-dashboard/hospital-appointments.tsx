@@ -10,8 +10,14 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
-import { hospitalFilterParams, matchesAppointment } from "~/features/hospital-dashboard/hospital-preview-state";
-import { type AppointmentStatus, type PreviewAppointment } from "~/features/hospital-dashboard/hospital-appointment-data";
+import {
+  hospitalFilterParams,
+  matchesAppointment,
+} from "~/features/hospital-dashboard/hospital-preview-state";
+import {
+  type AppointmentStatus,
+  type PreviewAppointment,
+} from "~/features/hospital-dashboard/hospital-appointment-data";
 
 const statusColors: Record<AppointmentStatus, string> = {
   Pending: "bg-[#fff8e6] text-[#b7791f]",
@@ -263,13 +269,22 @@ export default function HospitalAppointments({
   const query = search;
   const department = searchParams.get("department") ?? "All";
   const status = searchParams.get("status") ?? "All Status";
-  const page = Math.max(1, Number.parseInt(searchParams.get("page") ?? "1", 10) || 1);
+  const page = Math.max(
+    1,
+    Number.parseInt(searchParams.get("page") ?? "1", 10) || 1
+  );
   const setDepartment = (value: string) =>
-    setSearchParams((current) => hospitalFilterParams(current, "department", value, "All"));
+    setSearchParams((current) =>
+      hospitalFilterParams(current, "department", value, "All")
+    );
   const setStatus = (value: string) =>
-    setSearchParams((current) => hospitalFilterParams(current, "status", value, "All Status"));
+    setSearchParams((current) =>
+      hospitalFilterParams(current, "status", value, "All Status")
+    );
   const setPage = (value: number) =>
-    setSearchParams((current) => hospitalFilterParams(current, "page", String(value), "1"));
+    setSearchParams((current) =>
+      hospitalFilterParams(current, "page", String(value), "1")
+    );
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const departments = [

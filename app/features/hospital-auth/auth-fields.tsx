@@ -14,7 +14,6 @@ const WIZARD_STEPS = [
 export const inputClassName =
   "h-11 w-full rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10";
 
-
 export function Field({
   label,
   value,
@@ -58,7 +57,6 @@ export function Field({
   );
 }
 
-
 export function StepProgress({ activeStep }: { activeStep: number }) {
   return (
     <ol
@@ -97,5 +95,3 @@ export function StepProgress({ activeStep }: { activeStep: number }) {
     </ol>
   );
 }
-
-

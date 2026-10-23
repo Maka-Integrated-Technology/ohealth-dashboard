@@ -14,7 +14,9 @@ async function loadTs(relativePath) {
       target: ts.ScriptTarget.ES2022,
     },
   }).outputText;
-  return import("data:text/javascript;base64," + Buffer.from(compiled).toString("base64"));
+  return import(
+    "data:text/javascript;base64," + Buffer.from(compiled).toString("base64")
+  );
 }
 
 const [
@@ -32,9 +34,18 @@ const [
 ]);
 
 test("hospital section is loaded from URL, including invalid fallback", () => {
-  assert.equal(state.getHospitalSection(new URLSearchParams("section=Patients")), "Patients");
-  assert.equal(state.getHospitalSection(new URLSearchParams("section=Appointments")), "Appointments");
-  assert.equal(state.getHospitalSection(new URLSearchParams("section=Unknown")), "Dashboard");
+  assert.equal(
+    state.getHospitalSection(new URLSearchParams("section=Patients")),
+    "Patients"
+  );
+  assert.equal(
+    state.getHospitalSection(new URLSearchParams("section=Appointments")),
+    "Appointments"
+  );
+  assert.equal(
+    state.getHospitalSection(new URLSearchParams("section=Unknown")),
+    "Dashboard"
+  );
 });
 
 test("sidebar navigation produces shareable URLs and preserves earlier history state", () => {
@@ -45,7 +56,10 @@ test("sidebar navigation produces shareable URLs and preserves earlier history s
   assert.equal(next.has("tab"), false);
   assert.equal(state.getHospitalSection(initial), "Patients");
   assert.equal(initial.get("q"), "John");
-  assert.equal(state.hospitalNavigationParams(next, "Dashboard").has("section"), false);
+  assert.equal(
+    state.hospitalNavigationParams(next, "Dashboard").has("section"),
+    false
+  );
 });
 
 test("search and filter parameters can be restored on refresh", () => {
@@ -55,26 +69,52 @@ test("search and filter parameters can be restored on refresh", () => {
   assert.equal(url.has("page"), false);
   url = state.hospitalFilterParams(url, "department", "Cardiology", "All");
   url = state.hospitalFilterParams(url, "status", "Confirmed", "All Status");
-  assert.equal(new URLSearchParams(url.toString()).get("department"), "Cardiology");
+  assert.equal(
+    new URLSearchParams(url.toString()).get("department"),
+    "Cardiology"
+  );
   assert.equal(new URLSearchParams(url.toString()).get("status"), "Confirmed");
-  assert.equal(state.hospitalFilterParams(url, "department", "All", "All").has("department"), false);
+  assert.equal(
+    state
+      .hospitalFilterParams(url, "department", "All", "All")
+      .has("department"),
+    false
+  );
 });
 
 test("header and local Patients search use identical matching rules", () => {
-  const results = hospitalPatientRecords.filter((record) => state.matchesPatient(record, "maria"));
+  const results = hospitalPatientRecords.filter((record) =>
+    state.matchesPatient(record, "maria")
+  );
   assert.equal(results.length, 1);
   assert.equal(results[0].id, "maria-santos");
-  assert.equal(hospitalPatientRecords.filter((record) => state.matchesPatient(record, "unknown patient")).length, 0);
-  assert.equal(hospitalPatientRecords.filter((record) => state.matchesPatient(record, "")).length, 8);
+  assert.equal(
+    hospitalPatientRecords.filter((record) =>
+      state.matchesPatient(record, "unknown patient")
+    ).length,
+    0
+  );
+  assert.equal(
+    hospitalPatientRecords.filter((record) => state.matchesPatient(record, ""))
+      .length,
+    8
+  );
 });
 
 test("appointment search and filters keep matches limited to the chosen records", () => {
-  const matches = appointmentSamples.filter((item) =>
-    state.matchesAppointment(item, "sarah chen") && item.department === "Cardiology"
+  const matches = appointmentSamples.filter(
+    (item) =>
+      state.matchesAppointment(item, "sarah chen") &&
+      item.department === "Cardiology"
   );
   assert.ok(matches.length > 0);
   assert.ok(matches.every((item) => item.doctor === "Dr. Sarah Chen"));
-  assert.equal(appointmentSamples.filter((item) => state.matchesAppointment(item, "nonexistent doctor")).length, 0);
+  assert.equal(
+    appointmentSamples.filter((item) =>
+      state.matchesAppointment(item, "nonexistent doctor")
+    ).length,
+    0
+  );
 });
 
 test("appointment drawer local edits replace only the selected row", () => {
@@ -92,14 +132,19 @@ test("mark-as-read action is idempotent and never mutates the previous state", (
   const next = state.markPreviewNotificationRead(original, "new-appointment");
   assert.deepEqual(next, ["previous", "new-appointment"]);
   assert.deepEqual(original, ["previous"]);
-  assert.equal(state.markPreviewNotificationRead(next, "new-appointment"), next);
+  assert.equal(
+    state.markPreviewNotificationRead(next, "new-appointment"),
+    next
+  );
 });
 
 test("every notification sample category is available as a filter", () => {
   const categories = new Set(hospitalNotificationFilters);
   assert.ok(categories.has("Prescriptions"));
   assert.ok(categories.has("Patients"));
-  assert.ok(hospitalNotificationSamples.every((item) => categories.has(item.category)));
+  assert.ok(
+    hospitalNotificationSamples.every((item) => categories.has(item.category))
+  );
 });
 
 test("registration steps advance in order without submitting to a backend", () => {
@@ -109,10 +154,31 @@ test("registration steps advance in order without submitting to a backend", () =
 });
 
 test("administrator password validation rejects short and mismatched passwords", () => {
-  assert.equal(auth.validatePreviewAdministrator({ password: "123", confirmPassword: "123" }), "Use at least 8 characters for the password.");
-  assert.match(auth.validatePreviewAdministrator({ password: "longsecure", confirmPassword: "different" }), /do not match/);
-  assert.equal(auth.validatePreviewAdministrator({ password: "longsecure", confirmPassword: "longsecure" }), null);
-  assert.equal(auth.validatePreviewAdministrator({ password: "", confirmPassword: "" }), null);
+  assert.equal(
+    auth.validatePreviewAdministrator({
+      password: "123",
+      confirmPassword: "123",
+    }),
+    "Use at least 8 characters for the password."
+  );
+  assert.match(
+    auth.validatePreviewAdministrator({
+      password: "longsecure",
+      confirmPassword: "different",
+    }),
+    /do not match/
+  );
+  assert.equal(
+    auth.validatePreviewAdministrator({
+      password: "longsecure",
+      confirmPassword: "longsecure",
+    }),
+    null
+  );
+  assert.equal(
+    auth.validatePreviewAdministrator({ password: "", confirmPassword: "" }),
+    null
+  );
 });
 
 test("patient preview chronology keeps the last visit before the next appointment", () => {

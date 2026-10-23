@@ -16,7 +16,9 @@ export type HospitalSection = (typeof hospitalSections)[number];
 
 export function getHospitalSection(params: URLSearchParams): HospitalSection {
   const requested = params.get("section");
-  return hospitalSections.find((section) => section === requested) ?? "Dashboard";
+  return (
+    hospitalSections.find((section) => section === requested) ?? "Dashboard"
+  );
 }
 
 export function hospitalNavigationParams(
@@ -95,9 +97,7 @@ export function replacePreviewAppointment<T extends { id: string }>(
   records: T[],
   updated: T
 ): T[] {
-  return records.map((record) =>
-    record.id === updated.id ? updated : record
-  );
+  return records.map((record) => (record.id === updated.id ? updated : record));
 }
 
 export function markPreviewNotificationRead(

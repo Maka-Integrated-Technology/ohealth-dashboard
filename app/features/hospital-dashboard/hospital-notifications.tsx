@@ -13,7 +13,12 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { hospitalNotificationSamples, hospitalNotificationFilters, type HospitalNotificationCategory, type NotificationDestination } from "~/features/hospital-dashboard/hospital-notification-data";
+import {
+  hospitalNotificationSamples,
+  hospitalNotificationFilters,
+  type HospitalNotificationCategory,
+  type NotificationDestination,
+} from "~/features/hospital-dashboard/hospital-notification-data";
 
 const categoryIcons: Record<HospitalNotificationCategory, LucideIcon> = {
   Appointments: CalendarCheck,

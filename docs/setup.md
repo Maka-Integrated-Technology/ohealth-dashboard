@@ -24,9 +24,9 @@ cp .env.example .env.local
 
 The app reads the following variables (client-side, prefixed with `VITE_`):
 
-| Variable            | Required | Description                                                                                                                                 |
-| ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `VITE_API_BASE_URL` | Yes      | Base URL for all API requests. Read by `app/lib/config/axios.ts`.                                                                           |
+| Variable            | Required | Description                                                                                                                                                        |
+| ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `VITE_API_BASE_URL` | Yes      | Base URL for all API requests. Read by `app/lib/config/axios.ts`.                                                                                                  |
 | `VITE_ROUTE`        | No       | Which dashboard surface to build/serve: `mp-dashboard` (`mp`), `ph-dashboard` (`ph`), `lb-dashboard` (`lb`), or `hs-dashboard` (`hs`). Defaults to `mp-dashboard`. |
 
 > Both are **build-time** variables — Vite inlines them into the bundle. See

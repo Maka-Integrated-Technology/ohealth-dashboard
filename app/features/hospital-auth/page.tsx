@@ -12,9 +12,16 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { nextRegistrationStep, validatePreviewAdministrator } from "~/features/hospital-auth/registration-flow";
+import {
+  nextRegistrationStep,
+  validatePreviewAdministrator,
+} from "~/features/hospital-auth/registration-flow";
 import HospitalAuthHero from "~/features/hospital-auth/hospital-auth-hero";
-import { Field, StepProgress, inputClassName } from "~/features/hospital-auth/auth-fields";
+import {
+  Field,
+  StepProgress,
+  inputClassName,
+} from "~/features/hospital-auth/auth-fields";
 
 type AuthScreen =
   | "sign-in"
@@ -94,9 +101,10 @@ export default function HospitalAuthPage() {
     validationSchema: Yup.object({
       email: Yup.string().email("Enter a valid email address."),
     }),
-    onSubmit: () => setFeedback(
-      "Password-reset is a preview state only. No reset email was sent."
-    ),
+    onSubmit: () =>
+      setFeedback(
+        "Password-reset is a preview state only. No reset email was sent."
+      ),
   });
   const hospitalForm = useFormik<HospitalDetails>({
     initialValues: {
@@ -155,7 +163,10 @@ export default function HospitalAuthPage() {
     void hospitalForm.setFieldValue(key, value);
   };
 
-  const updateAdministrator = (key: keyof AdministratorDetails, value: string) => {
+  const updateAdministrator = (
+    key: keyof AdministratorDetails,
+    value: string
+  ) => {
     void adminForm.setFieldValue(key, value);
   };
 
@@ -252,7 +263,9 @@ export default function HospitalAuthPage() {
               <Field
                 label="Email address"
                 value={loginForm.values.email}
-                onChange={(value) => void loginForm.setFieldValue("email", value)}
+                onChange={(value) =>
+                  void loginForm.setFieldValue("email", value)
+                }
                 type="email"
                 autoComplete="email"
                 placeholder="admin@hospital.ng"
@@ -282,7 +295,10 @@ export default function HospitalAuthPage() {
                     autoComplete="current-password"
                     placeholder="Enter your password"
                     onChange={(event) =>
-                      void loginForm.setFieldValue("password", event.currentTarget.value)
+                      void loginForm.setFieldValue(
+                        "password",
+                        event.currentTarget.value
+                      )
                     }
                   />
                   <button
@@ -334,7 +350,9 @@ export default function HospitalAuthPage() {
               <Field
                 label="Email address"
                 value={resetForm.values.email}
-                onChange={(value) => void resetForm.setFieldValue("email", value)}
+                onChange={(value) =>
+                  void resetForm.setFieldValue("email", value)
+                }
                 type="email"
                 autoComplete="email"
                 placeholder="admin@hospital.ng"
@@ -370,7 +388,10 @@ export default function HospitalAuthPage() {
               <StepProgress activeStep={activeStep} />
 
               {registrationStep === 1 ? (
-                <form className="space-y-4" onSubmit={hospitalForm.handleSubmit}>
+                <form
+                  className="space-y-4"
+                  onSubmit={hospitalForm.handleSubmit}
+                >
                   <div className="mb-1">
                     <h3 className="font-semibold text-slate-900">
                       Hospital details
@@ -443,10 +464,7 @@ export default function HospitalAuthPage() {
               ) : null}
 
               {registrationStep === 2 ? (
-                <form
-                  className="space-y-4"
-                  onSubmit={adminForm.handleSubmit}
-                >
+                <form className="space-y-4" onSubmit={adminForm.handleSubmit}>
                   <div className="mb-1">
                     <h3 className="font-semibold text-slate-900">
                       Administrator account

@@ -4,7 +4,9 @@ export type PreviewAdministrator = {
   confirmPassword: string;
 };
 
-export function validatePreviewAdministrator(values: PreviewAdministrator): string | null {
+export function validatePreviewAdministrator(
+  values: PreviewAdministrator
+): string | null {
   if (values.password && values.password.length < 8)
     return "Use at least 8 characters for the password.";
   if (

@@ -134,7 +134,9 @@ export const hospitalNotificationSamples: HospitalNotification[] = [
   },
 ];
 
-export const hospitalNotificationFilters: ("All" | HospitalNotificationCategory)[] = [
+export const hospitalNotificationFilters: (
+  "All" | HospitalNotificationCategory
+)[] = [
   "All",
   "Appointments",
   "Verification",
