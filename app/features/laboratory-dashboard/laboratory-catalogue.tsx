@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Plus, Search, X } from "lucide-react";
+import { useSearchParams } from "react-router";
+import { labListParams, labParam } from "./laboratory-list-state";
 import { LaboratoryShell } from "./laboratory-shell";
 import {
   CATEGORY_SUMMARY,
@@ -345,11 +347,13 @@ function ToggleConfirmation({
 
 export default function LaboratoryTestCatalogue() {
   const [tests, setTests] = useState<CatalogueTest[]>(INITIAL_CATALOGUE_TESTS);
-  const [search, setSearch] = useState("");
-  const [headerSearch, setHeaderSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState<
-    CatalogueCategory | "All Categories"
-  >("All Categories");
+  const [params, setParams] = useSearchParams();
+  const search = labParam(params, "q");
+  const setSearch = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const headerSearch = search;
+  const setHeaderSearch = setSearch;
+  const categoryFilter = labParam(params, "category", ["All Categories", ...CATALOGUE_CATEGORIES.map((category) => category.category)], "All Categories") as CatalogueCategory | "All Categories";
+  const setCategoryFilter = (value: CatalogueCategory | "All Categories") => setParams((current) => labListParams(current, "category", value, "All Categories"));
   const [editorId, setEditorId] = useState<string | null>(null);
   const [draft, setDraft] = useState<CatalogueDraft | null>(null);
   const [error, setError] = useState("");
