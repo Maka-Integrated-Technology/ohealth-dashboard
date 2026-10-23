@@ -64,8 +64,11 @@ ohealth-dashboard/
 │   │   │   ├── layout.tsx      #   <AppShell portal="Pharmacy" />
 │   │   │   └── page.tsx        #   / — Pharmacy dashboard
 │   │   ├── lb-dashboard/       # VITE_ROUTE=lb-dashboard
-│   │       ├── layout.tsx      #   <AppShell portal="Laboratory" />
-│   │       └── page.tsx        #   / — Laboratory dashboard
+│   │   │   ├── layout.tsx      #   <AppShell portal="Laboratory" />
+│   │   │   └── page.tsx        #   / — Laboratory dashboard
+│   │   └── hs-dashboard/       # VITE_ROUTE=hs-dashboard
+│   │       ├── layout.tsx      #   Hospital portal route layout
+│   │       └── page.tsx        #   Hospital portal entry point
 │   ├── styles/
 │   │   └── global.css          # Tailwind v4 imports + CSS design tokens
 │   ├── types/
@@ -76,6 +79,7 @@ ohealth-dashboard/
 │   ├── architecture.md
 │   ├── code-style.md
 │   ├── deployment.md           # Staging / production deploy (SSH + Docker)
+│   ├── environment.md          # Build target and port reference
 │   ├── folder-structure.md     # (this file)
 │   ├── setup.md
 │   └── workflow.md
