@@ -1,8 +1,8 @@
 # Production / staging compose file.
 #
-# Runs all three dashboard surfaces as separate containers on one host, each
+# Runs all four dashboard surfaces as separate containers on one host, each
 # built with its own VITE_ROUTE and published on its own port. Front them with a
-# reverse proxy to map each to a subdomain (e.g. mp./ph./lb.<domain>).
+# reverse proxy to map each to a subdomain (e.g. mp./ph./lb./hs.<domain>).
 #
 # Used by the Deploy workflow (.github/workflows/deploy.yml) on the server:
 #   docker compose -p ohealth-fe-<env> --env-file .env.prod \
@@ -47,6 +47,19 @@ services:
     restart: unless-stopped
     ports:
       - "${LB_PORT:-3002}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+
+  hs-dashboard:
+    build:
+      context: .
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+        VITE_ROUTE: hospital-dashboard
+    restart: unless-stopped
+    ports:
+      - "${HS_PORT:-3003}:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000

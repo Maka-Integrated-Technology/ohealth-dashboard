@@ -1,0 +1,601 @@
+import {
+  Building2,
+  type LucideIcon,
+  Check,
+  Clock3,
+  Contact,
+  Edit3,
+  Hospital,
+  Plus,
+  ShieldCheck,
+  Stethoscope,
+  Trash2,
+  X,
+} from "lucide-react";
+import { useFormik } from "formik";
+import { useState, type ReactNode } from "react";
+import * as Yup from "yup";
+
+type HospitalProfileData = {
+  name: string;
+  description: string;
+  address: string;
+  phone: string;
+  email: string;
+  website: string;
+  emergencyPhone: string;
+  hours: { label: string; opens: string; closes: string }[];
+  departments: string[];
+  services: string[];
+};
+
+const sampleProfile: HospitalProfileData = {
+  name: "St. Mary's Medical Center",
+  description:
+    "A premier full-service hospital providing comprehensive medical care with state-of-the-art facilities and a dedicated team of specialists.",
+  address: "1247 Medical Center Drive, Rumuokoro, Port harcourt, Rivers",
+  phone: "+234 12345678",
+  email: "info@stmarysmedical.com",
+  website: "www.stmarysmedical.com",
+  emergencyPhone: "+234 5555-0911",
+  hours: [
+    { label: "Monday–Friday", opens: "7:00 AM", closes: "8:00 PM" },
+    { label: "Saturday", opens: "8:00 AM", closes: "5:00 PM" },
+    { label: "Sunday", opens: "9:00 AM", closes: "3:00 PM" },
+    { label: "Emergency", opens: "24 / 7", closes: "" },
+  ],
+  departments: [
+    "Cardiology",
+    "Neurology",
+    "Orthopedics",
+    "Pediatrics",
+    "General Medicine",
+    "Dermatology",
+    "Oncology",
+    "Radiology",
+  ],
+  services: [
+    "ICU",
+    "Emergency Department",
+    "Surgical Suite",
+    "Radiology & Imaging",
+    "Laboratory",
+    "Pharmacy",
+    "Physical Therapy",
+    "Cafeteria",
+  ],
+};
+
+function SectionCard({
+  title,
+  icon: Icon,
+  children,
+  onEdit,
+  editing,
+}: {
+  title: string;
+  icon: LucideIcon;
+  children: ReactNode;
+  onEdit?: () => void;
+  editing?: boolean;
+}) {
+  return (
+    <section className="overflow-hidden rounded-[24px] border border-[#f1f5f9] bg-white">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f1f5f9] px-4 py-4 sm:px-6 sm:px-[30px] sm:py-6">
+        <h3 className="flex items-center gap-[15px] text-[17px] leading-[24px] font-semibold text-[#1f2a37] sm:text-[21px] sm:leading-[30px]">
+          <Icon className="size-6 text-[#45556c]" strokeWidth={1.8} />
+          {title}
+        </h3>
+        {!editing && onEdit ? (
+          <button
+            onClick={onEdit}
+            type="button"
+            className="flex items-center gap-2 rounded-xl border border-[#e2e8f0] px-[18px] py-[9px] text-[14px] text-[#62748e] hover:bg-[#f8fafc] sm:text-[17px]"
+          >
+            <Edit3 className="size-[18px]" />
+            Edit
+          </button>
+        ) : null}
+      </div>
+      <div className="p-6 sm:p-[30px]">{children}</div>
+    </section>
+  );
+}
+
+function ProfileField({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-[14px] leading-[21px] font-medium text-[#6c737f] sm:text-[17px] sm:leading-[25px]">
+        {label}
+      </dt>
+      <dd className="mt-[3px] text-[16px] leading-[24px] font-medium text-[#1f2a37] sm:text-[20px] sm:leading-[30px]">
+        {value}
+      </dd>
+    </div>
+  );
+}
+
+function EditableField({
+  label,
+  value,
+  onChange,
+  multiline,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  multiline?: boolean;
+}) {
+  const classes =
+    "mt-2 block w-full rounded-xl border border-[#d2d6db] bg-white px-4 py-3 text-[14px] sm:text-[17px] text-[#1f2a37] outline-none focus:border-[#155eef] focus:ring-2 focus:ring-[#155eef]/20";
+  return (
+    <label className="block text-[13px] font-medium text-[#4d5761] sm:text-[16px]">
+      {label}
+      {multiline ? (
+        <textarea
+          rows={3}
+          className={classes}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      ) : (
+        <input
+          className={classes}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      )}
+    </label>
+  );
+}
+
+function EditableTags({
+  label,
+  items,
+  onChange,
+}: {
+  label: string;
+  items: string[];
+  onChange: (items: string[]) => void;
+}) {
+  const [newItem, setNewItem] = useState("");
+  const addItem = () => {
+    const trimmed = newItem.trim();
+    if (
+      trimmed &&
+      !items.some((item) => item.toLowerCase() === trimmed.toLowerCase())
+    ) {
+      onChange([...items, trimmed]);
+      setNewItem("");
+    }
+  };
+  return (
+    <div>
+      <div className="flex flex-wrap gap-3">
+        {items.map((item, index) => (
+          <span
+            key={`${item}-${index}`}
+            className="inline-flex items-center gap-2 rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 py-2.5 text-[13px] text-[#45556c] sm:text-[16px]"
+          >
+            {item}
+            <button
+              type="button"
+              aria-label={`Remove ${item}`}
+              onClick={() => onChange(items.filter((_, i) => i !== index))}
+              className="rounded-full p-1 hover:bg-[#fef3f2]"
+            >
+              <X className="size-4" />
+            </button>
+          </span>
+        ))}
+      </div>
+      <div className="mt-4 flex flex-wrap gap-3">
+        <input
+          aria-label={`New ${label.toLowerCase()}`}
+          placeholder={`Add ${label.toLowerCase()}…`}
+          value={newItem}
+          onChange={(event) => setNewItem(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              addItem();
+            }
+          }}
+          className="min-h-11 min-w-0 flex-1 rounded-xl border border-[#d2d6db] px-4"
+        />
+        <button
+          type="button"
+          onClick={addItem}
+          disabled={!newItem.trim()}
+          className="inline-flex items-center gap-2 rounded-xl border border-[#d2d6db] px-5 text-[#155eef] disabled:opacity-40"
+        >
+          <Plus className="size-4" />
+          Add
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function cloneProfile(data: HospitalProfileData): HospitalProfileData {
+  return {
+    ...data,
+    hours: data.hours.map((item) => ({ ...item })),
+    departments: [...data.departments],
+    services: [...data.services],
+  };
+}
+
+export default function HospitalProfile() {
+  const [profile, setProfile] = useState<HospitalProfileData>(sampleProfile);
+  const [editing, setEditing] = useState(false);
+  const [notice, setNotice] = useState("");
+  const [hourLabel, setHourLabel] = useState("");
+  const formik = useFormik<HospitalProfileData>({
+    initialValues: cloneProfile(profile),
+    enableReinitialize: true,
+    validationSchema: Yup.object({
+      name: Yup.string().trim().required("Hospital name is required."),
+      email: Yup.string()
+        .trim()
+        .email("Enter a valid email address.")
+        .required("Hospital email is required."),
+    }),
+    onSubmit: (values) => {
+      setProfile(cloneProfile(values));
+      setEditing(false);
+      setHourLabel("");
+      setNotice(
+        "Changes saved in this local preview only. Public profile updates require OHealth approval."
+      );
+    },
+  });
+  const draft = formik.values;
+  const startEdit = () => {
+    formik.resetForm({ values: cloneProfile(profile) });
+    setEditing(true);
+    setNotice("");
+  };
+  const updateDraft = <K extends keyof HospitalProfileData>(
+    key: K,
+    value: HospitalProfileData[K]
+  ) => {
+    void formik.setFieldValue(key, value);
+  };
+  const cancelEdit = () => {
+    formik.resetForm({ values: cloneProfile(profile) });
+    setEditing(false);
+    setHourLabel("");
+    setNotice("");
+  };
+  const addHour = () => {
+    if (!hourLabel.trim()) return;
+    updateDraft("hours", [
+      ...draft.hours,
+      { label: hourLabel.trim(), opens: "", closes: "" },
+    ]);
+    setHourLabel("");
+  };
+
+  return (
+    <form
+      onSubmit={formik.handleSubmit}
+      className="mx-auto w-full max-w-[1082px] pb-14 lg:pt-4"
+    >
+      <div className="mb-[47px] flex items-center gap-4">
+        <div
+          role="img"
+          aria-label="Hospital header photo pending original Figma asset"
+          className="size-[60px] shrink-0 rounded-[15px] border-[3px] border-white bg-[#d9d9d9] shadow-[0_0_20px_rgba(119,119,119,0.15)] sm:size-[85px]"
+        />
+        <div className="min-w-0 pb-3">
+          <h2 className="text-[21px] leading-[34px] font-bold text-[#1f2a37] sm:text-[27px] sm:leading-[42px]">
+            {profile.name}
+          </h2>
+          <p className="text-[14px] leading-6 text-[#4d5761] sm:text-[18px]">
+            Hospital Administrator
+          </p>
+        </div>
+      </div>
+      {editing ? (
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-white p-4 sm:p-6">
+          <div>
+            <h2 className="text-[19px] font-semibold text-[#1f2a37] sm:text-[24px]">
+              Edit Hospital Profile
+            </h2>
+            <p className="mt-1 flex items-start gap-2 text-sm text-[#6c737f]">
+              <ShieldCheck className="mt-0.5 size-4 shrink-0" />
+              This change requires OHealth approval before it becomes publicly
+              visible.
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={cancelEdit}
+              className="inline-flex items-center gap-2 rounded-xl border border-[#d2d6db] px-5 py-3 text-[#4d5761]"
+            >
+              <X className="size-4" />
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#155eef] px-5 py-3 font-medium text-white"
+            >
+              <Check className="size-4" />
+              Save Changes
+            </button>
+          </div>
+        </div>
+      ) : null}
+      {notice ? (
+        <div
+          role="status"
+          className={`mb-7 rounded-xl px-5 py-4 text-sm ${notice.startsWith("Changes") ? "bg-[#eff4ff] text-[#155eef]" : "bg-[#fef3f2] text-[#b42318]"}`}
+        >
+          {notice}
+        </div>
+      ) : null}
+      <div className="space-y-[62px]">
+        <SectionCard
+          title="Basic Information"
+          icon={Building2}
+          editing={editing}
+          onEdit={startEdit}
+        >
+          {editing ? (
+            <div className="grid gap-6">
+              <EditableField
+                label="Hospital Name"
+                value={draft.name}
+                onChange={(value) => updateDraft("name", value)}
+              />
+              {formik.submitCount > 0 && formik.errors.name ? (
+                <p role="alert" className="text-sm text-[#b42318]">
+                  {formik.errors.name}
+                </p>
+              ) : null}
+              <EditableField
+                label="Description"
+                value={draft.description}
+                multiline
+                onChange={(value) => updateDraft("description", value)}
+              />
+              <EditableField
+                label="Address"
+                value={draft.address}
+                onChange={(value) => updateDraft("address", value)}
+              />
+            </div>
+          ) : (
+            <dl className="grid gap-6">
+              <ProfileField label="Hospital Name" value={profile.name} />
+              <ProfileField label="Description" value={profile.description} />
+              <ProfileField label="Address" value={profile.address} />
+            </dl>
+          )}
+        </SectionCard>
+        <SectionCard
+          title="Contact Information"
+          icon={Contact}
+          editing={editing}
+          onEdit={startEdit}
+        >
+          {editing ? (
+            <div className="grid gap-6 sm:grid-cols-2">
+              <EditableField
+                label="Phone"
+                value={draft.phone}
+                onChange={(value) => updateDraft("phone", value)}
+              />
+              <EditableField
+                label="Email"
+                value={draft.email}
+                onChange={(value) => updateDraft("email", value)}
+              />
+              {formik.submitCount > 0 && formik.errors.email ? (
+                <p role="alert" className="text-sm text-[#b42318]">
+                  {formik.errors.email}
+                </p>
+              ) : null}
+              <EditableField
+                label="Website"
+                value={draft.website}
+                onChange={(value) => updateDraft("website", value)}
+              />
+              <EditableField
+                label="Emergency Contact"
+                value={draft.emergencyPhone}
+                onChange={(value) => updateDraft("emergencyPhone", value)}
+              />
+            </div>
+          ) : (
+            <dl className="grid gap-6 sm:grid-cols-2">
+              <ProfileField label="Phone" value={profile.phone} />
+              <ProfileField label="Email" value={profile.email} />
+              <ProfileField label="Website" value={profile.website} />
+              <ProfileField
+                label="Emergency Contact"
+                value={profile.emergencyPhone}
+              />
+            </dl>
+          )}
+        </SectionCard>
+        <SectionCard
+          title="Operating Hours"
+          icon={Clock3}
+          editing={editing}
+          onEdit={startEdit}
+        >
+          {editing ? (
+            <div>
+              <div className="mb-3 grid grid-cols-[1fr_1fr_1fr_auto] gap-2 text-sm text-[#6c737f]">
+                <span>Day / Period</span>
+                <span>Opens</span>
+                <span>Closes</span>
+                <span> </span>
+              </div>
+              {draft.hours.map((hour, index) => (
+                <div
+                  key={index}
+                  className="mb-3 grid grid-cols-[1fr_1fr_1fr_auto] gap-2"
+                >
+                  <input
+                    aria-label={`Period ${index + 1}`}
+                    value={hour.label}
+                    onChange={(event) =>
+                      updateDraft(
+                        "hours",
+                        draft.hours.map((item, i) =>
+                          i === index
+                            ? { ...item, label: event.target.value }
+                            : item
+                        )
+                      )
+                    }
+                    className="min-w-0 rounded-lg border border-[#d2d6db] p-2"
+                  />
+                  <input
+                    aria-label={`Opening time ${index + 1}`}
+                    value={hour.opens}
+                    onChange={(event) =>
+                      updateDraft(
+                        "hours",
+                        draft.hours.map((item, i) =>
+                          i === index
+                            ? { ...item, opens: event.target.value }
+                            : item
+                        )
+                      )
+                    }
+                    className="min-w-0 rounded-lg border border-[#d2d6db] p-2"
+                  />
+                  <input
+                    aria-label={`Closing time ${index + 1}`}
+                    value={hour.closes}
+                    onChange={(event) =>
+                      updateDraft(
+                        "hours",
+                        draft.hours.map((item, i) =>
+                          i === index
+                            ? { ...item, closes: event.target.value }
+                            : item
+                        )
+                      )
+                    }
+                    placeholder="Closed"
+                    className="min-w-0 rounded-lg border border-[#d2d6db] p-2"
+                  />
+                  <button
+                    type="button"
+                    aria-label={`Remove ${hour.label}`}
+                    onClick={() =>
+                      updateDraft(
+                        "hours",
+                        draft.hours.filter((_, i) => i !== index)
+                      )
+                    }
+                    className="rounded-lg p-2 text-[#d92d20]"
+                  >
+                    <Trash2 className="size-4" />
+                  </button>
+                </div>
+              ))}
+              <div className="mt-3 flex gap-3">
+                <input
+                  aria-label="Add a day or period"
+                  placeholder="Add a day or period…"
+                  value={hourLabel}
+                  onChange={(event) => setHourLabel(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      addHour();
+                    }
+                  }}
+                  className="min-w-0 flex-1 rounded-xl border border-[#d2d6db] px-4 py-3"
+                />
+                <button
+                  type="button"
+                  onClick={addHour}
+                  disabled={!hourLabel.trim()}
+                  className="rounded-xl border border-[#d2d6db] px-5 text-[#155eef] disabled:opacity-40"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          ) : (
+            <dl className="divide-y divide-[#f1f5f9]">
+              {profile.hours.map((item) => (
+                <div
+                  key={item.label}
+                  className="flex flex-wrap items-center justify-between gap-2 py-3 text-[16px] text-[#1f2a37] sm:text-[20px]"
+                >
+                  <dt>{item.label}</dt>
+                  <dd className="font-medium">
+                    {item.closes
+                      ? `${item.opens} – ${item.closes}`
+                      : item.opens}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          )}
+        </SectionCard>
+        <SectionCard
+          title="Departments"
+          icon={Stethoscope}
+          editing={editing}
+          onEdit={startEdit}
+        >
+          {editing ? (
+            <EditableTags
+              label="Department"
+              items={draft.departments}
+              onChange={(items) => updateDraft("departments", items)}
+            />
+          ) : (
+            <ul className="grid list-none gap-5 sm:grid-cols-2">
+              {profile.departments.map((name) => (
+                <li
+                  key={name}
+                  className="flex items-center gap-3 text-[15px] text-[#1f2a37] sm:text-[19px]"
+                >
+                  <span className="size-2 rounded-full bg-[#155eef]" />
+                  {name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </SectionCard>
+        <SectionCard
+          title="Facilities & Services"
+          icon={Hospital}
+          editing={editing}
+          onEdit={startEdit}
+        >
+          {editing ? (
+            <EditableTags
+              label="Service"
+              items={draft.services}
+              onChange={(items) => updateDraft("services", items)}
+            />
+          ) : (
+            <ul className="grid list-none gap-5 sm:grid-cols-2">
+              {profile.services.map((name) => (
+                <li
+                  key={name}
+                  className="flex items-center gap-3 text-[15px] text-[#1f2a37] sm:text-[19px]"
+                >
+                  <span className="size-2 rounded-full bg-[#155eef]" />
+                  {name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </SectionCard>
+      </div>
+    </form>
+  );
+}

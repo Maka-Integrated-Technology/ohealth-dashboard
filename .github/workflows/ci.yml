@@ -43,11 +43,12 @@ jobs:
       - name: Verify dependency audit policy
         run: npm run test:audit-policy
 
-      - name: Audit dependencies
-        run: npm run audit:dependencies
+      - name: Verify hospital preview behaviors
+        run: npm run test:hospital
 
       - name: Laboratory behavior regressions
         run: npm run test:lab
+
       - name: Laboratory rendered interaction regressions
         run: npm run test:lab:ui
 
@@ -60,5 +61,11 @@ jobs:
       - name: Type-check
         run: npm run typecheck
 
-      - name: Build
+      - name: Build medical professional portal
         run: npm run build
+
+      - name: Build hospital portal
+        run: npm run build:hs
+
+      - name: Audit dependencies
+        run: npm run audit:dependencies

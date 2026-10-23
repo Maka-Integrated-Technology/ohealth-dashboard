@@ -18,9 +18,16 @@ const ROUTE_ALIASES: Record<string, string> = {
   mp: "mp-dashboard",
   ph: "ph-dashboard",
   lb: "lb-dashboard",
+  hs: "hospital-dashboard",
+  hospital: "hospital-dashboard",
 };
 
-const APP_ROUTES = ["mp-dashboard", "ph-dashboard", "lb-dashboard"] as const;
+const APP_ROUTES = [
+  "mp-dashboard",
+  "ph-dashboard",
+  "lb-dashboard",
+  "hospital-dashboard",
+] as const;
 
 type AppRoute = (typeof APP_ROUTES)[number];
 
