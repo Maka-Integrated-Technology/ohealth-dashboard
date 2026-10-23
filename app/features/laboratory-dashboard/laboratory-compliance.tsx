@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useSearchParams } from "react-router";
 import { labListParams, labParam } from "./laboratory-list-state";
 import { Search, ChevronDown, AlertTriangle } from "lucide-react";
