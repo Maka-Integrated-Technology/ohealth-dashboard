@@ -1,0 +1,73 @@
+name: Laboratory review validation (temporary)
+on:
+  push:
+    branches: [feat/laboratory-auth-cloudflare-preview]
+    paths:
+      - .github/workflows/laboratory-review-validate-temp.yml
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: feat/laboratory-auth-cloudflare-preview
+          persist-credentials: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 20
+          cache: npm
+      - name: Reproducible dependency install
+        run: npm ci --ignore-scripts --no-audit
+      - name: Apply automated formatting only
+        run: |
+          npx prettier --write \
+            app/features/laboratory-dashboard/laboratory-list-state.ts \
+            app/features/laboratory-dashboard/laboratory-staff.tsx \
+            app/features/laboratory-dashboard/laboratory-catalogue.tsx \
+            app/features/laboratory-dashboard/laboratory-results.tsx \
+            app/features/laboratory-dashboard/laboratory-samples.tsx \
+            app/features/laboratory-dashboard/laboratory-external-results.tsx \
+            app/features/laboratory-dashboard/laboratory-notifications.tsx \
+            app/features/laboratory-dashboard/laboratory-dashboard.tsx \
+            app/features/laboratory-dashboard/laboratory-reports.tsx \
+            app/features/laboratory-dashboard/laboratory-compliance.tsx \
+            app/features/laboratory-dashboard/laboratory-profile.tsx \
+            app/features/laboratory-dashboard/laboratory-shell.tsx \
+            app/features/laboratory-dashboard/laboratory-bookings.tsx \
+            app/features/laboratory-auth/page.tsx \
+            app/features/laboratory-auth/laboratory-registration-flow.ts \
+            app/features/laboratory-auth/laboratory-auth-hero.tsx \
+            app/features/laboratory-auth/laboratory-auth-fields.tsx \
+            app/features/laboratory-auth/laboratory-auth-completion.tsx \
+            app/routes/lb-dashboard/test-bookings/page.tsx \
+            scripts/tests/laboratory-preview.test.mjs \
+            package.json README.md docs/laboratory-review.md docs/setup.md \
+            .github/workflows/ci.yml .github/workflows/laboratory-preview.yml
+      - name: Commit formatter output
+        run: |
+          if ! git diff --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -u
+            git commit -m 'style(lab): format self-review fixes'
+            git push origin HEAD:feat/laboratory-auth-cloudflare-preview
+          fi
+      - name: Format check
+        run: npm run format:check
+      - name: Behavioral tests
+        run: npm run test:lab
+      - name: Dependency policy tests
+        run: npm run test:audit-policy
+      - name: Dependency audit
+        run: npm run audit:dependencies
+      - name: Lint warning-free
+        run: npm run lint -- --max-warnings=0
+      - name: TypeScript
+        run: npm run typecheck
+      - name: Lab build
+        run: npm run build:lb
+      - name: Other portal builds
+        run: npm run build:mp && npm run build:ph
