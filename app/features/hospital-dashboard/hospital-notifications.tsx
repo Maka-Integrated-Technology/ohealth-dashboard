@@ -13,18 +13,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { hospitalNotificationSamples, type HospitalNotificationCategory, type NotificationDestination } from "~/features/hospital-dashboard/hospital-notification-data";
+import { hospitalNotificationSamples, hospitalNotificationFilters, type HospitalNotificationCategory, type NotificationDestination } from "~/features/hospital-dashboard/hospital-notification-data";
 
-const notificationFilters: ("All" | HospitalNotificationCategory)[] = [
-  "All",
-  "Appointments",
-  "Verification",
-  "Laboratory",
-  "Reviews",
-  "Prescriptions",
-  "Patients",
-  "System",
-];
 const categoryIcons: Record<HospitalNotificationCategory, LucideIcon> = {
   Appointments: CalendarCheck,
   Verification: ShieldCheck,
@@ -91,7 +81,7 @@ export default function HospitalNotifications({
         </button>
       </div>
       <div className="mb-6 flex flex-wrap gap-2 border-b border-[#e2e8f0] pb-3">
-        {notificationFilters.map((category) => {
+        {hospitalNotificationFilters.map((category) => {
           const number =
             category === "All"
               ? hospitalNotificationSamples.length
