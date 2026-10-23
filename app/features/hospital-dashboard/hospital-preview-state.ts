@@ -29,7 +29,7 @@ export function hospitalNavigationParams(
   if (section === "Dashboard") next.delete("section");
   else next.set("section", section);
   // Avoid carrying another screen's search/filter state into the destination.
-  for (const key of ["q", "department", "status", "page", "tab"]) {
+  for (const key of ["q", "department", "status", "page", "tab", "category"]) {
     next.delete(key);
   }
   return next;
@@ -37,7 +37,7 @@ export function hospitalNavigationParams(
 
 export function hospitalFilterParams(
   current: URLSearchParams,
-  key: "q" | "department" | "status" | "page",
+  key: "q" | "department" | "status" | "page" | "category",
   value: string,
   defaultValue = ""
 ): URLSearchParams {
