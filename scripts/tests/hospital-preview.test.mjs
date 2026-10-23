@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
+import { Buffer } from "node:buffer";
+import { URL, URLSearchParams } from "node:url";
 import ts from "typescript";
 
 // Keep the application test suite runnable under the repository's Node 20 CI.
