@@ -191,9 +191,25 @@ test("patient preview chronology keeps the last visit before the next appointmen
 
 test("notification category filters survive refresh and reset across sections", () => {
   const initial = new URLSearchParams("section=Notifications");
-  const filtered = state.hospitalFilterParams(initial, "category", "Patients", "All");
-  assert.equal(new URLSearchParams(filtered.toString()).get("category"), "Patients");
+  const filtered = state.hospitalFilterParams(
+    initial,
+    "category",
+    "Patients",
+    "All"
+  );
+  assert.equal(
+    new URLSearchParams(filtered.toString()).get("category"),
+    "Patients"
+  );
   assert.equal(initial.has("category"), false);
-  assert.equal(state.hospitalFilterParams(filtered, "category", "All", "All").has("category"), false);
-  assert.equal(state.hospitalNavigationParams(filtered, "Appointments").has("category"), false);
+  assert.equal(
+    state
+      .hospitalFilterParams(filtered, "category", "All", "All")
+      .has("category"),
+    false
+  );
+  assert.equal(
+    state.hospitalNavigationParams(filtered, "Appointments").has("category"),
+    false
+  );
 });

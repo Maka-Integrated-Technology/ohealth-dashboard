@@ -57,7 +57,9 @@ export default function HospitalNotifications({
   const filter: "All" | HospitalNotificationCategory =
     hospitalNotificationFilters.find((value) => value === category) ?? "All";
   const setFilter = (value: "All" | HospitalNotificationCategory) =>
-    setSearchParams((current) => hospitalFilterParams(current, "category", value, "All"));
+    setSearchParams((current) =>
+      hospitalFilterParams(current, "category", value, "All")
+    );
   const unreadCount = hospitalNotificationSamples.filter(
     (item) => !readIds.includes(item.id)
   ).length;

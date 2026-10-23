@@ -4,12 +4,12 @@ The frontend chooses **one portal per build** using `VITE_ROUTE`. The hospital
 frontend is now a supported target alongside the medical professional,
 pharmacy, and laboratory targets.
 
-| Portal | Canonical `VITE_ROUTE` | Alias | Local script | Dev port | Production Compose service | Default host port |
-| --- | --- | --- | --- | --- | --- | --- |
-| Medical professional | `mp-dashboard` | `mp` | `npm run dev:mp` | 5100 | `mp-dashboard` | 3000 |
-| Pharmacy | `ph-dashboard` | `ph` | `npm run dev:ph` | 5101 | `ph-dashboard` | 3001 |
-| Laboratory | `lb-dashboard` | `lb` | `npm run dev:lb` | 5102 | `lb-dashboard` | 3002 |
-| Hospital | `hs-dashboard` | `hs` | `npm run dev:hs` | 5103 | `hs-dashboard` | 3003 |
+| Portal               | Canonical `VITE_ROUTE` | Alias | Local script     | Dev port | Production Compose service | Default host port |
+| -------------------- | ---------------------- | ----- | ---------------- | -------- | -------------------------- | ----------------- |
+| Medical professional | `mp-dashboard`         | `mp`  | `npm run dev:mp` | 5100     | `mp-dashboard`             | 3000              |
+| Pharmacy             | `ph-dashboard`         | `ph`  | `npm run dev:ph` | 5101     | `ph-dashboard`             | 3001              |
+| Laboratory           | `lb-dashboard`         | `lb`  | `npm run dev:lb` | 5102     | `lb-dashboard`             | 3002              |
+| Hospital             | `hs-dashboard`         | `hs`  | `npm run dev:hs` | 5103     | `hs-dashboard`             | 3003              |
 
 ## Local development
 
