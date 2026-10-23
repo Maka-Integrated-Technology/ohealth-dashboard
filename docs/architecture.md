@@ -14,7 +14,7 @@ routing happens in the browser.
 
 ## Routing — one build per dashboard
 
-This app ships **three independent dashboard surfaces**, one per user role, and
+This app ships **four independent dashboard surfaces**, one per user role, and
 builds exactly one of them at a time. Which surface is active is selected at
 config time by the `VITE_ROUTE` environment variable.
 
@@ -23,6 +23,7 @@ config time by the `VITE_ROUTE` environment variable.
 | Medical Professional | `mp-dashboard` (`mp`) | `app/routes/mp-dashboard/` |
 | Pharmacy             | `ph-dashboard` (`ph`) | `app/routes/ph-dashboard/` |
 | Laboratory           | `lb-dashboard` (`lb`) | `app/routes/lb-dashboard/` |
+| Hospital             | `hs-dashboard` (`hs`) | `app/routes/hs-dashboard/` |
 
 `VITE_ROUTE` defaults to `mp-dashboard` when unset.
 
@@ -67,6 +68,8 @@ app/routes/
   lb-dashboard/
     layout.tsx
     page.tsx          ← / (when VITE_ROUTE=lb-dashboard)
+  hs-dashboard/
+    page.tsx          ← / (when VITE_ROUTE=hs-dashboard)
 ```
 
 Files named `page.tsx` become route components; files named `layout.tsx` become
@@ -207,11 +210,13 @@ The active surface is chosen with `VITE_ROUTE` (see
 npm run dev                 # default → mp-dashboard
 VITE_ROUTE=ph npm run dev   # Pharmacy surface
 VITE_ROUTE=lb npm run dev   # Laboratory surface
+VITE_ROUTE=hs npm run dev   # Hospital surface
 
 # Build
 VITE_ROUTE=mp npm run build
 VITE_ROUTE=ph npm run build
 VITE_ROUTE=lb npm run build
+VITE_ROUTE=hs npm run build
 ```
 
 ### Adding a new surface
