@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router";
+import { labListParams, labParam } from "./laboratory-list-state";
 import { Check, Search, X } from "lucide-react";
 import { LaboratoryShell } from "./laboratory-shell";
 import {
@@ -16,9 +18,13 @@ import {
 export default function LaboratoryResults() {
   const [results, setResults] =
     useState<LaboratoryResult[]>(INITIAL_LAB_RESULTS);
-  const [activeTab, setActiveTab] = useState<ResultsTab>("All");
-  const [search, setSearch] = useState("");
-  const [headerSearch, setHeaderSearch] = useState("");
+  const [params, setParams] = useSearchParams();
+  const activeTab = labParam(params, "tab", RESULTS_TABS, "All") as ResultsTab;
+  const setActiveTab = (value: ResultsTab) => setParams((current) => labListParams(current, "tab", value, "All"));
+  const search = labParam(params, "q");
+  const setSearch = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const headerSearch = search;
+  const setHeaderSearch = setSearch;
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [confirmPublish, setConfirmPublish] = useState(false);
   const [notice, setNotice] = useState("");
