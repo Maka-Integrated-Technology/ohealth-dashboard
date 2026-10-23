@@ -8,12 +8,13 @@ import {
   FileText,
   ShieldCheck,
 } from "lucide-react";
-import { useId, useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { nextRegistrationStep, validatePreviewAdministrator } from "~/features/hospital-auth/registration-flow";
 import HospitalAuthHero from "~/features/hospital-auth/hospital-auth-hero";
+import { Field, StepProgress, inputClassName } from "~/features/hospital-auth/auth-fields";
 
 type AuthScreen =
   | "sign-in"
@@ -24,7 +25,6 @@ type AuthScreen =
   | "setup-complete"
   | "ready";
 type RegistrationStep = 1 | 2 | 3;
-type InputKind = "text" | "email" | "tel" | "password";
 type DocumentKey = "license" | "registration" | "accreditation";
 
 type HospitalDetails = {
@@ -44,14 +44,6 @@ type AdministratorDetails = {
   password: string;
   confirmPassword: string;
 };
-
-const WIZARD_STEPS = [
-  "Hospital details",
-  "Administrator",
-  "Documents",
-  "Verification",
-  "Setup",
-];
 
 const DOCUMENTS: {
   key: DocumentKey;
@@ -75,96 +67,11 @@ const DOCUMENTS: {
   },
 ];
 
-const inputClassName =
-  "h-11 w-full rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10";
-
 const primaryButtonClassName =
   "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-not-allowed disabled:opacity-50";
 
 const secondaryButtonClassName =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600";
-
-function Field({
-  label,
-  value,
-  onChange,
-  type = "text",
-  placeholder,
-  autoComplete,
-  required = true,
-  hint,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  type?: InputKind;
-  placeholder?: string;
-  autoComplete?: string;
-  required?: boolean;
-  hint?: string;
-}) {
-  const id = useId();
-
-  return (
-    <div className="space-y-1.5">
-      <label className="block text-sm font-medium text-slate-700" htmlFor={id}>
-        {label}
-        {required ? <span className="ml-1 text-rose-500">*</span> : null}
-      </label>
-      <input
-        id={id}
-        className={inputClassName}
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        // Preview mode keeps this optional so every screen can be explored.
-        // Native input types (such as email) still validate values when supplied.
-        onChange={(event) => onChange(event.currentTarget.value)}
-      />
-      {hint ? <p className="text-xs text-slate-500">{hint}</p> : null}
-    </div>
-  );
-}
-
-function StepProgress({ activeStep }: { activeStep: number }) {
-  return (
-    <ol
-      className="mb-7 grid grid-cols-5 gap-1.5"
-      aria-label="Registration progress"
-    >
-      {WIZARD_STEPS.map((label, index) => {
-        const stepNumber = index + 1;
-        const isComplete = stepNumber < activeStep;
-        const isActive = stepNumber === activeStep;
-
-        return (
-          <li className="min-w-0 text-center" key={label}>
-            <div
-              className={
-                "mx-auto mb-2 flex size-7 items-center justify-center rounded-full text-xs font-semibold " +
-                (isComplete || isActive
-                  ? "bg-blue-600 text-white"
-                  : "bg-slate-100 text-slate-500")
-              }
-              aria-current={isActive ? "step" : undefined}
-            >
-              {isComplete ? <CheckCircle2 className="size-4" /> : stepNumber}
-            </div>
-            <span
-              className={
-                "block text-[10px] leading-tight sm:text-xs " +
-                (isActive ? "font-semibold text-blue-700" : "text-slate-500")
-              }
-            >
-              {label}
-            </span>
-          </li>
-        );
-      })}
-    </ol>
-  );
-}
 
 export default function HospitalAuthPage() {
   const navigate = useNavigate();
