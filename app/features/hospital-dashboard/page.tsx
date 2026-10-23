@@ -25,6 +25,13 @@ import {
 } from "lucide-react";
 import { useMemo, useState, type ReactNode } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
+import {
+  getHospitalSection,
+  hospitalFilterParams,
+  hospitalNavigationParams,
+  matchesAppointment,
+  type HospitalSection,
+} from "~/features/hospital-dashboard/hospital-preview-state";
 import HospitalPatientDetails from "~/features/hospital-dashboard/patient-details";
 import HospitalProfile from "~/features/hospital-dashboard/hospital-profile";
 import HospitalLaboratory from "~/features/hospital-dashboard/hospital-laboratory";
@@ -43,17 +50,6 @@ import HospitalPatientsList, {
   hospitalPatientRecords,
 } from "~/features/hospital-dashboard/patients-list";
 import Logo from "~/components/shared/logo";
-
-type HospitalSection =
-  | "Dashboard"
-  | "Hospital Profile"
-  | "Appointments"
-  | "Patients"
-  | "Laboratory"
-  | "Prescriptions"
-  | "Reviews"
-  | "Notifications"
-  | "Settings";
 
 type Appointment = PreviewAppointment;
 
@@ -222,13 +218,14 @@ function SectionHeading({
 export default function HospitalDashboardPage() {
   const navigate = useNavigate();
   const { id: patientId } = useParams();
-  const [sectionParams] = useSearchParams();
-  const [activeSection, setActiveSection] = useState<HospitalSection>(
-    () =>
-      navigation.find((item) => item.label === sectionParams.get("section"))
-        ?.label ?? "Dashboard"
-  );
-  const [search, setSearch] = useState("");
+  const [sectionParams, setSectionParams] = useSearchParams();
+  const activeSection = getHospitalSection(sectionParams);
+  const search = sectionParams.get("q") ?? "";
+  const setSearch = (value: string) =>
+    setSectionParams(
+      (current) => hospitalFilterParams(current, "q", value),
+      { replace: true }
+    );
   const [menuOpen, setMenuOpen] = useState(false);
   const [appointments, setAppointments] =
     useState<Appointment[]>(appointmentSamples);
@@ -268,32 +265,18 @@ export default function HospitalDashboardPage() {
     const query = search.trim().toLowerCase();
     if (!query) return appointments;
     return appointments.filter((appointment) =>
-      [
-        appointment.patient,
-        appointment.doctor,
-        appointment.department,
-        appointment.type,
-        appointment.status,
-        appointment.id,
-      ]
-        .join(" ")
-        .toLowerCase()
-        .includes(query)
+      matchesAppointment(appointment, query)
     );
   }, [appointments, search]);
 
   const selectNavigation = (section: HospitalSection) => {
+    const next = hospitalNavigationParams(sectionParams, section);
     if (patientId) {
-      navigate(
-        section === "Dashboard"
-          ? "/dashboard"
-          : "/dashboard?section=" + encodeURIComponent(section)
-      );
+      navigate("/dashboard" + (next.size ? "?" + next.toString() : ""));
     } else {
-      setActiveSection(section);
+      setSectionParams(next);
     }
     setMenuOpen(false);
-    setSearch("");
   };
 
   return (
@@ -434,9 +417,13 @@ export default function HospitalDashboardPage() {
             <Search className="size-[19px] shrink-0" strokeWidth={1.8} />
             <input
               type="search"
-              aria-label="Search patients and appointments"
+              aria-label="Search hospital patients and appointments"
               placeholder="Search patients, appointments..."
               value={search}
+              disabled={
+                Boolean(patientId) ||
+                !["Dashboard", "Patients", "Appointments"].includes(activeSection)
+              }
               onChange={(event) => setSearch(event.currentTarget.value)}
               className="min-w-0 flex-1 bg-transparent text-sm text-[#1d293d] outline-none placeholder:text-[#90a1b9]"
             />
@@ -511,7 +498,7 @@ export default function HospitalDashboardPage() {
                   />
                   <button
                     type="button"
-                    onClick={() => setActiveSection("Appointments")}
+                    onClick={() => selectNavigation("Appointments")}
                     className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#d7e0ec] px-4 text-sm font-semibold text-[#155eef] transition hover:bg-[#f5f8ff]"
                   >
                     View all <ChevronRight className="size-4" />
@@ -606,7 +593,7 @@ export default function HospitalDashboardPage() {
                   </p>
                   <button
                     type="button"
-                    onClick={() => setActiveSection("Appointments")}
+                    onClick={() => selectNavigation("Appointments")}
                     className="text-xs font-semibold text-[#155eef] hover:underline"
                   >
                     Manage appointments
@@ -749,6 +736,8 @@ export default function HospitalDashboardPage() {
             </>
           ) : activeSection === "Patients" ? (
             <HospitalPatientsList
+              search={search}
+              onSearchChange={setSearch}
               onView={(id) => navigate("/patients/" + encodeURIComponent(id))}
             />
           ) : activeSection === "Hospital Profile" ? (
@@ -757,6 +746,8 @@ export default function HospitalDashboardPage() {
             <HospitalAppointments
               records={appointments}
               onUpdate={updateAppointment}
+              search={search}
+              onSearchChange={setSearch}
             />
           ) : activeSection === "Laboratory" ? (
             <HospitalLaboratory />
