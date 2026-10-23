@@ -392,7 +392,7 @@ export default function HospitalSettings() {
                     type="email"
                     onChange={(email) => {
                       void accountForm.setFieldValue("email", email);
-                    }
+                    }}
                   />
                   {accountForm.submitCount > 0 &&
                   (accountForm.errors.name || accountForm.errors.email) ? (
@@ -624,14 +624,14 @@ export default function HospitalSettings() {
                       value={inviteForm.values.name}
                       onChange={(name) => {
                         void inviteForm.setFieldValue("name", name);
-                      }
+                      }}
                     />
                     <Field
                       label="Email"
                       value={inviteForm.values.email}
                       onChange={(email) => {
                         void inviteForm.setFieldValue("email", email);
-                      }
+                      }}
                       type="email"
                     />
                     <label className="block text-[13px] font-medium text-[#4d5761] sm:text-[15px]">
@@ -640,7 +640,7 @@ export default function HospitalSettings() {
                         value={inviteForm.values.role}
                         onChange={(event) => {
                           void inviteForm.setFieldValue("role", event.target.value);
-                        }
+                        }}
                         className="mt-2 block min-h-11 w-full rounded-xl border border-[#d2d6db] bg-white px-4 text-[#1f2a37]"
                       >
                         {[
