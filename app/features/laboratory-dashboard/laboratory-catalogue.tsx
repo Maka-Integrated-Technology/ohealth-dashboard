@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { Plus, Search, X } from "lucide-react";
 import { useSearchParams } from "react-router";
 import { labListParams, labParam } from "./laboratory-list-state";
@@ -94,18 +96,54 @@ function TestStatus({ active }: { active: boolean }) {
 function CatalogueEditor({
   draft,
   editing,
-  error,
-  onChange,
+  existingTests,
+  editingId,
   onCancel,
   onSave,
 }: {
   draft: CatalogueDraft;
   editing: boolean;
-  error: string;
-  onChange: (draft: CatalogueDraft) => void;
+  existingTests: CatalogueTest[];
+  editingId: string | null;
   onCancel: () => void;
-  onSave: (event: FormEvent<HTMLFormElement>) => void;
+  onSave: (values: CatalogueDraft) => void;
 }) {
+  const formik = useFormik<CatalogueDraft>({
+    enableReinitialize: true,
+    initialValues: draft,
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .trim()
+        .required("Test name is required.")
+        .max(140)
+        .test(
+          "unique-test-name",
+          "A test with this name already exists in the preview catalogue.",
+          (value) => !value || !existingTests.some(
+            (test) =>
+              test.id !== editingId &&
+              test.name.trim().toLowerCase() === value.trim().toLowerCase()
+          )
+        ),
+      category: Yup.string().oneOf(CATEGORY_SUMMARY.map((item) => item.category)).required(),
+      price: Yup.number()
+        .typeError("Enter a valid price.")
+        .integer("Enter a whole-number price.")
+        .moreThan(0, "Enter a positive price.")
+        .required("Price is required."),
+      turnaround: Yup.string().trim().required("Turnaround time is required.").max(65),
+      active: Yup.boolean().required(),
+    }),
+    onSubmit: (values) => onSave({
+      ...values,
+      name: values.name.trim(),
+      turnaround: values.turnaround.trim(),
+    }),
+  });
+  const values = formik.values;
+  const error = formik.submitCount > 0
+    ? Object.values(formik.errors).find((message) => Boolean(message))
+    : null;
   return (
     <div
       role="presentation"
@@ -137,7 +175,7 @@ function CatalogueEditor({
           </button>
         </div>
         <form
-          onSubmit={onSave}
+          onSubmit={formik.handleSubmit}
           className="space-y-[15px] px-[18px] pt-[20px] pb-[22px] sm:px-[26px] sm:pb-[26px]"
         >
           <div>
@@ -152,9 +190,9 @@ function CatalogueEditor({
               required
               maxLength={140}
               autoFocus
-              value={draft.name}
+              value={values.name}
               onChange={(event) =>
-                onChange({ ...draft, name: event.currentTarget.value })
+                void formik.setFieldValue("name", event.currentTarget.value)
               }
               placeholder="e.g. Complete Blood Count (CBC)"
               className="h-[41px] w-full rounded-[10px] border border-[#dce5f0] px-[12px] text-[13px] text-[#344762] outline-none focus:border-[#155eef]"
@@ -170,12 +208,9 @@ function CatalogueEditor({
             <select
               id="catalogue-test-category"
               required
-              value={draft.category}
+              value={values.category}
               onChange={(event) =>
-                onChange({
-                  ...draft,
-                  category: event.currentTarget.value as CatalogueCategory,
-                })
+                void formik.setFieldValue("category", event.currentTarget.value)
               }
               className="h-[41px] w-full rounded-[10px] border border-[#dce5f0] bg-white px-[12px] text-[13px] text-[#344762] outline-none focus:border-[#155eef]"
             >
@@ -200,12 +235,9 @@ function CatalogueEditor({
                 min="1"
                 step="1"
                 required
-                value={draft.price || ""}
+                value={values.price || ""}
                 onChange={(event) =>
-                  onChange({
-                    ...draft,
-                    price: Number(event.currentTarget.value),
-                  })
+                  void formik.setFieldValue("price", Number(event.currentTarget.value))
                 }
                 placeholder="4500"
                 className="h-[41px] w-full rounded-[10px] border border-[#dce5f0] px-[12px] text-[13px] text-[#344762] outline-none focus:border-[#155eef]"
@@ -222,9 +254,9 @@ function CatalogueEditor({
                 id="catalogue-test-turnaround"
                 required
                 maxLength={65}
-                value={draft.turnaround}
+                value={values.turnaround}
                 onChange={(event) =>
-                  onChange({ ...draft, turnaround: event.currentTarget.value })
+                  void formik.setFieldValue("turnaround", event.currentTarget.value)
                 }
                 placeholder="e.g. 4–6 hours"
                 className="h-[41px] w-full rounded-[10px] border border-[#dce5f0] px-[12px] text-[13px] text-[#344762] outline-none focus:border-[#155eef]"
@@ -234,9 +266,9 @@ function CatalogueEditor({
           <label className="inline-flex cursor-pointer items-center gap-[9px] text-[12px] text-[#425872]">
             <input
               type="checkbox"
-              checked={draft.active}
+              checked={values.active}
               onChange={(event) =>
-                onChange({ ...draft, active: event.currentTarget.checked })
+                void formik.setFieldValue("active", event.currentTarget.checked)
               }
               className="size-[15px] accent-[#155eef]"
             />
@@ -370,7 +402,6 @@ export default function LaboratoryTestCatalogue() {
     );
   const [editorId, setEditorId] = useState<string | null>(null);
   const [draft, setDraft] = useState<CatalogueDraft | null>(null);
-  const [error, setError] = useState("");
   const [toggleTestId, setToggleTestId] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
   const toggleTest = tests.find((test) => test.id === toggleTestId) ?? null;
@@ -403,7 +434,6 @@ export default function LaboratoryTestCatalogue() {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setDraft(null);
-        setError("");
         setToggleTestId(null);
       }
     };
@@ -414,7 +444,6 @@ export default function LaboratoryTestCatalogue() {
   const beginAdd = () => {
     setDraft({ ...EMPTY_DRAFT });
     setEditorId(null);
-    setError("");
     setNotice("");
   };
 
@@ -427,39 +456,11 @@ export default function LaboratoryTestCatalogue() {
       active: test.active,
     });
     setEditorId(test.id);
-    setError("");
     setNotice("");
   };
 
-  const saveTest = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!draft) return;
-    const name = draft.name.trim();
-    const turnaround = draft.turnaround.trim();
-    if (
-      !name ||
-      !turnaround ||
-      !Number.isFinite(draft.price) ||
-      !Number.isInteger(draft.price) ||
-      draft.price <= 0
-    ) {
-      setError(
-        "Enter a test name, a positive whole-number price, and a turnaround time."
-      );
-      return;
-    }
-    if (
-      tests.some(
-        (test) =>
-          test.id !== editorId && test.name.toLowerCase() === name.toLowerCase()
-      )
-    ) {
-      setError(
-        "A test with this name already exists in the preview catalogue."
-      );
-      return;
-    }
-    const saved: CatalogueDraft = { ...draft, name, turnaround };
+  const saveTest = (values: CatalogueDraft) => {
+    const saved: CatalogueDraft = values;
     if (editorId) {
       setTests((current) =>
         current.map((test) =>
@@ -478,7 +479,6 @@ export default function LaboratoryTestCatalogue() {
     }
     setDraft(null);
     setEditorId(null);
-    setError("");
   };
 
   const confirmToggle = () => {
@@ -712,12 +712,11 @@ export default function LaboratoryTestCatalogue() {
         <CatalogueEditor
           draft={draft}
           editing={editorId !== null}
-          error={error}
-          onChange={setDraft}
+          editingId={editorId}
+          existingTests={tests}
           onCancel={() => {
             setDraft(null);
-            setError("");
-          }}
+              }}
           onSave={saveTest}
         />
       )}
