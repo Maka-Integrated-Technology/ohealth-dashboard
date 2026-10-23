@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router";
+import { labListParams, labParam } from "./laboratory-list-state";
 import { Search, ChevronDown, AlertTriangle } from "lucide-react";
 import { Link } from "react-router";
 import { LaboratoryShell } from "./laboratory-shell";
@@ -498,8 +500,11 @@ function Monitoring() {
 }
 
 export default function LaboratoryComplianceAndAudit() {
-  const [active, setActive] = useState<AuditTab>("Audit Logs");
-  const [headerQuery, setHeaderQuery] = useState("");
+  const [params, setParams] = useSearchParams();
+  const active = labParam(params, "tab", TABS, "Audit Logs") as AuditTab;
+  const setActive = (value: AuditTab) => setParams((current) => labListParams(current, "tab", value, "Audit Logs"));
+  const headerQuery = labParam(params, "q");
+  const setHeaderQuery = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
   return (
     <LaboratoryShell
       section="Compliance & Audit"
