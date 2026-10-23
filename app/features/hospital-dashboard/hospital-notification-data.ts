@@ -133,3 +133,14 @@ export const hospitalNotificationSamples: HospitalNotification[] = [
     unread: false,
   },
 ];
+
+export const hospitalNotificationFilters: ("All" | HospitalNotificationCategory)[] = [
+  "All",
+  "Appointments",
+  "Verification",
+  "Laboratory",
+  "Reviews",
+  "Prescriptions",
+  "Patients",
+  "System",
+];
