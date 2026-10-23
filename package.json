@@ -19,7 +19,8 @@
     "format:check": "prettier --check .",
     "audit:dependencies": "node scripts/security/dependency-audit-policy.mjs",
     "test:audit-policy": "node --test scripts/security/dependency-audit-policy.test.mjs",
-    "test:lab": "node --test scripts/tests/laboratory-preview.test.mjs"
+    "test:lab": "node --test scripts/tests/laboratory-preview.test.mjs",
+    "test:lab:ui": "tsx --test scripts/tests/laboratory-ui.test.tsx"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.2.8",
@@ -72,7 +73,11 @@
     "tailwindcss": "^4.1.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.61.1",
-    "vite": "^8.2.4"
+    "vite": "^8.2.4",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "jsdom": "^26.1.0",
+    "tsx": "^4.20.6"
   },
   "overrides": {
     "brace-expansion@1": "1.1.21",
