@@ -2,9 +2,8 @@
 name: Hospital PR One-off Format
 
 on:
-  push:
-    branches:
-      - feat/hospital-auth-cloudflare-preview
+  pull_request:
+    branches: [dev]
     paths:
       - .github/workflows/hospital-format-once.yml
 
