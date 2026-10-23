@@ -63,7 +63,7 @@ ohealth-dashboard/
 │   │   ├── ph-dashboard/       # VITE_ROUTE=ph-dashboard
 │   │   │   ├── layout.tsx      #   <AppShell portal="Pharmacy" />
 │   │   │   └── page.tsx        #   / — Pharmacy dashboard
-│   │   └── lb-dashboard/       # VITE_ROUTE=lb-dashboard
+│   │   ├── lb-dashboard/       # VITE_ROUTE=lb-dashboard
 │   │       ├── layout.tsx      #   <AppShell portal="Laboratory" />
 │   │       └── page.tsx        #   / — Laboratory dashboard
 │   ├── styles/
@@ -87,7 +87,7 @@ ohealth-dashboard/
 ├── AGENTS.md                   # Workflow conventions for AI coding agents
 ├── components.json             # shadcn CLI config
 ├── docker-compose.yml          # Local dev / generic app compose
-├── docker-compose.prod.yml     # Staging + production compose (mp/ph/lb services)
+├── docker-compose.prod.yml     # Staging + production compose (mp/ph/lb/hs services)
 ├── Dockerfile
 ├── package.json
 ├── react-router.config.ts      # ssr: false
@@ -128,7 +128,7 @@ A page imports from `hooks.ts` only; it never calls `axios` directly.
 ### `app/routes/`
 
 One folder per **dashboard surface** (`mp-dashboard`, `ph-dashboard`,
-`lb-dashboard`). Exactly one is active per build, selected by the `VITE_ROUTE`
+`lb-dashboard`, `hs-dashboard`). Exactly one is active per build, selected by the `VITE_ROUTE`
 env var in `app/routes.ts` — that folder is scanned by `rr-next-routes`, so its
 `page.tsx` is served at `/` and its `layout.tsx` wraps it. See
 [architecture.md](./architecture.md#routing--one-build-per-dashboard) for the
