@@ -354,7 +354,7 @@ export default function LaboratoryProfile() {
                 "Use a time range such as 08:00–18:00 for every open day.",
                 function (value) {
                   if (!this.parent.open) return true;
-                  return /^([01]\\d|2[0-3]):[0-5]\\d[–-]([01]\\d|2[0-3]):[0-5]\\d$/.test(
+                  return /^([01]\d|2[0-3]):[0-5]\d[–-]([01]\d|2[0-3]):[0-5]\d$/.test(
                     value?.trim() ?? ""
                   );
                 }

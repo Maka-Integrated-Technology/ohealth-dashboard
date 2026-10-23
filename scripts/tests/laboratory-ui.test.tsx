@@ -40,12 +40,14 @@ const [
   { default: LaboratoryAuthPage },
   { default: LaboratoryTestCatalogue },
   { default: LaboratoryStaffManagement },
+  { default: LaboratoryProfile },
   { default: LaboratoryBookings },
   { default: LaboratoryResults },
 ] = await Promise.all([
   import("../../app/features/laboratory-auth/page"),
   import("../../app/features/laboratory-dashboard/laboratory-catalogue"),
   import("../../app/features/laboratory-dashboard/laboratory-staff"),
+  import("../../app/features/laboratory-dashboard/laboratory-profile"),
   import("../../app/features/laboratory-dashboard/laboratory-bookings"),
   import("../../app/features/laboratory-dashboard/laboratory-results"),
 ]);
@@ -144,6 +146,49 @@ test("staff Invite Staff modal submits a new local record and prevents duplicate
       within(duplicate).getByRole("alert").textContent ?? "",
       /already exists/i
     )
+  );
+});
+
+test("operating hours accepts the valid initial schedule and displays the save confirmation", async () => {
+  renderPage(<LaboratoryProfile />, "/laboratory-profile");
+  fireEvent.click(screen.getByRole("tab", { name: "Operating Hours" }));
+  const panel = screen.getByRole("tabpanel", { name: "Operating Hours" });
+  assert.equal(
+    (
+      within(panel).getByRole("textbox", {
+        name: "Mon operating hours",
+      }) as HTMLInputElement
+    ).value,
+    "08:00–18:00"
+  );
+  fireEvent.click(within(panel).getByRole("button", { name: "Save Hours" }));
+  await waitFor(() =>
+    assert.match(
+      screen.getByRole("status").textContent ?? "",
+      /Operating hours saved in this preview only/
+    )
+  );
+  assert.equal(within(panel).queryByRole("alert"), null);
+});
+
+test("operating hours rejects an invalid time range without displaying a save confirmation", async () => {
+  renderPage(<LaboratoryProfile />, "/laboratory-profile");
+  fireEvent.click(screen.getByRole("tab", { name: "Operating Hours" }));
+  const panel = screen.getByRole("tabpanel", { name: "Operating Hours" });
+  fireEvent.change(
+    within(panel).getByRole("textbox", { name: "Mon operating hours" }),
+    { target: { value: "25:00–18:00" } }
+  );
+  fireEvent.click(within(panel).getByRole("button", { name: "Save Hours" }));
+  await waitFor(() =>
+    assert.match(
+      within(panel).getByRole("alert").textContent ?? "",
+      /Use a time range such as 08:00–18:00/
+    )
+  );
+  assert.equal(
+    screen.queryByText(/Operating hours saved in this preview only/),
+    null
   );
 });
 
