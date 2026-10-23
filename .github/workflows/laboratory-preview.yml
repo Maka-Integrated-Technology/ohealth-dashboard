@@ -45,6 +45,8 @@ jobs:
         run: npm run test:audit-policy
       - name: Test lab preview flows
         run: npm run test:lab
+      - name: Laboratory rendered interaction regressions
+        run: npm run test:lab:ui
       - name: Check dependency policy
         run: npm run audit:dependencies
       - name: Check formatting
