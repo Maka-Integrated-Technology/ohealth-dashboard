@@ -23,7 +23,7 @@ config time by the `VITE_ROUTE` environment variable.
 | Medical Professional | `mp-dashboard` (`mp`) | `app/routes/mp-dashboard/` |
 | Pharmacy             | `ph-dashboard` (`ph`) | `app/routes/ph-dashboard/` |
 | Laboratory           | `lb-dashboard` (`lb`) | `app/routes/lb-dashboard/` |
-| Hospital             | `hs-dashboard` (`hs`) | `app/routes/hs-dashboard/` |
+| Hospital             | `hospital-dashboard` (`hs`) | `app/routes/hospital-dashboard/` |
 
 `VITE_ROUTE` defaults to `mp-dashboard` when unset.
 
@@ -68,8 +68,8 @@ app/routes/
   lb-dashboard/
     layout.tsx
     page.tsx          ← / (when VITE_ROUTE=lb-dashboard)
-  hs-dashboard/
-    page.tsx          ← / (when VITE_ROUTE=hs-dashboard)
+  hospital-dashboard/
+    page.tsx          ← / (when VITE_ROUTE=hospital-dashboard)
 ```
 
 Files named `page.tsx` become route components; files named `layout.tsx` become
