@@ -30,6 +30,8 @@ import {
   hospitalFilterParams,
   hospitalNavigationParams,
   matchesAppointment,
+  replacePreviewAppointment,
+  markPreviewNotificationRead,
   type HospitalSection,
 } from "~/features/hospital-dashboard/hospital-preview-state";
 import HospitalPatientDetails from "~/features/hospital-dashboard/patient-details";
@@ -233,11 +235,7 @@ export default function HospitalDashboardPage() {
     (appointment) => appointment.id === selectedAppointmentId
   );
   const updateAppointment = (updated: PreviewAppointment) =>
-    setAppointments((current) =>
-      current.map((appointment) =>
-        appointment.id === updated.id ? updated : appointment
-      )
-    );
+    setAppointments((current) => replacePreviewAppointment(current, updated));
   const selectedPatient = patientId
     ? [...appointments, ...hospitalPatientRecords].find(
         (patient) => patient.id === patientId
@@ -252,9 +250,7 @@ export default function HospitalDashboardPage() {
     (item) => !readNotificationIds.includes(item.id)
   ).length;
   const markNotificationRead = (id: string) =>
-    setReadNotificationIds((current) =>
-      current.includes(id) ? current : [...current, id]
-    );
+    setReadNotificationIds((current) => markPreviewNotificationRead(current, id));
   const markAllNotificationsRead = () =>
     setReadNotificationIds(hospitalNotificationSamples.map((item) => item.id));
 
