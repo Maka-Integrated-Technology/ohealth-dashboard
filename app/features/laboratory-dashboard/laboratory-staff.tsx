@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Plus, Search, X } from "lucide-react";
+import { useSearchParams } from "react-router";
+import { labListParams, labParam, labStaffMatch, labUniqueEmail } from "./laboratory-list-state";
 import { LaboratoryShell } from "./laboratory-shell";
 import {
   INITIAL_LAB_STAFF,
@@ -421,8 +423,11 @@ function StaffStatusBadge({ status }: { status: LabStaffMember["status"] }) {
 
 export default function LaboratoryStaffManagement() {
   const [staff, setStaff] = useState<LabStaffMember[]>(INITIAL_LAB_STAFF);
-  const [search, setSearch] = useState("");
-  const [headerSearch, setHeaderSearch] = useState("");
+  const [params, setParams] = useSearchParams();
+  const search = labParam(params, "q");
+  const setSearch = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const headerSearch = search;
+  const setHeaderSearch = setSearch;
   const [dialog, setDialog] = useState<ActiveDialog>(null);
   const [notice, setNotice] = useState("");
 
@@ -441,34 +446,14 @@ export default function LaboratoryStaffManagement() {
   }, [dialog]);
 
   const visibleStaff = useMemo(() => {
-    const local = search.trim().toLowerCase();
-    const global = headerSearch.trim().toLowerCase();
-    return staff.filter((member) => {
-      const fields = [
-        member.name,
-        member.email,
-        member.phone,
-        member.role,
-        member.status,
-        member.lastActive,
-      ]
-        .join(" ")
-        .toLowerCase();
-      return fields.includes(local) && fields.includes(global);
-    });
-  }, [staff, search, headerSearch]);
+    return staff.filter((member) => labStaffMatch(member, search));
+  }, [staff, search]);
 
   const saveStaff = (draft: FormData): string | null => {
     if (!draft.name || !draft.email || !draft.email.includes("@"))
       return "Enter a valid name and email address.";
     const editedId = dialog?.kind === "edit" ? dialog.staffId : null;
-    if (
-      staff.some(
-        (member) =>
-          member.email.toLowerCase() === draft.email.toLowerCase() &&
-          member.id !== editedId
-      )
-    ) {
+    if (!labUniqueEmail(staff, draft.email, editedId)) {
       return "A staff member with this email address already exists in this preview.";
     }
     if (editedId) {
