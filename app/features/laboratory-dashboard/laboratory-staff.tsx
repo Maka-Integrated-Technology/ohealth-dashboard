@@ -139,7 +139,9 @@ function StaffFormModal({
           (value) => !value || labUniqueEmail(members, value, staff?.id ?? null)
         ),
       phone: Yup.string().max(40),
-      role: Yup.string().oneOf([...LAB_STAFF_ROLES]).required(),
+      role: Yup.string()
+        .oneOf([...LAB_STAFF_ROLES])
+        .required(),
     }),
     onSubmit: (values, helpers) => {
       const message = onSubmit({
@@ -152,9 +154,10 @@ function StaffFormModal({
     },
   });
   const draft = formik.values;
-  const error = formik.submitCount > 0
-    ? Object.values(formik.errors).find((message) => Boolean(message))
-    : null;
+  const error =
+    formik.submitCount > 0
+      ? Object.values(formik.errors).find((message) => Boolean(message))
+      : null;
 
   return (
     <ModalFrame

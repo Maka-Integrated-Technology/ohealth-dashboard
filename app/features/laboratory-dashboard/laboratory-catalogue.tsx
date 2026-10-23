@@ -119,31 +119,40 @@ function CatalogueEditor({
         .test(
           "unique-test-name",
           "A test with this name already exists in the preview catalogue.",
-          (value) => !value || !existingTests.some(
-            (test) =>
-              test.id !== editingId &&
-              test.name.trim().toLowerCase() === value.trim().toLowerCase()
-          )
+          (value) =>
+            !value ||
+            !existingTests.some(
+              (test) =>
+                test.id !== editingId &&
+                test.name.trim().toLowerCase() === value.trim().toLowerCase()
+            )
         ),
-      category: Yup.string().oneOf(CATEGORY_SUMMARY.map((item) => item.category)).required(),
+      category: Yup.string()
+        .oneOf(CATEGORY_SUMMARY.map((item) => item.category))
+        .required(),
       price: Yup.number()
         .typeError("Enter a valid price.")
         .integer("Enter a whole-number price.")
         .moreThan(0, "Enter a positive price.")
         .required("Price is required."),
-      turnaround: Yup.string().trim().required("Turnaround time is required.").max(65),
+      turnaround: Yup.string()
+        .trim()
+        .required("Turnaround time is required.")
+        .max(65),
       active: Yup.boolean().required(),
     }),
-    onSubmit: (values) => onSave({
-      ...values,
-      name: values.name.trim(),
-      turnaround: values.turnaround.trim(),
-    }),
+    onSubmit: (values) =>
+      onSave({
+        ...values,
+        name: values.name.trim(),
+        turnaround: values.turnaround.trim(),
+      }),
   });
   const values = formik.values;
-  const error = formik.submitCount > 0
-    ? Object.values(formik.errors).find((message) => Boolean(message))
-    : null;
+  const error =
+    formik.submitCount > 0
+      ? Object.values(formik.errors).find((message) => Boolean(message))
+      : null;
   return (
     <div
       role="presentation"
@@ -237,7 +246,10 @@ function CatalogueEditor({
                 required
                 value={values.price || ""}
                 onChange={(event) =>
-                  void formik.setFieldValue("price", Number(event.currentTarget.value))
+                  void formik.setFieldValue(
+                    "price",
+                    Number(event.currentTarget.value)
+                  )
                 }
                 placeholder="4500"
                 className="h-[41px] w-full rounded-[10px] border border-[#dce5f0] px-[12px] text-[13px] text-[#344762] outline-none focus:border-[#155eef]"
@@ -256,7 +268,10 @@ function CatalogueEditor({
                 maxLength={65}
                 value={values.turnaround}
                 onChange={(event) =>
-                  void formik.setFieldValue("turnaround", event.currentTarget.value)
+                  void formik.setFieldValue(
+                    "turnaround",
+                    event.currentTarget.value
+                  )
                 }
                 placeholder="e.g. 4–6 hours"
                 className="h-[41px] w-full rounded-[10px] border border-[#dce5f0] px-[12px] text-[13px] text-[#344762] outline-none focus:border-[#155eef]"
@@ -716,7 +731,7 @@ export default function LaboratoryTestCatalogue() {
           existingTests={tests}
           onCancel={() => {
             setDraft(null);
-              }}
+          }}
           onSave={saveTest}
         />
       )}

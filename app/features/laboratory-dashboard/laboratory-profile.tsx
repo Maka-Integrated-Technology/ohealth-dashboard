@@ -132,7 +132,10 @@ function BranchDialog({
     },
     validationSchema: Yup.object({
       name: Yup.string().trim().required("Branch name is required.").max(120),
-      address: Yup.string().trim().required("Branch address is required.").max(250),
+      address: Yup.string()
+        .trim()
+        .required("Branch address is required.")
+        .max(250),
       phone: Yup.string().trim().required("Branch phone is required.").max(40),
       active: Yup.boolean().required(),
     }),
@@ -175,7 +178,10 @@ function BranchDialog({
             <X className="size-[19px]" />
           </button>
         </div>
-        <form onSubmit={formik.handleSubmit} className="space-y-[15px] px-[20px] py-[21px]">
+        <form
+          onSubmit={formik.handleSubmit}
+          className="space-y-[15px] px-[20px] py-[21px]"
+        >
           <ProfileField
             label="Branch Name"
             value={draft.name}
@@ -184,7 +190,9 @@ function BranchDialog({
           <ProfileField
             label="Branch Address"
             value={draft.address}
-            onChange={(address) => void formik.setFieldValue("address", address)}
+            onChange={(address) =>
+              void formik.setFieldValue("address", address)
+            }
           />
           <ProfileField
             label="Branch Phone"
@@ -196,7 +204,9 @@ function BranchDialog({
             <input
               type="checkbox"
               checked={draft.active}
-              onChange={(event) => void formik.setFieldValue("active", event.currentTarget.checked)}
+              onChange={(event) =>
+                void formik.setFieldValue("active", event.currentTarget.checked)
+              }
               className="size-[16px] accent-[#155eef]"
             />
             Branch active
@@ -301,39 +311,62 @@ export default function LaboratoryProfile() {
   const detailsForm = useFormik<ProfileDetails>({
     initialValues: INITIAL_DETAILS,
     validationSchema: Yup.object({
-      laboratoryName: Yup.string().trim().required("Laboratory name is required.").max(160),
-      registrationNumber: Yup.string().trim().required("Registration number is required.").max(80),
-      licenseNumber: Yup.string().trim().required("License number is required.").max(80),
-      contactEmail: Yup.string().trim().email("Enter a valid contact email.").required("Contact email is required."),
-      phoneNumber: Yup.string().trim().required("Phone number is required.").max(40),
+      laboratoryName: Yup.string()
+        .trim()
+        .required("Laboratory name is required.")
+        .max(160),
+      registrationNumber: Yup.string()
+        .trim()
+        .required("Registration number is required.")
+        .max(80),
+      licenseNumber: Yup.string()
+        .trim()
+        .required("License number is required.")
+        .max(80),
+      contactEmail: Yup.string()
+        .trim()
+        .email("Enter a valid contact email.")
+        .required("Contact email is required."),
+      phoneNumber: Yup.string()
+        .trim()
+        .required("Phone number is required.")
+        .max(40),
       region: Yup.string().trim().required("Region is required.").max(100),
       address: Yup.string().trim().required("Address is required.").max(250),
     }),
-    onSubmit: () => setNotice(
-      "Lab details saved in this preview only. No laboratory account was updated."
-    ),
+    onSubmit: () =>
+      setNotice(
+        "Lab details saved in this preview only. No laboratory account was updated."
+      ),
   });
   const hoursForm = useFormik<{ days: OpeningDay[] }>({
     initialValues: { days: INITIAL_HOURS },
     validationSchema: Yup.object({
-      days: Yup.array().of(
-        Yup.object({
-          day: Yup.string().required(),
-          open: Yup.boolean().required(),
-          hours: Yup.string().required().test(
-            "valid-time-range",
-            "Use a time range such as 08:00–18:00 for every open day.",
-            function(value) {
-              if (!this.parent.open) return true;
-              return /^([01]\\d|2[0-3]):[0-5]\\d[–-]([01]\\d|2[0-3]):[0-5]\\d$/.test(value?.trim() ?? "");
-            }
-          ),
-        })
-      ).required(),
+      days: Yup.array()
+        .of(
+          Yup.object({
+            day: Yup.string().required(),
+            open: Yup.boolean().required(),
+            hours: Yup.string()
+              .required()
+              .test(
+                "valid-time-range",
+                "Use a time range such as 08:00–18:00 for every open day.",
+                function (value) {
+                  if (!this.parent.open) return true;
+                  return /^([01]\\d|2[0-3]):[0-5]\\d[–-]([01]\\d|2[0-3]):[0-5]\\d$/.test(
+                    value?.trim() ?? ""
+                  );
+                }
+              ),
+          })
+        )
+        .required(),
     }),
-    onSubmit: () => setNotice(
-      "Operating hours saved in this preview only. No live scheduling was changed."
-    ),
+    onSubmit: () =>
+      setNotice(
+        "Operating hours saved in this preview only. No live scheduling was changed."
+      ),
   });
   const details = detailsForm.values;
   const hours = hoursForm.values.days;
@@ -363,19 +396,29 @@ export default function LaboratoryProfile() {
   const saveDetails = detailsForm.handleSubmit;
 
   const updateHours = (index: number, value: string) => {
-    void hoursForm.setFieldValue("days", hours.map((day, i) =>
-      i === index ? { ...day, hours: value } : day
-    ));
+    void hoursForm.setFieldValue(
+      "days",
+      hours.map((day, i) => (i === index ? { ...day, hours: value } : day))
+    );
   };
 
   const toggleDay = (index: number) => {
-    void hoursForm.setFieldValue("days", hours.map((item, i) =>
-      i !== index ? item : {
-        ...item,
-        open: !item.open,
-        hours: item.open ? "Closed" : item.day === "Sat" ? "09:00–14:00" : "08:00–18:00",
-      }
-    ));
+    void hoursForm.setFieldValue(
+      "days",
+      hours.map((item, i) =>
+        i !== index
+          ? item
+          : {
+              ...item,
+              open: !item.open,
+              hours: item.open
+                ? "Closed"
+                : item.day === "Sat"
+                  ? "09:00–14:00"
+                  : "08:00–18:00",
+            }
+      )
+    );
   };
   const saveHours = hoursForm.handleSubmit;
 
@@ -527,11 +570,12 @@ export default function LaboratoryProfile() {
                 />
               </div>
             </div>
-            {detailsForm.submitCount > 0 && Object.keys(detailsForm.errors).length > 0 && (
-              <p role="alert" className="mt-3 text-[12px] text-red-600">
-                {Object.values(detailsForm.errors).find(Boolean)}
-              </p>
-            )}
+            {detailsForm.submitCount > 0 &&
+              Object.keys(detailsForm.errors).length > 0 && (
+                <p role="alert" className="mt-3 text-[12px] text-red-600">
+                  {Object.values(detailsForm.errors).find(Boolean)}
+                </p>
+              )}
             <div className="mt-[21px] flex justify-end">
               <button type="submit" className={PRIMARY_CLASS}>
                 Save Changes
