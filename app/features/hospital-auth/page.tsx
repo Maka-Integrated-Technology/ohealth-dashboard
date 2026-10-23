@@ -8,7 +8,7 @@ import {
   FileText,
   ShieldCheck,
 } from "lucide-react";
-import { useId, useState, type ChangeEvent } from "react";
+import { useId, useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
