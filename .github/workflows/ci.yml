@@ -48,6 +48,8 @@ jobs:
 
       - name: Laboratory behavior regressions
         run: npm run test:lab
+      - name: Laboratory rendered interaction regressions
+        run: npm run test:lab:ui
 
       - name: Check formatting
         run: npm run format:check
