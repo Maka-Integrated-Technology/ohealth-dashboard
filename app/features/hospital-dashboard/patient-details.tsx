@@ -113,7 +113,7 @@ export default function HospitalPatientDetails({
             <div className="text-right">
               <p className="text-[14px] text-[#6c737f]">Last visit</p>
               <p className="mt-1 text-[13px] font-medium text-[#1f2a37] sm:text-[15px]">
-                2025-11-15
+                2024-11-15
               </p>
             </div>
           ) : null}
