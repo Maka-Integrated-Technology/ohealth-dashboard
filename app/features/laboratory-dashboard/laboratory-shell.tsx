@@ -171,8 +171,9 @@ export function LaboratoryShell({
             />
             <input
               type="search"
-              aria-label="Search patients and appointments"
-              placeholder="Search patients, appointments..."
+              aria-label={"Search " + section.toLowerCase()}
+              placeholder={"Search " + section.toLowerCase() + "..."}
+              disabled={!onSearchChange}
               value={search ?? ""}
               onChange={(event) => onSearchChange?.(event.currentTarget.value)}
               className="h-[34px] w-full rounded-[8px] border border-[#e1e7f0] bg-[#f8fafc] pr-3 pl-[37px] text-[14px] text-[#263b59] outline-none placeholder:text-[#617594] focus:border-[#97b8f7]"
