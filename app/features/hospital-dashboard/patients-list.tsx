@@ -5,19 +5,18 @@ import { matchesPatient } from "~/features/hospital-dashboard/hospital-preview-s
 
 export default function HospitalPatientsList({
   onView,
+  search,
+  onSearchChange,
 }: {
   onView: (id: string) => void;
+  search: string;
+  onSearchChange: (value: string) => void;
 }) {
-  const [filter, setFilter] = useState("");
   const visiblePatients = useMemo(() => {
-    const term = filter.trim().toLowerCase();
-    if (!term) return hospitalPatientRecords;
     return hospitalPatientRecords.filter((record) =>
-      [record.patient, record.detail, record.doctor, record.department].some(
-        (value) => value.toLowerCase().includes(term)
-      )
+      matchesPatient(record, search)
     );
-  }, [filter]);
+  }, [search]);
 
   return (
     <div className="max-w-[1143px] pb-12">
@@ -37,9 +36,9 @@ export default function HospitalPatientsList({
           <input
             type="search"
             aria-label="Search hospital patients"
-            value={filter}
+            value={search}
             placeholder="Search patients..."
-            onChange={(event) => setFilter(event.currentTarget.value)}
+            onChange={(event) => onSearchChange(event.currentTarget.value)}
             className="min-w-0 flex-1 bg-transparent text-[14px] text-[#1f2a37] outline-none placeholder:text-[#90a1b9] sm:text-[18px]"
           />
         </label>
