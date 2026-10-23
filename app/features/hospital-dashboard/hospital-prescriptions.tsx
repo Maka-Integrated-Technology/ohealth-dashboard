@@ -10,6 +10,8 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router";
+import { hospitalFilterParams } from "~/features/hospital-dashboard/hospital-preview-state";
 
 type Medication = {
   name: string;
@@ -492,7 +494,12 @@ function CreatePrescription({
 export default function HospitalPrescriptions() {
   const [records, setRecords] =
     useState<PrescriptionRecord[]>(examplePrescriptions);
-  const [query, setQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("q") ?? "";
+  const setQuery = (value: string) =>
+    setSearchParams((current) => hospitalFilterParams(current, "q", value), {
+      replace: true,
+    });
   const [expanded, setExpanded] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [notice, setNotice] = useState("");
