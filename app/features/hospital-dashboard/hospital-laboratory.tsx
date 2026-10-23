@@ -9,6 +9,8 @@ import {
   TestTubeDiagonal,
 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router";
+import { hospitalFilterParams } from "~/features/hospital-dashboard/hospital-preview-state";
 
 type LabStatus =
   | "Requested"
@@ -323,10 +325,18 @@ function LabDetails({
 
 export default function HospitalLaboratory() {
   const [records, setRecords] = useState<LabRecord[]>(initialLabRecords);
-  const [query, setQuery] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<LabStatus | "All">(
-    "All"
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("q") ?? "";
+  const selectedStatus =
+    stages.find((status) => status === searchParams.get("status")) ?? "All";
+  const setSelectedStatus = (value: LabStatus | "All") =>
+    setSearchParams((current) =>
+      hospitalFilterParams(current, "status", value, "All")
+    );
+  const setQuery = (value: string) =>
+    setSearchParams((current) => hospitalFilterParams(current, "q", value), {
+      replace: true,
+    });
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = records.find((record) => record.id === selectedId);
 
