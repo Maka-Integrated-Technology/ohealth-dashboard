@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router";
+import { labListParams, labParam } from "./laboratory-list-state";
 import {
   Area,
   AreaChart,
@@ -239,9 +241,13 @@ const CHART_TOOLTIP = {
 };
 
 export default function LaboratoryReportsAndAnalytics() {
-  const [period, setPeriod] = useState<Period>("Last 7 Months");
-  const [category, setCategory] = useState("All Categories");
-  const [headerQuery, setHeaderQuery] = useState("");
+  const [params, setParams] = useSearchParams();
+  const period = labParam(params, "period", ["Last 7 Months", "Last 3 Months", "This Month"], "Last 7 Months") as Period;
+  const setPeriod = (value: Period) => setParams((current) => labListParams(current, "period", value, "Last 7 Months"));
+  const category = labParam(params, "category", ["All Categories", ...CATEGORIES.map((item) => item.name)], "All Categories");
+  const setCategory = (value: string) => setParams((current) => labListParams(current, "category", value, "All Categories"));
+  const headerQuery = labParam(params, "q");
+  const setHeaderQuery = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
 
   const monthly =
     period === "This Month"
