@@ -1,5 +1,4 @@
 import {
-  Activity,
   ArrowRight,
   CheckCircle2,
   ChevronLeft,
@@ -7,7 +6,6 @@ import {
   Eye,
   EyeOff,
   FileText,
-  ShieldCheck,
 } from "lucide-react";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router";
