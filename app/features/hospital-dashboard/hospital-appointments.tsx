@@ -9,6 +9,8 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router";
+import { hospitalFilterParams, matchesAppointment } from "~/features/hospital-dashboard/hospital-preview-state";
 import { type AppointmentStatus, type PreviewAppointment } from "~/features/hospital-dashboard/hospital-appointment-data";
 
 const statusColors: Record<AppointmentStatus, string> = {
@@ -249,15 +251,26 @@ export function AppointmentDrawer({
 export default function HospitalAppointments({
   records,
   onUpdate,
+  search,
+  onSearchChange,
 }: {
   records: PreviewAppointment[];
   onUpdate: (appointment: PreviewAppointment) => void;
+  search: string;
+  onSearchChange: (value: string) => void;
 }) {
-  const [query, setQuery] = useState("");
-  const [department, setDepartment] = useState("All");
-  const [status, setStatus] = useState("All Status");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = search;
+  const department = searchParams.get("department") ?? "All";
+  const status = searchParams.get("status") ?? "All Status";
+  const page = Math.max(1, Number.parseInt(searchParams.get("page") ?? "1", 10) || 1);
+  const setDepartment = (value: string) =>
+    setSearchParams((current) => hospitalFilterParams(current, "department", value, "All"));
+  const setStatus = (value: string) =>
+    setSearchParams((current) => hospitalFilterParams(current, "status", value, "All Status"));
+  const setPage = (value: number) =>
+    setSearchParams((current) => hospitalFilterParams(current, "page", String(value), "1"));
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
 
   const departments = [
     "All",
@@ -279,15 +292,8 @@ export default function HospitalAppointments({
   ];
 
   const filtered = useMemo(() => {
-    const term = query.toLowerCase().trim();
     return records.filter((record) => {
-      const matchesSearch = [
-        record.patient,
-        record.doctor,
-        record.department,
-        record.type,
-        record.id,
-      ].some((value) => value.toLowerCase().includes(term));
+      const matchesSearch = matchesAppointment(record, query);
       return (
         matchesSearch &&
         (department === "All" || record.department === department) &&
@@ -317,8 +323,7 @@ export default function HospitalAppointments({
           <input
             value={query}
             onChange={(event) => {
-              setQuery(event.target.value);
-              setPage(1);
+              onSearchChange(event.target.value);
             }}
             type="search"
             aria-label="Search patients and doctors"
@@ -330,7 +335,6 @@ export default function HospitalAppointments({
           value={department}
           onChange={(event) => {
             setDepartment(event.target.value);
-            setPage(1);
           }}
           aria-label="Filter by department"
           className="min-h-[48px] rounded-xl border border-[#e2e8f0] bg-white px-4 text-[13px] text-[#4d5761] sm:text-[16px] lg:w-[211px]"
@@ -345,7 +349,6 @@ export default function HospitalAppointments({
           value={status}
           onChange={(event) => {
             setStatus(event.target.value);
-            setPage(1);
           }}
           aria-label="Filter by status"
           className="min-h-[48px] rounded-xl border border-[#e2e8f0] bg-white px-4 text-[13px] text-[#4d5761] sm:text-[16px] lg:w-[172px]"
