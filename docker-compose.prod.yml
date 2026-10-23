@@ -56,7 +56,7 @@ services:
       context: .
       args:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL}
-        VITE_ROUTE: hs-dashboard
+        VITE_ROUTE: hospital-dashboard
     restart: unless-stopped
     ports:
       - "${HS_PORT:-3003}:3000"
