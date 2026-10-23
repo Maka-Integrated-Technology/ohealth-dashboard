@@ -90,3 +90,19 @@ export function matchesPatient(
     record.department,
   ].some((value) => value.toLowerCase().includes(term));
 }
+
+export function replacePreviewAppointment<T extends { id: string }>(
+  records: T[],
+  updated: T
+): T[] {
+  return records.map((record) =>
+    record.id === updated.id ? updated : record
+  );
+}
+
+export function markPreviewNotificationRead(
+  current: string[],
+  id: string
+): string[] {
+  return current.includes(id) ? current : [...current, id];
+}
