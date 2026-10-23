@@ -40,7 +40,7 @@ jobs:
             app/features/hospital-dashboard/patient-details.tsx \
             scripts/tests/hospital-preview.test.mjs \
             package.json README.md docker-compose.prod.yml \
-            docs/architecture.md docs/setup.md docs/deployment.md docs/folder-structure.md \
+            docs/architecture.md docs/setup.md docs/deployment.md docs/folder-structure.md docs/environment.md \
             .github/workflows/ci.yml
       - name: Commit automatic formatting
         run: |
@@ -65,5 +65,5 @@ jobs:
         run: npm run typecheck
       - name: Build hospital
         run: npm run build:hs
-      - name: Build other portals
+      - name: Build other three portals
         run: npm run build && npm run build:ph && npm run build:lb
