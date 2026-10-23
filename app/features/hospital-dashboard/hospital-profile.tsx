@@ -12,7 +12,9 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { useFormik } from "formik";
 import { useState, type ReactNode } from "react";
+import * as Yup from "yup";
 
 type HospitalProfileData = {
   name: string;
@@ -157,6 +159,16 @@ function EditableTags({
   onChange: (items: string[]) => void;
 }) {
   const [newItem, setNewItem] = useState("");
+  const addItem = () => {
+    const trimmed = newItem.trim();
+    if (
+      trimmed &&
+      !items.some((item) => item.toLowerCase() === trimmed.toLowerCase())
+    ) {
+      onChange([...items, trimmed]);
+      setNewItem("");
+    }
+  };
   return (
     <div>
       <div className="flex flex-wrap gap-3">
@@ -177,36 +189,30 @@ function EditableTags({
           </span>
         ))}
       </div>
-      <form
-        className="mt-4 flex flex-wrap gap-3"
-        onSubmit={(event) => {
-          event.preventDefault();
-          const trimmed = newItem.trim();
-          if (
-            trimmed &&
-            !items.some((item) => item.toLowerCase() === trimmed.toLowerCase())
-          ) {
-            onChange([...items, trimmed]);
-            setNewItem("");
-          }
-        }}
-      >
+      <div className="mt-4 flex flex-wrap gap-3">
         <input
           aria-label={`New ${label.toLowerCase()}`}
           placeholder={`Add ${label.toLowerCase()}…`}
           value={newItem}
           onChange={(event) => setNewItem(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              addItem();
+            }
+          }}
           className="min-h-11 min-w-0 flex-1 rounded-xl border border-[#d2d6db] px-4"
         />
         <button
-          type="submit"
+          type="button"
+          onClick={addItem}
           disabled={!newItem.trim()}
           className="inline-flex items-center gap-2 rounded-xl border border-[#d2d6db] px-5 text-[#155eef] disabled:opacity-40"
         >
           <Plus className="size-4" />
           Add
         </button>
-      </form>
+      </div>
     </div>
   );
 }
@@ -222,40 +228,60 @@ function cloneProfile(data: HospitalProfileData): HospitalProfileData {
 
 export default function HospitalProfile() {
   const [profile, setProfile] = useState<HospitalProfileData>(sampleProfile);
-  const [draft, setDraft] = useState<HospitalProfileData>(
-    cloneProfile(sampleProfile)
-  );
   const [editing, setEditing] = useState(false);
   const [notice, setNotice] = useState("");
   const [hourLabel, setHourLabel] = useState("");
-
+  const formik = useFormik<HospitalProfileData>({
+    initialValues: cloneProfile(profile),
+    enableReinitialize: true,
+    validationSchema: Yup.object({
+      name: Yup.string().trim().required("Hospital name is required."),
+      email: Yup.string()
+        .trim()
+        .email("Enter a valid email address.")
+        .required("Hospital email is required."),
+    }),
+    onSubmit: (values) => {
+      setProfile(cloneProfile(values));
+      setEditing(false);
+      setHourLabel("");
+      setNotice(
+        "Changes saved in this local preview only. Public profile updates require OHealth approval."
+      );
+    },
+  });
+  const draft = formik.values;
   const startEdit = () => {
-    setDraft(cloneProfile(profile));
+    formik.resetForm({ values: cloneProfile(profile) });
     setEditing(true);
     setNotice("");
   };
   const updateDraft = <K extends keyof HospitalProfileData>(
     key: K,
     value: HospitalProfileData[K]
-  ) => setDraft((current) => ({ ...current, [key]: value }));
-  const cancelEdit = () => {
-    setEditing(false);
-    setDraft(cloneProfile(profile));
+  ) => {
+    void formik.setFieldValue(key, value);
   };
-  const saveEdit = () => {
-    if (!draft.name.trim() || !draft.email.trim()) {
-      setNotice("Hospital name and email are required.");
-      return;
-    }
-    setProfile(cloneProfile(draft));
+  const cancelEdit = () => {
+    formik.resetForm({ values: cloneProfile(profile) });
     setEditing(false);
-    setNotice(
-      "Changes saved in this local preview only. Public profile updates require OHealth approval."
-    );
+    setHourLabel("");
+    setNotice("");
+  };
+  const addHour = () => {
+    if (!hourLabel.trim()) return;
+    updateDraft("hours", [
+      ...draft.hours,
+      { label: hourLabel.trim(), opens: "", closes: "" },
+    ]);
+    setHourLabel("");
   };
 
   return (
-    <div className="mx-auto w-full max-w-[1082px] pb-14 lg:pt-4">
+    <form
+      onSubmit={formik.handleSubmit}
+      className="mx-auto w-full max-w-[1082px] pb-14 lg:pt-4"
+    >
       <div className="mb-[47px] flex items-center gap-4">
         <div
           role="img"
@@ -293,8 +319,7 @@ export default function HospitalProfile() {
               Cancel
             </button>
             <button
-              type="button"
-              onClick={saveEdit}
+              type="submit"
               className="inline-flex items-center gap-2 rounded-xl bg-[#155eef] px-5 py-3 font-medium text-white"
             >
               <Check className="size-4" />
@@ -325,6 +350,11 @@ export default function HospitalProfile() {
                 value={draft.name}
                 onChange={(value) => updateDraft("name", value)}
               />
+              {formik.submitCount > 0 && formik.errors.name ? (
+                <p role="alert" className="text-sm text-[#b42318]">
+                  {formik.errors.name}
+                </p>
+              ) : null}
               <EditableField
                 label="Description"
                 value={draft.description}
@@ -363,6 +393,11 @@ export default function HospitalProfile() {
                 value={draft.email}
                 onChange={(value) => updateDraft("email", value)}
               />
+              {formik.submitCount > 0 && formik.errors.email ? (
+                <p role="alert" className="text-sm text-[#b42318]">
+                  {formik.errors.email}
+                </p>
+              ) : null}
               <EditableField
                 label="Website"
                 value={draft.website}
@@ -466,34 +501,29 @@ export default function HospitalProfile() {
                   </button>
                 </div>
               ))}
-              <form
-                className="mt-3 flex gap-3"
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  if (hourLabel.trim()) {
-                    updateDraft("hours", [
-                      ...draft.hours,
-                      { label: hourLabel.trim(), opens: "", closes: "" },
-                    ]);
-                    setHourLabel("");
-                  }
-                }}
-              >
+              <div className="mt-3 flex gap-3">
                 <input
                   aria-label="Add a day or period"
                   placeholder="Add a day or period…"
                   value={hourLabel}
                   onChange={(event) => setHourLabel(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      addHour();
+                    }
+                  }}
                   className="min-w-0 flex-1 rounded-xl border border-[#d2d6db] px-4 py-3"
                 />
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={addHour}
                   disabled={!hourLabel.trim()}
                   className="rounded-xl border border-[#d2d6db] px-5 text-[#155eef] disabled:opacity-40"
                 >
                   Add
                 </button>
-              </form>
+              </div>
             </div>
           ) : (
             <dl className="divide-y divide-[#f1f5f9]">
@@ -566,6 +596,6 @@ export default function HospitalProfile() {
           )}
         </SectionCard>
       </div>
-    </div>
+    </form>
   );
 }
