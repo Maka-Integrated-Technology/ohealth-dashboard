@@ -14,6 +14,8 @@ type PreviewPatient = {
   initials: string;
   patient: string;
   detail: string;
+  nextAppointment?: string;
+  lastAppointment?: string;
 };
 
 type PatientTab =
@@ -105,7 +107,7 @@ export default function HospitalPatientDetails({
             {isFigmaSample ? (
               <p className="mt-3 inline-flex items-center gap-2 text-[13px] font-medium text-[#2970ff] sm:text-[15px]">
                 <CalendarDays className="size-4" />
-                Next: 2024-12-20
+                Next: {patient.nextAppointment}
               </p>
             ) : null}
           </div>
@@ -113,7 +115,7 @@ export default function HospitalPatientDetails({
             <div className="text-right">
               <p className="text-[14px] text-[#6c737f]">Last visit</p>
               <p className="mt-1 text-[13px] font-medium text-[#1f2a37] sm:text-[15px]">
-                2024-11-15
+                {patient.lastAppointment}
               </p>
             </div>
           ) : null}
