@@ -661,6 +661,7 @@ export default function LaboratoryAuthPage() {
               )
             }
             onOpenScreen={openScreen}
+            onOpenDashboard={() => navigate("/dashboard")}
           />
           <div className="mt-8 border-t border-slate-200 pt-4">
             <p className="text-center text-[11px] leading-5 text-slate-400">
