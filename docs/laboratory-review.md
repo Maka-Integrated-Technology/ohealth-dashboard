@@ -23,6 +23,7 @@ Run:
 
 ```bash
 npm run test:lab
+npm run test:lab:ui
 npm run test:audit-policy
 npm run audit:dependencies
 npm run format:check
@@ -35,7 +36,18 @@ Node-based behavior tests cover URL search/filter logic, invalid and default
 parameters, staff filtering/duplicate emails/preview-only updates, catalogue
 updates, booking transitions, results publishing transitions, notification
 read-state helpers, onboarding progression and password rule validation.
-Both the normal CI and laboratory preview workflow run the lab tests.
+Five additional React Testing Library/JSDOM component tests render the actual
+onboarding, catalogue, staff, bookings and result-publishing screens and
+exercise their buttons, dialogs, form submission and local-state changes.
+Both the normal CI and hardened Laboratory Preview workflow run both lab
+suites. These rendered tests do not replace cross-browser Playwright or
+manual keyboard/visual QA.
+
+The permanent Laboratory Preview workflow uses SHA-pinned checkout and
+setup-node actions, does not persist checkout credentials, and runs the
+repository supply-chain scan and its adversarial tests **before** installing
+dependencies. The standalone lockfile/formatter validation workflow was
+temporary and is removed before review.
 
 ## Security and privacy constraints
 
@@ -51,8 +63,9 @@ new advisories must be remediated, not suppressed.
 
 ## Remaining manual checks before deployment
 
-- Browser automation for full dialogs, keyboard/focus interactions, and
-  URL back/forward behavior (unit tests alone are not an end-to-end guarantee)
+- Cross-browser end-to-end automation for keyboard/focus interactions,
+  URL back/forward and real browser navigation (component tests are not
+  a full end-to-end guarantee)
 - Visual screenshot comparison at desktop/tablet/mobile breakpoints
 - Review historical dates and fictional/sample patient data against approved
   training/preview content
@@ -60,3 +73,7 @@ new advisories must be remediated, not suppressed.
   a separate, reviewed production implementation
 
 No production deployment is performed by the PR review work.
+
+The unrelated external Cloudflare Pages check for `ohealth-hospital-preview`
+must be scoped by its project owner so hospital preview builds do not block
+laboratory-only changes. This PR does not modify Cloudflare project settings.
