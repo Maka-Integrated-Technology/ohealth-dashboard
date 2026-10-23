@@ -39,5 +39,6 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git commit -m "style(hospital): format reviewed form and filter changes"
+            git pull --rebase origin feat/hospital-auth-cloudflare-preview
             git push origin HEAD:feat/hospital-auth-cloudflare-preview
           fi
