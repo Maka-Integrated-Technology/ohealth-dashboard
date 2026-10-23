@@ -194,8 +194,11 @@ const RECORD_ROUTES: Partial<Record<AuditCategory, string>> = {
 };
 
 function AuditLogs({ query }: { query: string }) {
-  const [localSearch, setLocalSearch] = useState("");
-  const [category, setCategory] = useState<AuditCategory | "">("");
+  const [params, setParams] = useSearchParams();
+  const localSearch = labParam(params, "q");
+  const setLocalSearch = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const category = labParam(params, "category", ["Sample", "Booking", "Result", "Staff", "Auth"]) as AuditCategory | "";
+  const setCategory = (value: AuditCategory | "") => setParams((current) => labListParams(current, "category", value));
 
   const filtered = useMemo(() => {
     const local = localSearch.trim().toLowerCase();
