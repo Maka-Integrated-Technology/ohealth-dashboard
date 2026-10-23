@@ -38,17 +38,14 @@ import HospitalLaboratory from "~/features/hospital-dashboard/hospital-laborator
 import HospitalPrescriptions from "~/features/hospital-dashboard/hospital-prescriptions";
 import HospitalReviews from "~/features/hospital-dashboard/hospital-reviews";
 import HospitalSettings from "~/features/hospital-dashboard/hospital-settings";
-import HospitalNotifications, {
-  hospitalNotificationSamples,
-} from "~/features/hospital-dashboard/hospital-notifications";
+import HospitalNotifications from "~/features/hospital-dashboard/hospital-notifications";
+import { hospitalNotificationSamples } from "~/features/hospital-dashboard/hospital-notification-data";
 import HospitalAppointments, {
   AppointmentDrawer,
-  appointmentSamples,
-  type PreviewAppointment,
 } from "~/features/hospital-dashboard/hospital-appointments";
-import HospitalPatientsList, {
-  hospitalPatientRecords,
-} from "~/features/hospital-dashboard/patients-list";
+import { appointmentSamples, type PreviewAppointment } from "~/features/hospital-dashboard/hospital-appointment-data";
+import HospitalPatientsList from "~/features/hospital-dashboard/patients-list";
+import { hospitalPatientRecords } from "~/features/hospital-dashboard/hospital-patient-data";
 import Logo from "~/components/shared/logo";
 
 type Appointment = PreviewAppointment;
