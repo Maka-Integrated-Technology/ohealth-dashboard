@@ -222,7 +222,7 @@ test("hospital Compose build argument uses an accepted VITE_ROUTE", () => {
   const router = readFileSync(new URL("../../app/routes.ts", import.meta.url), "utf8");
   assert.match(
     compose,
-    /hs-dashboard:\\s*\\n(?:.|\\n)*?VITE_ROUTE: hospital-dashboard/
+    /hs-dashboard:\s*\n[\s\S]*?VITE_ROUTE: hospital-dashboard/
   );
   assert.match(router, /"hospital-dashboard"/);
   assert.doesNotMatch(compose, /VITE_ROUTE: hs-dashboard/);
