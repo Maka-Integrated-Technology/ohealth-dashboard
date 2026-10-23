@@ -219,7 +219,10 @@ test("hospital Compose build argument uses an accepted VITE_ROUTE", () => {
     new URL("../../docker-compose.prod.yml", import.meta.url),
     "utf8"
   );
-  const router = readFileSync(new URL("../../app/routes.ts", import.meta.url), "utf8");
+  const router = readFileSync(
+    new URL("../../app/routes.ts", import.meta.url),
+    "utf8"
+  );
   assert.match(
     compose,
     /hs-dashboard:\s*\n[\s\S]*?VITE_ROUTE: hospital-dashboard/
@@ -231,7 +234,12 @@ test("hospital Compose build argument uses an accepted VITE_ROUTE", () => {
 test("laboratory search and status filters round-trip through the URL", () => {
   const initial = new URLSearchParams("section=Laboratory");
   const searched = state.hospitalFilterParams(initial, "q", "blood");
-  const filtered = state.hospitalFilterParams(searched, "status", "Processing", "All");
+  const filtered = state.hospitalFilterParams(
+    searched,
+    "status",
+    "Processing",
+    "All"
+  );
   const restored = new URLSearchParams(filtered.toString());
   assert.equal(restored.get("q"), "blood");
   assert.equal(restored.get("status"), "Processing");
@@ -251,9 +259,9 @@ test("prescription search survives a URL refresh but clears on section change", 
     "amoxicillin"
   );
   assert.equal(new URLSearchParams(query.toString()).get("q"), "amoxicillin");
+  assert.equal(state.hospitalFilterParams(query, "q", "").has("q"), false);
   assert.equal(
-    state.hospitalFilterParams(query, "q", "").has("q"),
+    state.hospitalNavigationParams(query, "Laboratory").has("q"),
     false
   );
-  assert.equal(state.hospitalNavigationParams(query, "Laboratory").has("q"), false);
 });

@@ -495,9 +495,13 @@ export default function HospitalSettings() {
                       autoComplete={autocomplete}
                       className="mt-2 block min-h-11 w-full rounded-xl border border-[#d2d6db] px-4 outline-none focus:border-[#155eef]"
                     />
-                    {(passwordForm.touched[key] || passwordForm.submitCount > 0) &&
+                    {(passwordForm.touched[key] ||
+                      passwordForm.submitCount > 0) &&
                     passwordForm.errors[key] ? (
-                      <span role="alert" className="mt-1 block text-xs text-[#b42318]">
+                      <span
+                        role="alert"
+                        className="mt-1 block text-xs text-[#b42318]"
+                      >
                         {passwordForm.errors[key]}
                       </span>
                     ) : null}
@@ -639,7 +643,10 @@ export default function HospitalSettings() {
                       <select
                         value={inviteForm.values.role}
                         onChange={(event) => {
-                          void inviteForm.setFieldValue("role", event.target.value);
+                          void inviteForm.setFieldValue(
+                            "role",
+                            event.target.value
+                          );
                         }}
                         className="mt-2 block min-h-11 w-full rounded-xl border border-[#d2d6db] bg-white px-4 text-[#1f2a37]"
                       >
