@@ -1,5 +1,10 @@
-export type LabAdministratorPassword = { password: string; confirmPassword: string };
-export function labAdministratorPasswordError(form: LabAdministratorPassword): string | null {
+export type LabAdministratorPassword = {
+  password: string;
+  confirmPassword: string;
+};
+export function labAdministratorPasswordError(
+  form: LabAdministratorPassword
+): string | null {
   if (form.password && form.password.length < 8)
     return "Use at least 8 characters for the password.";
   if (

@@ -12,10 +12,17 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { nextLabRegistrationStep, labAdministratorPasswordError } from "~/features/laboratory-auth/laboratory-registration-flow";
+import {
+  nextLabRegistrationStep,
+  labAdministratorPasswordError,
+} from "~/features/laboratory-auth/laboratory-registration-flow";
 import { LaboratoryAuthCompletion } from "~/features/laboratory-auth/laboratory-auth-completion";
 import LaboratoryAuthHero from "~/features/laboratory-auth/laboratory-auth-hero";
-import { Field, StepProgress, inputClassName } from "~/features/laboratory-auth/laboratory-auth-fields";
+import {
+  Field,
+  StepProgress,
+  inputClassName,
+} from "~/features/laboratory-auth/laboratory-auth-fields";
 
 type AuthScreen =
   | "sign-in"
@@ -85,19 +92,34 @@ export default function LaboratoryAuthPage() {
   const [showAdminPassword, setShowAdminPassword] = useState(false);
   const loginForm = useFormik({
     initialValues: { email: "", password: "" },
-    validationSchema: Yup.object({ email: Yup.string().email("Enter a valid email address.") }),
+    validationSchema: Yup.object({
+      email: Yup.string().email("Enter a valid email address."),
+    }),
     onSubmit: () => navigate("/dashboard"),
   });
   const resetForm = useFormik({
     initialValues: { email: "" },
-    validationSchema: Yup.object({ email: Yup.string().email("Enter a valid email address.") }),
-    onSubmit: () => setFeedback("Password-reset is a preview state only. No reset email was sent."),
+    validationSchema: Yup.object({
+      email: Yup.string().email("Enter a valid email address."),
+    }),
+    onSubmit: () =>
+      setFeedback(
+        "Password-reset is a preview state only. No reset email was sent."
+      ),
   });
   const labForm = useFormik<LaboratoryDetails>({
     initialValues: {
-      name: "", registrationNumber: "", licenseNumber: "", address: "", state: "", phone: "", email: "",
+      name: "",
+      registrationNumber: "",
+      licenseNumber: "",
+      address: "",
+      state: "",
+      phone: "",
+      email: "",
     },
-    validationSchema: Yup.object({ email: Yup.string().email("Enter a valid laboratory email.") }),
+    validationSchema: Yup.object({
+      email: Yup.string().email("Enter a valid laboratory email."),
+    }),
     onSubmit: () => {
       setFeedback("");
       setRegistrationStep(nextLabRegistrationStep(1) as RegistrationStep);
@@ -105,9 +127,15 @@ export default function LaboratoryAuthPage() {
   });
   const adminForm = useFormik<AdministratorDetails>({
     initialValues: {
-      fullName: "", email: "", phone: "", password: "", confirmPassword: "",
+      fullName: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
     },
-    validationSchema: Yup.object({ email: Yup.string().email("Enter a valid administrator email.") }),
+    validationSchema: Yup.object({
+      email: Yup.string().email("Enter a valid administrator email."),
+    }),
     onSubmit: (values) => {
       const error = labAdministratorPasswordError(values);
       if (error) {
@@ -135,7 +163,10 @@ export default function LaboratoryAuthPage() {
   const updateLaboratory = (key: keyof LaboratoryDetails, value: string) => {
     void labForm.setFieldValue(key, value);
   };
-  const updateAdministrator = (key: keyof AdministratorDetails, value: string) => {
+  const updateAdministrator = (
+    key: keyof AdministratorDetails,
+    value: string
+  ) => {
     void adminForm.setFieldValue(key, value);
   };
 
@@ -182,7 +213,8 @@ export default function LaboratoryAuthPage() {
 
   return (
     <div className="min-h-screen bg-[#fcfcfc] lg:grid lg:grid-cols-[minmax(350px,0.99fr)_minmax(500px,1.01fr)]">
-      <LaboratoryAuthHero />      <main className="flex min-h-[70vh] items-center justify-center px-5 py-10 sm:px-8 lg:min-h-screen lg:px-12 xl:px-16">
+      <LaboratoryAuthHero />{" "}
+      <main className="flex min-h-[70vh] items-center justify-center px-5 py-10 sm:px-8 lg:min-h-screen lg:px-12 xl:px-16">
         <div className="w-full max-w-xl">
           <div className="mb-8 flex items-start justify-between gap-4">
             <div>
@@ -230,7 +262,9 @@ export default function LaboratoryAuthPage() {
               <Field
                 label="Email address"
                 value={loginForm.values.email}
-                onChange={(value) => void loginForm.setFieldValue("email", value)}
+                onChange={(value) =>
+                  void loginForm.setFieldValue("email", value)
+                }
                 type="email"
                 autoComplete="email"
                 placeholder="admin@laboratory.ng"
@@ -260,7 +294,10 @@ export default function LaboratoryAuthPage() {
                     autoComplete="current-password"
                     placeholder="Enter your password"
                     onChange={(event) =>
-                      void loginForm.setFieldValue("password", event.currentTarget.value)
+                      void loginForm.setFieldValue(
+                        "password",
+                        event.currentTarget.value
+                      )
                     }
                   />
                   <button
@@ -312,7 +349,9 @@ export default function LaboratoryAuthPage() {
               <Field
                 label="Email address"
                 value={resetForm.values.email}
-                onChange={(value) => void resetForm.setFieldValue("email", value)}
+                onChange={(value) =>
+                  void resetForm.setFieldValue("email", value)
+                }
                 type="email"
                 autoComplete="email"
                 placeholder="admin@laboratory.ng"
@@ -421,10 +460,7 @@ export default function LaboratoryAuthPage() {
               ) : null}
 
               {registrationStep === 2 ? (
-                <form
-                  className="space-y-4"
-                  onSubmit={adminForm.handleSubmit}
-                >
+                <form className="space-y-4" onSubmit={adminForm.handleSubmit}>
                   <div className="mb-1">
                     <h3 className="font-semibold text-slate-900">
                       Administrator account

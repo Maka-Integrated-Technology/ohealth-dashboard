@@ -325,7 +325,10 @@ export default function LaboratoryDashboard() {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const search = labParam(params, "q");
-  const setSearch = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const setSearch = (value: string) =>
+    setParams((current) => labListParams(current, "q", value), {
+      replace: true,
+    });
   const [reportOpen, setReportOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<
     (typeof SCHEDULE)[number] | null

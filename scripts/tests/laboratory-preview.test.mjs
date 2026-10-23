@@ -10,9 +10,14 @@ import ts from "typescript";
 async function loadTs(path) {
   const file = new URL("../../app/features/" + path, import.meta.url);
   const output = ts.transpileModule(readFileSync(file, "utf8"), {
-    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+    compilerOptions: {
+      module: ts.ModuleKind.ESNext,
+      target: ts.ScriptTarget.ES2022,
+    },
   }).outputText;
-  return import("data:text/javascript;base64," + Buffer.from(output).toString("base64"));
+  return import(
+    "data:text/javascript;base64," + Buffer.from(output).toString("base64")
+  );
 }
 
 const [state, staff, catalogue, bookings, results, auth] = await Promise.all([
@@ -38,23 +43,65 @@ test("lab section filters preserve tabs and validate untrusted params", () => {
   const after = state.labListParams(initial, "category", "Blood Tests");
   assert.equal(after.get("tab"), "Pending");
   assert.equal(after.get("category"), "Blood Tests");
-  assert.equal(state.labParam(after, "tab", ["All", "Pending"], "All"), "Pending");
-  assert.equal(state.labParam(new URLSearchParams("tab=unknown"), "tab", ["All", "Pending"], "All"), "All");
-  assert.equal(state.labListParams(after, "tab", "All", "All").has("tab"), false);
+  assert.equal(
+    state.labParam(after, "tab", ["All", "Pending"], "All"),
+    "Pending"
+  );
+  assert.equal(
+    state.labParam(
+      new URLSearchParams("tab=unknown"),
+      "tab",
+      ["All", "Pending"],
+      "All"
+    ),
+    "All"
+  );
+  assert.equal(
+    state.labListParams(after, "tab", "All", "All").has("tab"),
+    false
+  );
 });
 
 test("staff preview searches role, email and last active without case sensitivity", () => {
   assert.equal(staff.INITIAL_LAB_STAFF.length, 6);
-  assert.equal(staff.INITIAL_LAB_STAFF.filter((item) => state.labStaffMatch(item, "chiamaka")).length, 1);
-  assert.equal(staff.INITIAL_LAB_STAFF.filter((item) => state.labStaffMatch(item, "quality assurance")).length, 1);
-  assert.equal(staff.INITIAL_LAB_STAFF.filter((item) => state.labStaffMatch(item, "unknown person")).length, 0);
+  assert.equal(
+    staff.INITIAL_LAB_STAFF.filter((item) =>
+      state.labStaffMatch(item, "chiamaka")
+    ).length,
+    1
+  );
+  assert.equal(
+    staff.INITIAL_LAB_STAFF.filter((item) =>
+      state.labStaffMatch(item, "quality assurance")
+    ).length,
+    1
+  );
+  assert.equal(
+    staff.INITIAL_LAB_STAFF.filter((item) =>
+      state.labStaffMatch(item, "unknown person")
+    ).length,
+    0
+  );
 });
 
 test("staff invitation and edit checks prevent duplicate email except for same member", () => {
   const first = staff.INITIAL_LAB_STAFF[0];
-  assert.equal(state.labUniqueEmail(staff.INITIAL_LAB_STAFF, first.email.toUpperCase(), null), false);
-  assert.equal(state.labUniqueEmail(staff.INITIAL_LAB_STAFF, first.email, first.id), true);
-  assert.equal(state.labUniqueEmail(staff.INITIAL_LAB_STAFF, "new@ohealthplus.ng", null), true);
+  assert.equal(
+    state.labUniqueEmail(
+      staff.INITIAL_LAB_STAFF,
+      first.email.toUpperCase(),
+      null
+    ),
+    false
+  );
+  assert.equal(
+    state.labUniqueEmail(staff.INITIAL_LAB_STAFF, first.email, first.id),
+    true
+  );
+  assert.equal(
+    state.labUniqueEmail(staff.INITIAL_LAB_STAFF, "new@ohealthplus.ng", null),
+    true
+  );
 });
 
 test("staff status, role and permissions edits affect only the selected preview row", () => {
@@ -70,8 +117,14 @@ test("staff status, role and permissions edits affect only the selected preview 
 test("catalogue search recognizes tests and safely preserves nonedited rows", () => {
   assert.ok(catalogue.INITIAL_CATALOGUE_TESTS.length > 4);
   const target = catalogue.INITIAL_CATALOGUE_TESTS[0];
-  assert.equal(state.labTextMatch([target.name, target.category, target.id], "cbc"), true);
-  const result = state.labReplaceById(catalogue.INITIAL_CATALOGUE_TESTS, { ...target, active: false });
+  assert.equal(
+    state.labTextMatch([target.name, target.category, target.id], "cbc"),
+    true
+  );
+  const result = state.labReplaceById(catalogue.INITIAL_CATALOGUE_TESTS, {
+    ...target,
+    active: false,
+  });
   assert.equal(result[0].active, false);
   assert.equal(catalogue.INITIAL_CATALOGUE_TESTS[0].active, true);
 });
@@ -79,11 +132,18 @@ test("catalogue search recognizes tests and safely preserves nonedited rows", ()
 test("booking transitions replace one booking and preserve other patients", () => {
   const original = bookings.INITIAL_BOOKINGS;
   const target = original[0];
-  const next = state.labReplaceById(original, { ...target, status: "Cancelled" });
+  const next = state.labReplaceById(original, {
+    ...target,
+    status: "Cancelled",
+  });
   assert.equal(next[0].status, "Cancelled");
   assert.notEqual(next[0], target);
   assert.strictEqual(next[1], original[1]);
-  assert.equal(bookings.lifecycleIndex("Completed") >= bookings.lifecycleIndex("Confirmed"), true);
+  assert.equal(
+    bookings.lifecycleIndex("Completed") >=
+      bookings.lifecycleIndex("Confirmed"),
+    true
+  );
 });
 
 test("results publish preview transition doesn't mutate another result", () => {
@@ -96,10 +156,19 @@ test("results publish preview transition doesn't mutate another result", () => {
 });
 
 test("notification read helper is idempotent and doesn't mutate original list", () => {
-  const list = [{ id: "n1", unread: true }, { id: "n2", unread: true }];
+  const list = [
+    { id: "n1", unread: true },
+    { id: "n2", unread: true },
+  ];
   const next = state.labWithNotificationRead(list, "n1");
-  assert.deepEqual(next.map((item) => item.unread), [false, true]);
-  assert.deepEqual(list.map((item) => item.unread), [true, true]);
+  assert.deepEqual(
+    next.map((item) => item.unread),
+    [false, true]
+  );
+  assert.deepEqual(
+    list.map((item) => item.unread),
+    [true, true]
+  );
   assert.equal(state.labWithNotificationRead(next, "n1")[0].unread, false);
 });
 
@@ -110,8 +179,29 @@ test("onboarding stage progression stays sequential without calling a backend", 
 });
 
 test("administrator onboarding rejects short and mismatched passwords", () => {
-  assert.match(auth.labAdministratorPasswordError({ password: "123", confirmPassword: "123" }), /at least 8/);
-  assert.match(auth.labAdministratorPasswordError({ password: "verysecure", confirmPassword: "different" }), /do not match/);
-  assert.equal(auth.labAdministratorPasswordError({ password: "verysecure", confirmPassword: "verysecure" }), null);
-  assert.equal(auth.labAdministratorPasswordError({ password: "", confirmPassword: "" }), null);
+  assert.match(
+    auth.labAdministratorPasswordError({
+      password: "123",
+      confirmPassword: "123",
+    }),
+    /at least 8/
+  );
+  assert.match(
+    auth.labAdministratorPasswordError({
+      password: "verysecure",
+      confirmPassword: "different",
+    }),
+    /do not match/
+  );
+  assert.equal(
+    auth.labAdministratorPasswordError({
+      password: "verysecure",
+      confirmPassword: "verysecure",
+    }),
+    null
+  );
+  assert.equal(
+    auth.labAdministratorPasswordError({ password: "", confirmPassword: "" }),
+    null
+  );
 });

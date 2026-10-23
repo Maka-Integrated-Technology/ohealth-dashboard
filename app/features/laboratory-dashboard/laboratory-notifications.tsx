@@ -95,7 +95,10 @@ export default function LaboratoryNotifications() {
   const items = useLabNotifications();
   const [params, setParams] = useSearchParams();
   const headerSearch = labParam(params, "q");
-  const setHeaderSearch = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const setHeaderSearch = (value: string) =>
+    setParams((current) => labListParams(current, "q", value), {
+      replace: true,
+    });
   const unreadCount = items.filter((item) => item.unread).length;
   const query = headerSearch.trim().toLowerCase();
   const visibleItems = query

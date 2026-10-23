@@ -241,12 +241,31 @@ const CHART_TOOLTIP = {
 
 export default function LaboratoryReportsAndAnalytics() {
   const [params, setParams] = useSearchParams();
-  const period = labParam(params, "period", ["Last 7 Months", "Last 3 Months", "This Month"], "Last 7 Months") as Period;
-  const setPeriod = (value: Period) => setParams((current) => labListParams(current, "period", value, "Last 7 Months"));
-  const category = labParam(params, "category", ["All Categories", ...CATEGORIES.map((item) => item.name)], "All Categories");
-  const setCategory = (value: string) => setParams((current) => labListParams(current, "category", value, "All Categories"));
+  const period = labParam(
+    params,
+    "period",
+    ["Last 7 Months", "Last 3 Months", "This Month"],
+    "Last 7 Months"
+  ) as Period;
+  const setPeriod = (value: Period) =>
+    setParams((current) =>
+      labListParams(current, "period", value, "Last 7 Months")
+    );
+  const category = labParam(
+    params,
+    "category",
+    ["All Categories", ...CATEGORIES.map((item) => item.name)],
+    "All Categories"
+  );
+  const setCategory = (value: string) =>
+    setParams((current) =>
+      labListParams(current, "category", value, "All Categories")
+    );
   const headerQuery = labParam(params, "q");
-  const setHeaderQuery = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const setHeaderQuery = (value: string) =>
+    setParams((current) => labListParams(current, "q", value), {
+      replace: true,
+    });
 
   const monthly =
     period === "This Month"

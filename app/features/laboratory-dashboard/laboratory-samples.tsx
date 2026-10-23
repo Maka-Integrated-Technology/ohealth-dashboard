@@ -120,14 +120,25 @@ function StatusPill({
 export default function LaboratorySamplesAndTests() {
   const [params, setParams] = useSearchParams();
   const search = labParam(params, "q");
-  const setSearch = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const setSearch = (value: string) =>
+    setParams((current) => labListParams(current, "q", value), {
+      replace: true,
+    });
   const headerSearch = search;
   const setHeaderSearch = setSearch;
   const filter = labParam(params, "status", STATUS_ORDER) as SampleStatus | "";
-  const setFilter = (next: SampleStatus | "" | ((previous: SampleStatus | "") => SampleStatus | "")) =>
+  const setFilter = (
+    next:
+      SampleStatus | "" | ((previous: SampleStatus | "") => SampleStatus | "")
+  ) =>
     setParams((current) => {
-      const previous = labParam(current, "status", STATUS_ORDER) as SampleStatus | "";
-      return labListParams(current, "status", typeof next === "function" ? next(previous) : next);
+      const previous = labParam(current, "status", STATUS_ORDER) as
+        SampleStatus | "";
+      return labListParams(
+        current,
+        "status",
+        typeof next === "function" ? next(previous) : next
+      );
     });
   const [selectedId, setSelectedId] = useState<string | null>(null);
 

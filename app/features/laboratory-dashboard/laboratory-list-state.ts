@@ -24,7 +24,10 @@ export function labListParams(
   return next;
 }
 
-export function labTextMatch(values: readonly string[], query: string): boolean {
+export function labTextMatch(
+  values: readonly string[],
+  query: string
+): boolean {
   const needle = query.trim().toLocaleLowerCase();
   return values.some((value) => value.toLocaleLowerCase().includes(needle));
 }
@@ -41,7 +44,14 @@ export function labStaffMatch(
   search: string
 ): boolean {
   return labTextMatch(
-    [staff.name, staff.email, staff.phone, staff.role, staff.status, staff.lastActive],
+    [
+      staff.name,
+      staff.email,
+      staff.phone,
+      staff.role,
+      staff.status,
+      staff.lastActive,
+    ],
     search
   );
 }
@@ -68,10 +78,9 @@ export function labReplaceById<T extends { id: string }>(
   );
 }
 
-export function labWithNotificationRead<T extends { id: string; unread: boolean }>(
-  records: readonly T[],
-  id: string
-): T[] {
+export function labWithNotificationRead<
+  T extends { id: string; unread: boolean },
+>(records: readonly T[], id: string): T[] {
   return records.map((record) =>
     record.id === id ? { ...record, unread: false } : record
   );

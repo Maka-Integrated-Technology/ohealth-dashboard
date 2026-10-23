@@ -196,9 +196,19 @@ const RECORD_ROUTES: Partial<Record<AuditCategory, string>> = {
 function AuditLogs({ query }: { query: string }) {
   const [params, setParams] = useSearchParams();
   const localSearch = labParam(params, "q");
-  const setLocalSearch = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
-  const category = labParam(params, "category", ["Sample", "Booking", "Result", "Staff", "Auth"]) as AuditCategory | "";
-  const setCategory = (value: AuditCategory | "") => setParams((current) => labListParams(current, "category", value));
+  const setLocalSearch = (value: string) =>
+    setParams((current) => labListParams(current, "q", value), {
+      replace: true,
+    });
+  const category = labParam(params, "category", [
+    "Sample",
+    "Booking",
+    "Result",
+    "Staff",
+    "Auth",
+  ]) as AuditCategory | "";
+  const setCategory = (value: AuditCategory | "") =>
+    setParams((current) => labListParams(current, "category", value));
 
   const filtered = useMemo(() => {
     const local = localSearch.trim().toLowerCase();
@@ -505,9 +515,13 @@ function Monitoring() {
 export default function LaboratoryComplianceAndAudit() {
   const [params, setParams] = useSearchParams();
   const active = labParam(params, "tab", TABS, "Audit Logs") as AuditTab;
-  const setActive = (value: AuditTab) => setParams((current) => labListParams(current, "tab", value, "Audit Logs"));
+  const setActive = (value: AuditTab) =>
+    setParams((current) => labListParams(current, "tab", value, "Audit Logs"));
   const headerQuery = labParam(params, "q");
-  const setHeaderQuery = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const setHeaderQuery = (value: string) =>
+    setParams((current) => labListParams(current, "q", value), {
+      replace: true,
+    });
   return (
     <LaboratoryShell
       section="Compliance & Audit"

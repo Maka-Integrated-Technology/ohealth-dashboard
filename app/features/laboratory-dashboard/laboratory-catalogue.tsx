@@ -349,11 +349,25 @@ export default function LaboratoryTestCatalogue() {
   const [tests, setTests] = useState<CatalogueTest[]>(INITIAL_CATALOGUE_TESTS);
   const [params, setParams] = useSearchParams();
   const search = labParam(params, "q");
-  const setSearch = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const setSearch = (value: string) =>
+    setParams((current) => labListParams(current, "q", value), {
+      replace: true,
+    });
   const headerSearch = search;
   const setHeaderSearch = setSearch;
-  const categoryFilter = labParam(params, "category", ["All Categories", ...CATEGORY_SUMMARY.map((category) => category.category)], "All Categories") as CatalogueCategory | "All Categories";
-  const setCategoryFilter = (value: CatalogueCategory | "All Categories") => setParams((current) => labListParams(current, "category", value, "All Categories"));
+  const categoryFilter = labParam(
+    params,
+    "category",
+    [
+      "All Categories",
+      ...CATEGORY_SUMMARY.map((category) => category.category),
+    ],
+    "All Categories"
+  ) as CatalogueCategory | "All Categories";
+  const setCategoryFilter = (value: CatalogueCategory | "All Categories") =>
+    setParams((current) =>
+      labListParams(current, "category", value, "All Categories")
+    );
   const [editorId, setEditorId] = useState<string | null>(null);
   const [draft, setDraft] = useState<CatalogueDraft | null>(null);
   const [error, setError] = useState("");

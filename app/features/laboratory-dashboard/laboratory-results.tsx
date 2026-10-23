@@ -20,9 +20,13 @@ export default function LaboratoryResults() {
     useState<LaboratoryResult[]>(INITIAL_LAB_RESULTS);
   const [params, setParams] = useSearchParams();
   const activeTab = labParam(params, "tab", RESULTS_TABS, "All") as ResultsTab;
-  const setActiveTab = (value: ResultsTab) => setParams((current) => labListParams(current, "tab", value, "All"));
+  const setActiveTab = (value: ResultsTab) =>
+    setParams((current) => labListParams(current, "tab", value, "All"));
   const search = labParam(params, "q");
-  const setSearch = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const setSearch = (value: string) =>
+    setParams((current) => labListParams(current, "q", value), {
+      replace: true,
+    });
   const headerSearch = search;
   const setHeaderSearch = setSearch;
   const [selectedId, setSelectedId] = useState<string | null>(null);

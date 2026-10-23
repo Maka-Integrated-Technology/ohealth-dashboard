@@ -281,10 +281,16 @@ function ExternalResultDetail({
 export default function LaboratoryExternalResults() {
   const [params, setParams] = useSearchParams();
   const query = labParam(params, "q");
-  const setQuery = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const setQuery = (value: string) =>
+    setParams((current) => labListParams(current, "q", value), {
+      replace: true,
+    });
   const headerSearch = query;
   const setHeaderSearch = setQuery;
-  const sourceFilter = labParam(params, "source", ["External Upload", "OHealth+ Lab"]) as Source | "";
+  const sourceFilter = labParam(params, "source", [
+    "External Upload",
+    "OHealth+ Lab",
+  ]) as Source | "";
   const setSourceFilter = (value: Source | null) =>
     setParams((current) => labListParams(current, "source", value ?? ""));
   const [selected, setSelected] = useState<ExternalResult | null>(null);

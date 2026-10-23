@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Plus, Search, X } from "lucide-react";
 import { useSearchParams } from "react-router";
-import { labListParams, labParam, labStaffMatch, labUniqueEmail } from "./laboratory-list-state";
+import {
+  labListParams,
+  labParam,
+  labStaffMatch,
+  labUniqueEmail,
+} from "./laboratory-list-state";
 import { LaboratoryShell } from "./laboratory-shell";
 import {
   INITIAL_LAB_STAFF,
@@ -425,7 +430,10 @@ export default function LaboratoryStaffManagement() {
   const [staff, setStaff] = useState<LabStaffMember[]>(INITIAL_LAB_STAFF);
   const [params, setParams] = useSearchParams();
   const search = labParam(params, "q");
-  const setSearch = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const setSearch = (value: string) =>
+    setParams((current) => labListParams(current, "q", value), {
+      replace: true,
+    });
   const headerSearch = search;
   const setHeaderSearch = setSearch;
   const [dialog, setDialog] = useState<ActiveDialog>(null);

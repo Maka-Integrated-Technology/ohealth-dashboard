@@ -93,4 +93,3 @@ export function StepProgress({ activeStep }: { activeStep: number }) {
     </ol>
   );
 }
-

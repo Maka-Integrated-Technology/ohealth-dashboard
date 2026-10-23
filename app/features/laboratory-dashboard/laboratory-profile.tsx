@@ -288,7 +288,8 @@ export default function LaboratoryProfile() {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const tab = labParam(params, "tab", TABS, "Lab Details") as ProfileTab;
-  const setTab = (value: ProfileTab) => setParams((current) => labListParams(current, "tab", value, "Lab Details"));
+  const setTab = (value: ProfileTab) =>
+    setParams((current) => labListParams(current, "tab", value, "Lab Details"));
   const [details, setDetails] = useState<ProfileDetails>(INITIAL_DETAILS);
   const [hours, setHours] = useState<OpeningDay[]>(INITIAL_HOURS);
   const [branches, setBranches] = useState<Branch[]>(INITIAL_BRANCHES);
@@ -298,7 +299,6 @@ export default function LaboratoryProfile() {
   const [securityDialog, setSecurityDialog] = useState<ProfileDialog>(null);
   const [previewTwoFactor, setPreviewTwoFactor] = useState(true);
   const [notice, setNotice] = useState("");
-
 
   useEffect(() => {
     if (editingBranch === null && securityDialog === null) return;
@@ -383,9 +383,7 @@ export default function LaboratoryProfile() {
   };
 
   return (
-    <LaboratoryShell
-      section="Laboratory Profile"
-    >
+    <LaboratoryShell section="Laboratory Profile">
       <div className="w-full px-[15px] pt-[24px] pb-[75px] sm:px-[30px] sm:pt-[44px] lg:px-[45px]">
         <h1 className="text-[22px] leading-[30px] font-semibold tracking-[-0.4px] text-[#202b3a] sm:text-[29px] sm:leading-[38px]">
           Laboratory Profile

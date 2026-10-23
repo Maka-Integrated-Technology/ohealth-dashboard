@@ -1,6 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router";
-import { labListParams, labParam } from "~/features/laboratory-dashboard/laboratory-list-state";
+import {
+  labListParams,
+  labParam,
+} from "~/features/laboratory-dashboard/laboratory-list-state";
 import { CalendarDays, ChevronDown, Clock3, Search, X } from "lucide-react";
 import { LaboratoryShell } from "~/features/laboratory-dashboard/laboratory-shell";
 import { LaboratoryBookingDrawer } from "~/features/laboratory-dashboard/laboratory-booking-drawer";
@@ -60,13 +63,20 @@ export default function LaboratoryTestBookings() {
   const [bookings, setBookings] = useState<Booking[]>(INITIAL_BOOKINGS);
   const [params, setParams] = useSearchParams();
   const activeTab = labParam(params, "tab", TABS, "All Bookings") as BookingTab;
-  const setActiveTab = (value: BookingTab) => setParams((current) => labListParams(current, "tab", value, "All Bookings"));
+  const setActiveTab = (value: BookingTab) =>
+    setParams((current) =>
+      labListParams(current, "tab", value, "All Bookings")
+    );
   const query = labParam(params, "q");
-  const setQuery = (value: string) => setParams((current) => labListParams(current, "q", value), { replace: true });
+  const setQuery = (value: string) =>
+    setParams((current) => labListParams(current, "q", value), {
+      replace: true,
+    });
   const headerQuery = query;
   const setHeaderQuery = setQuery;
   const category = labParam(params, "category", CATEGORIES);
-  const setCategory = (value: string) => setParams((current) => labListParams(current, "category", value));
+  const setCategory = (value: string) =>
+    setParams((current) => labListParams(current, "category", value));
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [rescheduleId, setRescheduleId] = useState<string | null>(null);
   const [cancelId, setCancelId] = useState<string | null>(null);
