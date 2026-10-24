@@ -132,6 +132,7 @@ function OrderStatus({
   );
 }
 
+// Begin codeing and sign test
 export default function PharmacyDashboard() {
   return (
     <div className="bg-[#fcfcfc] px-5 pt-6 pb-8 sm:px-6 lg:px-[30px] lg:pt-[26px]">
