@@ -1,11 +1,10 @@
 import {
+  ArrowUpRight,
   Award,
   Check,
   ClipboardList,
   Package,
   Pill,
-  TrendingDown,
-  TrendingUp,
 } from "lucide-react";
 
 const stats = [
@@ -14,28 +13,24 @@ const stats = [
     label: "Total Medicines",
     value: "1,247",
     change: "+4.2%",
-    trend: "up",
   },
   {
     icon: Package,
     label: "Pending Orders",
     value: "23",
     change: "-12%",
-    trend: "down",
   },
   {
     icon: Pill,
     label: "Prescriptions Filled",
     value: "89",
     change: "+8.7%",
-    trend: "up",
   },
   {
     icon: Award,
     label: "Compliance Score",
     value: "98%",
     change: "Optimal",
-    trend: "up",
   },
 ] as const;
 
@@ -152,39 +147,31 @@ export default function PharmacyDashboard() {
 
         <section
           aria-label="Pharmacy overview"
-          className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-[18px]"
+          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-[18px]"
         >
-          {stats.map(({ icon: Icon, label, value, change, trend }) => (
+          {stats.map(({ icon: Icon, label, value, change }) => (
             <article
               key={label}
-              className="rounded-xl border border-[#e4e8ee] bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.025)] sm:min-h-[120px] sm:p-[17px]"
+              className="rounded-xl border border-[#e4e8ee] bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.025)] sm:min-h-[120px] sm:p-[15px]"
             >
-              <div className="flex items-center justify-between gap-3">
-                <h2 className="text-[13px] font-medium text-[#5e687a] sm:text-[clamp(13px,1vw,15px)]">
+              <div className="flex items-center justify-between gap-2.5">
+                <h2 className="text-[13px] font-medium text-[#5e687a] sm:text-[clamp(12px,0.9vw,15px)]">
                   {label}
                 </h2>
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#eef4ff] text-[#1262f5]">
-                  <Icon className="size-[18px]" strokeWidth={2} />
+                <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-[#eef4ff] text-[#1262f5]">
+                  <Icon className="size-4" strokeWidth={2} />
                 </div>
               </div>
-              <p className="mt-2 text-[clamp(24px,2.3vw,34px)] leading-8 font-bold tracking-[-0.035em] text-[#171f2e]">
+              <p className="mt-2 text-[clamp(20px,1.5vw,28px)] leading-[27px] font-bold tracking-[-0.035em] text-[#171f2e]">
                 {value}
               </p>
-              <div className="mt-1 flex items-center gap-1.5 text-xs leading-4">
-                {trend === "up" ? (
-                  <TrendingUp
+              <div className="mt-1 flex items-center gap-1.5 text-xs leading-[14px]">
+                <span className="inline-flex items-center gap-0.5 rounded-sm bg-[#e8fbf1] px-1 font-semibold text-emerald-700">
+                  <ArrowUpRight
                     aria-hidden="true"
-                    className="size-3.5 text-emerald-600"
+                    className="size-3 text-emerald-600"
                     strokeWidth={2.5}
                   />
-                ) : (
-                  <TrendingDown
-                    aria-hidden="true"
-                    className="size-3.5 text-emerald-600"
-                    strokeWidth={2.5}
-                  />
-                )}
-                <span className="rounded-sm bg-[#e8fbf1] px-1 font-semibold text-emerald-700">
                   {change}
                 </span>
                 <span className="text-[#929bab]">vs last month</span>
@@ -212,9 +199,9 @@ export default function PharmacyDashboard() {
                   <tr className="h-[32px] bg-[#f8f9fb] text-[11px] font-semibold text-[#4d5869] sm:text-xs">
                     <th className="w-[18%] px-3 sm:px-[17px]">Order ID</th>
                     <th className="w-[22%] px-2">Customer</th>
-                    <th className="w-[22%] px-2">Medicine</th>
-                    <th className="w-[18%] px-2">Status</th>
-                    <th className="w-[20%] px-3 text-right sm:px-[17px]">
+                    <th className="w-[21%] px-2">Medicine</th>
+                    <th className="w-[17%] px-2">Status</th>
+                    <th className="w-[22%] px-3 text-right sm:px-[17px]">
                       Date
                     </th>
                   </tr>
@@ -223,7 +210,7 @@ export default function PharmacyDashboard() {
                   {recentOrders.map((order) => (
                     <tr
                       key={order.id}
-                      className="h-[39px] border-t border-[#edf0f4] text-xs text-[#4e596b] sm:text-[13px]"
+                      className="h-[39px] border-t border-[#edf0f4] text-xs text-[#4e596b]"
                     >
                       <td className="px-3 font-semibold whitespace-nowrap text-[#172033] sm:px-[17px]">
                         {order.id}
@@ -261,7 +248,7 @@ export default function PharmacyDashboard() {
                 {inventoryAlerts.map((item) => (
                   <li
                     key={item.medicine}
-                    className="border-b border-[#edf0f4] py-2.5 last:border-0 last:pb-0"
+                    className="border-b border-[#edf0f4] py-2 last:border-0 last:pb-0"
                   >
                     <p className="text-xs leading-4 font-semibold text-[#172033] sm:text-[13px]">
                       {item.medicine}
@@ -282,17 +269,17 @@ export default function PharmacyDashboard() {
               <h2 className="text-sm font-semibold text-[#172033] sm:text-[15px]">
                 Verification Details
               </h2>
-              <ul className="mt-3 space-y-3">
+              <ul className="mt-2 space-y-2">
                 {verificationDetails.map((item) => (
-                  <li key={item.title} className="flex items-start gap-2.5">
-                    <span className="mt-0.5 flex size-[18px] shrink-0 items-center justify-center rounded-full bg-[#e8fbf1] text-emerald-600">
-                      <Check className="size-3" strokeWidth={2.5} />
+                  <li key={item.title} className="flex items-start gap-2">
+                    <span className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full bg-[#e8fbf1] text-emerald-600">
+                      <Check className="size-[11px]" strokeWidth={2.5} />
                     </span>
                     <span>
-                      <span className="block text-xs leading-4 font-semibold text-[#172033] sm:text-[13px]">
+                      <span className="block text-xs leading-[15px] font-semibold text-[#172033]">
                         {item.title}
                       </span>
-                      <span className="mt-0.5 block text-[11px] leading-4 text-[#8993a3] sm:text-xs">
+                      <span className="mt-0.5 block text-[11px] leading-[13px] text-[#8993a3]">
                         {item.detail}
                       </span>
                     </span>
