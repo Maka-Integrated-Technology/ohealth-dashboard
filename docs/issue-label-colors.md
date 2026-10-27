@@ -4,15 +4,13 @@
 
 These are the team's default colours for the existing GitHub labels used in [Issue #55](https://github.com/Maka-Integrated-Technology/ohealth-dashboard/issues/55), [Issue #56](https://github.com/Maka-Integrated-Technology/ohealth-dashboard/issues/56), and [Issue #57](https://github.com/Maka-Integrated-Technology/ohealth-dashboard/issues/57). Labels retain their original names, so current issues and filters keep working.
 
-| Label | Colour | GitHub hex | Intended use |
-| --- | --- | --- | --- |
-| `frontend` | Blue | `#2563EB` | Frontend development and integration |
-| `ui` | Purple | `#9333EA` | Layout, Figma matching, styling and design work |
-| `deployment` | Orange | `#EA580C` | Hosting, release preparation and Cloudflare previews |
-| `qa` | Yellow | `#EAB308` | Quality assurance, tests and sign-off |
-| `pharmacy` | Green | `#16A34A` | Pharmacy portal scope |
-| `medical-professional` | Teal | `#0D9488` | Medical Professional portal scope |
-| `bug` | Red | `#D73A4A` | Defects and regressions; preserves GitHub's original red |
+- `frontend` — **Blue** (`#2563EB`): Frontend development and integration
+- `ui` — **Purple** (`#9333EA`): Layout, Figma matching, styling and design work
+- `deployment` — **Orange** (`#EA580C`): Hosting, release preparation and Cloudflare previews
+- `qa` — **Yellow** (`#EAB308`): Quality assurance, tests and sign-off
+- `pharmacy` — **Green** (`#16A34A`): Pharmacy portal scope
+- `medical-professional` — **Teal** (`#0D9488`): Medical Professional portal scope
+- `bug` — **Red** (`#D73A4A`): Defects and regressions; preserves GitHub's original red
 
 ## Source of truth and application
 
