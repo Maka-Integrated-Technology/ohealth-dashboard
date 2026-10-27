@@ -1,0 +1,50 @@
+name: Sync Approved Issue Label Colors
+
+on:
+  push:
+    branches: [dev]
+    paths:
+      - .github/issue-label-colors.json
+      - .github/workflows/sync-issue-label-colors.yml
+  workflow_dispatch:
+
+# Only the issue-label metadata can be changed by this workflow.
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync:
+    name: Apply approved dashboard label palette
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Update colours and descriptions of existing labels
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          palette=".github/issue-label-colors.json"
+          jq -e '.labels | type == "array" and length > 0' "$palette" >/dev/null
+
+          count=0
+          while IFS= read -r label; do
+            name="$(jq -er '.name | select(type == "string" and test("^[a-z0-9-]+$"))' <<< "$label")"
+            color="$(jq -er '.color | select(type == "string" and test("^[A-Fa-f0-9]{6}$"))' <<< "$label")"
+            description="$(jq -er '.description | select(type == "string" and length > 0)' <<< "$label")"
+
+            # PATCH updates label metadata; it does not create or remove labels.
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/labels/${name}" \
+              --field "color=${color}" \
+              --field "description=${description}" >/dev/null
+            echo "Updated ${name} to #${color}"
+            count=$((count + 1))
+          done < <(jq -c '.labels[]' "$palette")
+
+          echo "Synchronized ${count} approved labels"
