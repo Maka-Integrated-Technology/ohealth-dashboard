@@ -1,0 +1,41 @@
+{
+  "description": "Approved GitHub issue-label colours for the OHealth+ dashboard repository",
+  "approved_on": "2026-10-27",
+  "labels": [
+    {
+      "name": "frontend",
+      "color": "2563EB",
+      "description": "Frontend implementation and dashboard UI work"
+    },
+    {
+      "name": "ui",
+      "color": "9333EA",
+      "description": "User interface, design alignment, and visual polish"
+    },
+    {
+      "name": "deployment",
+      "color": "EA580C",
+      "description": "Hosting, preview environments, deployment and release readiness"
+    },
+    {
+      "name": "qa",
+      "color": "EAB308",
+      "description": "Quality assurance, testing and verification"
+    },
+    {
+      "name": "pharmacy",
+      "color": "16A34A",
+      "description": "OHealth+ Pharmacy Dashboard work"
+    },
+    {
+      "name": "medical-professional",
+      "color": "0D9488",
+      "description": "OHealth+ Medical Professional Dashboard work"
+    },
+    {
+      "name": "bug",
+      "color": "D73A4A",
+      "description": "Something isn't working"
+    }
+  ]
+}
