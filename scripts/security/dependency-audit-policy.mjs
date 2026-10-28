@@ -11,6 +11,15 @@ const acceptedAdvisories = new Map([
         "No patched release exists; exposure is limited to shadcn build tooling.",
     },
   ],
+  [
+    "GHSA-gcqx-w48m-w2h4",
+    {
+      packageName: "deepmerge",
+      reviewBy: "2026-11-04",
+      reason:
+        "No patched release exists; exposure is limited to shadcn development tooling.",
+    },
+  ],
 ]);
 
 function advisoryId(url) {
