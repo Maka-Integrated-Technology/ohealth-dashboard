@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import { Link, useLocation } from "react-router";
 import { Menu, type LucideIcon } from "lucide-react";
+import type { AppShellVariant } from "./app-shell-variant";
 import Logo from "./logo";
 import { Button } from "~/components/ui/button";
 import {
@@ -20,8 +21,7 @@ export interface SidebarItem {
 
 interface Props {
   items: SidebarItem[];
-  compact?: boolean;
-  showLogo?: boolean;
+  variant?: AppShellVariant;
   footer?: ReactNode;
 }
 
@@ -29,13 +29,15 @@ function SidebarNav({
   items,
   pathname,
   onNavigate,
-  compact = false,
+  variant = "default",
 }: {
   items: SidebarItem[];
   pathname: string;
   onNavigate?: () => void;
-  compact?: boolean;
+  variant?: AppShellVariant;
 }) {
+  const isCompact = variant === "compact";
+
   return (
     <nav className="flex flex-col gap-1">
       {items.map((item) => {
@@ -47,23 +49,21 @@ function SidebarNav({
             onClick={onNavigate}
             className={cn(
               "relative flex items-center rounded-lg font-medium transition-colors",
-              compact
+              isCompact
                 ? "h-[34px] gap-2.5 px-3 text-xs"
                 : "gap-3 px-3 py-2.5 text-sm",
               active
-                ? compact
-                  ? "bg-[#eff4ff] text-[#155eef]"
-                  : "bg-primary/10 text-primary"
+                ? "bg-primary/10 text-primary"
                 : "text-muted-foreground hover:text-foreground hover:bg-accent"
             )}
           >
             <item.icon
-              className={compact ? "size-4 shrink-0" : "size-5"}
+              className={isCompact ? "size-4 shrink-0" : "size-5"}
               strokeWidth={1.75}
             />
             {item.label}
-            {compact && active && (
-              <span className="absolute top-2 right-2 h-[18px] w-[3px] rounded-full bg-[#155eef]" />
+            {isCompact && active && (
+              <span className="bg-primary absolute top-2 right-2 h-[18px] w-[3px] rounded-full" />
             )}
           </Link>
         );
@@ -72,30 +72,26 @@ function SidebarNav({
   );
 }
 
-export default function Sidebar({
-  items,
-  compact = false,
-  showLogo = true,
-  footer,
-}: Props) {
+export default function Sidebar({ items, variant = "default", footer }: Props) {
   const { pathname } = useLocation();
+  const isCompact = variant === "compact";
 
   return (
     <aside
       className={cn(
         "bg-card border-border fixed inset-y-0 left-0 z-40 hidden flex-col border-r lg:flex",
-        compact ? "w-[195px] px-[18px] py-[18px]" : "w-64 px-4 py-6"
+        isCompact ? "w-[195px] px-[18px] py-[18px]" : "w-64 px-4 py-6"
       )}
     >
-      {showLogo && (
+      {!isCompact && (
         <div className="mb-8 px-2">
           <Logo size="sm" />
         </div>
       )}
-      <SidebarNav items={items} pathname={pathname} compact={compact} />
+      <SidebarNav items={items} pathname={pathname} variant={variant} />
       {footer && (
         <div
-          className={cn("mt-auto", compact && "border-t border-slate-100 pt-3")}
+          className={cn("mt-auto", isCompact && "border-border border-t pt-3")}
         >
           {footer}
         </div>
@@ -104,13 +100,10 @@ export default function Sidebar({
   );
 }
 
-export function SidebarMobileTrigger({
-  items,
-  compact = false,
-  showLogo = true,
-}: Props) {
+export function SidebarMobileTrigger({ items, variant = "default" }: Props) {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
+  const isCompact = variant === "compact";
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -126,10 +119,10 @@ export function SidebarMobileTrigger({
       </SheetTrigger>
       <SheetContent
         side="left"
-        className={cn("py-6", compact ? "w-[255px] px-4" : "w-64 px-4")}
+        className={cn("py-6", isCompact ? "w-[255px] px-4" : "w-64 px-4")}
       >
         <SheetTitle className="sr-only">Navigation</SheetTitle>
-        {showLogo && (
+        {!isCompact && (
           <div className="mb-8 px-2">
             <Logo size="sm" />
           </div>
@@ -138,7 +131,7 @@ export function SidebarMobileTrigger({
           items={items}
           pathname={pathname}
           onNavigate={() => setOpen(false)}
-          compact={compact}
+          variant={variant}
         />
       </SheetContent>
     </Sheet>

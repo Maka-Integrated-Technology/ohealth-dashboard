@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { AppShellVariant } from "../app-shell-variant";
 import Logo from "../logo";
 import { NavbarThemeToggle } from "../navbar-theme-toggle";
 import { cn } from "~/lib/utils/helpers";
@@ -9,9 +10,7 @@ interface Props {
   leftSlot?: ReactNode;
   rightSlot?: ReactNode;
   hasSidebar?: boolean;
-  showThemeToggle?: boolean;
-  compactSidebar?: boolean;
-  compactNavbar?: boolean;
+  variant?: AppShellVariant;
 }
 
 export default function MainNavbar({
@@ -20,22 +19,22 @@ export default function MainNavbar({
   leftSlot,
   rightSlot,
   hasSidebar = false,
-  showThemeToggle = true,
-  compactSidebar = false,
-  compactNavbar = false,
+  variant = "default",
 }: Props) {
+  const isCompact = variant === "compact";
+
   return (
     <>
       <nav
         className={cn(
           "bg-background/80 border-border fixed top-0 right-0 left-0 z-30 border-b backdrop-blur-md",
-          hasSidebar && (compactSidebar ? "lg:left-[195px]" : "lg:left-64")
+          hasSidebar && (isCompact ? "lg:left-[195px]" : "lg:left-64")
         )}
       >
         <div
           className={cn(
             "max-w-content mx-auto flex items-center gap-3",
-            compactNavbar ? "h-[68px] px-[18px]" : "h-16.25 px-4 sm:px-6"
+            isCompact ? "h-[68px] px-[18px]" : "h-16.25 px-4 sm:px-6"
           )}
         >
           {leftSlot}
@@ -45,13 +44,13 @@ export default function MainNavbar({
             <div
               className={cn(
                 "flex items-center gap-3",
-                compactNavbar ? "ml-0" : "lg:ml-2"
+                isCompact ? "ml-0" : "lg:ml-2"
               )}
             >
               <span
                 className={cn(
                   "text-foreground font-semibold tracking-tight",
-                  compactNavbar ? "text-xs" : "text-lg"
+                  isCompact ? "text-xs" : "text-lg"
                 )}
               >
                 {portal}
@@ -60,10 +59,10 @@ export default function MainNavbar({
           )}
 
           <div className="ml-auto flex items-center gap-3">
-            {showThemeToggle && <NavbarThemeToggle />}
+            {!isCompact && <NavbarThemeToggle />}
             {rightSlot && (
               <>
-                {showThemeToggle && (
+                {!isCompact && (
                   <div className="bg-border hidden h-6 w-px sm:block" />
                 )}
                 {rightSlot}
@@ -73,7 +72,7 @@ export default function MainNavbar({
         </div>
       </nav>
       {/* Spacer */}
-      <div className={compactNavbar ? "h-[68px]" : "h-16.25"} />
+      <div className={isCompact ? "h-[68px]" : "h-16.25"} />
     </>
   );
 }
