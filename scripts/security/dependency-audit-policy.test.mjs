@@ -4,6 +4,8 @@ import test from "node:test";
 import { evaluateAudit } from "./dependency-audit-policy.mjs";
 
 const advisoryUrl = "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm";
+const deepmergeAdvisoryUrl =
+  "https://github.com/advisories/GHSA-gcqx-w48m-w2h4";
 const beforeDeadline = new Date("2026-10-03T00:00:00Z");
 
 function auditFor(packageName = "braces", url = advisoryUrl) {
@@ -17,6 +19,16 @@ function auditFor(packageName = "braces", url = advisoryUrl) {
 
 test("accepts the reviewed braces advisory", () => {
   assert.equal(evaluateAudit(auditFor(), beforeDeadline).length, 1);
+});
+
+test("accepts the reviewed deepmerge advisory before its deadline", () => {
+  assert.equal(
+    evaluateAudit(
+      auditFor("deepmerge", deepmergeAdvisoryUrl),
+      new Date("2026-10-28T00:00:00Z")
+    ).length,
+    1
+  );
 });
 
 test("rejects an unreviewed advisory", () => {
