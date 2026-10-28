@@ -21,6 +21,7 @@
     "test:audit-policy": "node --test scripts/security/dependency-audit-policy.test.mjs",
     "test:lab": "node --test scripts/tests/laboratory-preview.test.mjs",
     "test:lab:ui": "tsx --test scripts/tests/laboratory-ui.test.tsx",
+    "test:pharmacy": "tsx --test scripts/tests/pharmacy-dashboard.test.tsx",
     "build:hs": "cross-env VITE_ROUTE=hs react-router build",
     "dev:hs": "cross-env VITE_ROUTE=hs react-router dev -p 5103",
     "test:hospital": "node --test scripts/tests/hospital-preview.test.mjs"
