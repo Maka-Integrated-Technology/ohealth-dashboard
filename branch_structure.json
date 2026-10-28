@@ -1,0 +1,30 @@
+{
+  "default_branch": "dev",
+  "branches": [
+    "dev",
+    "fix/dependency-audit-2026-10-28",
+    "main",
+    "origin",
+    "ph-dash",
+    "pharmacy_dashboard",
+    "staging"
+  ],
+  "parent": {
+    "dev": null,
+    "fix/dependency-audit-2026-10-28": "dev",
+    "main": "dev",
+    "origin": "dev",
+    "ph-dash": "dev",
+    "pharmacy_dashboard": "dev",
+    "staging": "dev"
+  },
+  "order": [
+    "dev",
+    "fix/dependency-audit-2026-10-28",
+    "main",
+    "origin",
+    "ph-dash",
+    "pharmacy_dashboard",
+    "staging"
+  ]
+}
