@@ -1,0 +1,30 @@
+{
+  "default_branch": "dev",
+  "branches": [
+    "dependabot/npm_and_yarn/npm-security-updates-09e9d619ee",
+    "dev",
+    "fix/dependency-audit-2026-10-28",
+    "main",
+    "origin",
+    "ph-dash",
+    "staging"
+  ],
+  "parent": {
+    "dependabot/npm_and_yarn/npm-security-updates-09e9d619ee": "dev",
+    "dev": null,
+    "fix/dependency-audit-2026-10-28": "dev",
+    "main": "dev",
+    "origin": "dev",
+    "ph-dash": "dev",
+    "staging": "dev"
+  },
+  "order": [
+    "dev",
+    "dependabot/npm_and_yarn/npm-security-updates-09e9d619ee",
+    "fix/dependency-audit-2026-10-28",
+    "main",
+    "origin",
+    "ph-dash",
+    "staging"
+  ]
+}
