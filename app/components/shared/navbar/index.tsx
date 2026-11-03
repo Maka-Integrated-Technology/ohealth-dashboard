@@ -11,6 +11,7 @@ interface Props {
   rightSlot?: ReactNode;
   hasSidebar?: boolean;
   variant?: AppShellVariant;
+  showThemeToggle?: boolean;
 }
 
 export default function MainNavbar({
@@ -20,8 +21,10 @@ export default function MainNavbar({
   rightSlot,
   hasSidebar = false,
   variant = "default",
+  showThemeToggle,
 }: Props) {
   const isCompact = variant === "compact";
+  const shouldShowThemeToggle = showThemeToggle ?? !isCompact;
 
   return (
     <>
@@ -59,7 +62,7 @@ export default function MainNavbar({
           )}
 
           <div className="ml-auto flex items-center gap-3">
-            {!isCompact && <NavbarThemeToggle />}
+            {shouldShowThemeToggle && <NavbarThemeToggle />}
             {rightSlot && (
               <>
                 {!isCompact && (
