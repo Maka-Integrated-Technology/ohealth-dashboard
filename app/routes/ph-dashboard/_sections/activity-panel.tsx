@@ -17,51 +17,11 @@ const ACTIVITIES = [
   },
 ] as const;
 
-/*
- * ORIGINAL ActivityHeartIcon
- * Kept for reference in case you want to restore it.
- *
-function ActivityHeartIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="mt-0.5 size-4 shrink-0"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M12 21s-9-5.7-9-12.1A5.1 5.1 0 0 1 12 5.7a5.1 5.1 0 0 1 9 3.2C21 15.3 12 21 12 21Z"
-        fill="#2563EB"
-      />
-
-      <path
-        d="M12 8.5v6M9 11.5h6"
-        stroke="#FFFFFF"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-*/
-
 export function ActivityPanel() {
   return (
     <Card className="border-border gap-0 border py-0 shadow-none ring-0">
       <div className="border-border flex items-center justify-between border-b px-3 py-3">
         <h2 className="text-foreground text-xs font-semibold">ACTIVITY</h2>
-
-        {/*
-          ORIGINAL BUTTON
-          Restore this when an activity-history action is implemented.
-
-          <button
-            type="button"
-            className="text-primary text-xs font-semibold hover:underline"
-          >
-            See all
-          </button>
-        */}
 
         <span className="text-primary text-xs font-semibold">See all</span>
       </div>
