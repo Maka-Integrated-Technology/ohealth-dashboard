@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 interface LogoProps {
   size?: "sm" | "md" | "lg" | "auth";
-  variant?: "default" | "light";
+  variant?: "default" | "light" | "auto";
   to?: string;
 }
 
@@ -17,12 +17,35 @@ export default function Logo({
       : size === "sm"
         ? "flex items-center gap-2"
         : "flex items-center gap-2.5";
+
+  /*
+   * ORIGINAL TEXT CLASS LOGIC
+   * Kept for reference and easy restoration.
+   *
   const textClass =
     size === "auth"
       ? `text-[18px] font-semibold tracking-[-0.8px] ${variant === "light" ? "text-[#f5f7f7]" : "text-slate-900"}`
       : size === "sm"
         ? `text-base font-bold tracking-tight ${variant === "light" ? "text-white" : "text-slate-900"}`
         : `text-xl font-bold tracking-tight ${variant === "light" ? "text-white" : "text-slate-900"}`;
+  */
+
+  const textSizeClass =
+    size === "auth"
+      ? "text-[18px] font-semibold tracking-[-0.8px]"
+      : size === "sm"
+        ? "text-base font-bold tracking-tight"
+        : "text-xl font-bold tracking-tight";
+
+  const textColorClass =
+    variant === "light"
+      ? "text-white"
+      : variant === "auto"
+        ? "text-slate-900 dark:text-white"
+        : "text-slate-900";
+
+  const textClass = `${textSizeClass} ${textColorClass}`;
+
   const svgSize = size === "sm" ? 24 : size === "auth" ? 30 : 32;
 
   return (
@@ -56,6 +79,7 @@ export default function Logo({
           />
         </svg>
       )}
+
       <span className={textClass}>
         OHealth
         <span

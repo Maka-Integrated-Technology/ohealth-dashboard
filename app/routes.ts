@@ -1,4 +1,5 @@
-import type { RouteConfig } from "@react-router/dev/routes";
+// import type { RouteConfig } from "@react-router/dev/routes";
+import type { RouteConfig, RouteConfigEntry } from "@react-router/dev/routes";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { loadEnv } from "vite";
@@ -56,7 +57,31 @@ function resolveAppRoute(rawRoute = process.env.VITE_ROUTE): AppRoute {
 
 const route = resolveAppRoute();
 
-export default nextRoutes({
+const generatedRoutes = nextRoutes({
   ...appRouterStyle,
   folderName: `./routes/${route}`,
-}) satisfies RouteConfig;
+});
+
+function normalizeRoutePaths(routes: RouteConfigEntry[]): RouteConfigEntry[] {
+  return routes.map((entry) => ({
+    ...entry,
+    file: entry.file.replace(/\\/g, "/"),
+    ...(entry.children
+      ? { children: normalizeRoutePaths(entry.children) }
+      : {}),
+  }));
+}
+
+const normalizedRoutes = normalizeRoutePaths(generatedRoutes);
+
+export default normalizedRoutes satisfies RouteConfig;
+
+// Original implementation before Windows path normalisation.
+// Keep this commented out for reference and easy restoration.
+
+// const route = resolveAppRoute();
+
+// export default nextRoutes({
+//   ...appRouterStyle,
+//   folderName: `./routes/${route}`,
+// }) satisfies RouteConfig;
