@@ -23,6 +23,7 @@ interface Props {
   items: SidebarItem[];
   variant?: AppShellVariant;
   footer?: ReactNode;
+  showLogo?: boolean;
 }
 
 function SidebarNav({
@@ -72,9 +73,17 @@ function SidebarNav({
   );
 }
 
-export default function Sidebar({ items, variant = "default", footer }: Props) {
+export default function Sidebar({
+  items,
+  variant = "default",
+  footer,
+  showLogo,
+}: Props) {
   const { pathname } = useLocation();
   const isCompact = variant === "compact";
+
+  // Preserve the original logo behavior unless explicitly overridden.
+  const shouldShowLogo = showLogo ?? !isCompact;
 
   return (
     <aside
@@ -83,8 +92,8 @@ export default function Sidebar({ items, variant = "default", footer }: Props) {
         isCompact ? "w-[195px] px-[18px] py-[18px]" : "w-64 px-4 py-6"
       )}
     >
-      {!isCompact && (
-        <div className="mb-8 px-2">
+      {shouldShowLogo && (
+        <div className={cn("mb-6 px-2", isCompact && "mb-5 px-0")}>
           <Logo size="sm" />
         </div>
       )}

@@ -6,21 +6,30 @@ import Sidebar, { SidebarMobileTrigger, type SidebarItem } from "./sidebar";
 import type { AppShellVariant } from "./app-shell-variant";
 import { cn } from "~/lib/utils/helpers";
 
+interface AppShellProps {
+  portal?: string;
+  sidebarItems?: SidebarItem[];
+  rightSlot?: ReactNode;
+  sidebarFooter?: ReactNode;
+  variant?: AppShellVariant;
+  showSidebarLogo?: boolean;
+  showNavbarThemeToggle?: boolean;
+}
+
 export default function AppShell({
   portal,
   sidebarItems,
   rightSlot,
   sidebarFooter,
   variant = "default",
-}: {
-  portal?: string;
-  sidebarItems?: SidebarItem[];
-  rightSlot?: ReactNode;
-  sidebarFooter?: ReactNode;
-  variant?: AppShellVariant;
-}) {
+  showSidebarLogo,
+  showNavbarThemeToggle,
+}: AppShellProps) {
   const hasSidebar = Boolean(sidebarItems?.length);
   const isCompact = variant === "compact";
+
+  // Preserve the existing behavior unless a dashboard explicitly overrides it.
+  const shouldShowSidebarLogo = showSidebarLogo ?? !isCompact;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -29,8 +38,10 @@ export default function AppShell({
           items={sidebarItems!}
           variant={variant}
           footer={sidebarFooter}
+          showLogo={shouldShowSidebarLogo}
         />
       )}
+
       <div
         className={cn(
           "flex flex-1 flex-col",
@@ -40,6 +51,7 @@ export default function AppShell({
         <MainNavbar
           portal={portal}
           showLogo={!hasSidebar}
+          showThemeToggle={showNavbarThemeToggle}
           leftSlot={
             hasSidebar ? (
               <SidebarMobileTrigger items={sidebarItems!} variant={variant} />
@@ -49,7 +61,9 @@ export default function AppShell({
           hasSidebar={hasSidebar}
           variant={variant}
         />
+
         <OfflineBanner />
+
         <main className="flex flex-1 flex-col">
           <Outlet />
         </main>
