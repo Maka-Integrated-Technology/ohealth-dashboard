@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { SIGNUP_INTENTS } from "~/features/auth/intents";
 
 /**
  * Step 1: Account Information Schema
@@ -82,7 +83,7 @@ export const stepThreeSchema = Yup.object().shape({
  */
 export const fullOnboardingSchema = Yup.object().shape({
   accountType: Yup.string()
-    .oneOf(["healthcare_professional", "facility"])
+    .oneOf([...SIGNUP_INTENTS])
     .required(),
   ...stepOneSchema.fields,
   ...stepTwoSchema.fields,
