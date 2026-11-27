@@ -29,6 +29,7 @@ export const QUERY_KEYS = {
   },
   auth: {
     me: () => ["auth", "me"] as const,
+    registrationBootstrap: () => ["auth", "registration-bootstrap"] as const,
   },
   chat: {
     messages: (consultationId: string) =>

@@ -1,14 +1,63 @@
 // app/features/auth/types.ts
 //
-// Shapes match the live legacy endpoints (ohealth-server src/modules/auth) —
-// not the role-free `RegisterAccountDto`/challenge contracts, which exist as
-// DTOs but aren't wired to a route yet. See docs/05-rework-plan.md step 2.
+// Shapes match the canonical challenge contract published by the backend
+// (Ohealth-be #137 / PR #150) in contracts/openapi.json. Registration and
+// login are now pre-session challenges: the server returns an opaque
+// `challenge_id` with cooldown/expiry, and tokens are issued only after a
+// verified code (`/verify`, `/login/verify`). See #77.
+import type { SignupIntent } from "./intents";
 
-export interface SignUpPayload {
+// ---------------------------------------------------------------------------
+// Registration bootstrap (Ohealth-be #136)
+// ---------------------------------------------------------------------------
+
+export interface RegistrationBootstrapLegalDocument {
+  document_type: string;
+  version: string;
+}
+
+export interface RegistrationBootstrapIntent {
+  intent: SignupIntent;
+  label: string;
+}
+
+export interface RegistrationBootstrap {
+  intents: RegistrationBootstrapIntent[];
+  terms: RegistrationBootstrapLegalDocument;
+  privacy: RegistrationBootstrapLegalDocument;
+}
+
+// ---------------------------------------------------------------------------
+// Challenge continuation
+// ---------------------------------------------------------------------------
+
+/** A pending pre-session challenge the client must continue with a code. */
+export interface AuthChallenge {
+  challenge_id: string;
+  expires_in_seconds: number;
+  resend_after_seconds: number;
+  /** Masked destination (e.g. "j•••@example.com"); present on signup. */
+  delivery_target?: string;
+}
+
+/** Returned when login requires a second factor before a session is issued. */
+export interface MfaChallenge {
+  mfa_challenge_id: string;
+  expires_in_seconds: number;
+}
+
+// ---------------------------------------------------------------------------
+// Request payloads
+// ---------------------------------------------------------------------------
+
+export interface ProfessionalSignupPayload {
+  intent: SignupIntent;
   first_name: string;
   last_name: string;
   email: string;
   password: string;
+  accepted_terms_version: string;
+  accepted_privacy_version: string;
 }
 
 export interface LoginPayload {
@@ -16,38 +65,37 @@ export interface LoginPayload {
   password: string;
 }
 
-export interface VerifyEmailPayload {
-  email: string;
+export interface VerifyChallengePayload {
+  challenge_id: string;
   code: string;
 }
 
-export interface ResendCodePayload {
-  email: string;
+export interface ResetPasswordPayload {
+  challenge_id: string;
+  code: string;
+  newPassword: string;
 }
 
 export interface GoogleLoginPayload {
   token: string;
 }
 
-export interface AuthUserSummary {
-  id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  role: string[];
-}
+// ---------------------------------------------------------------------------
+// Session (token transport stays cookie-based here; #78 migrates it to the
+// backend-managed HttpOnly browser session)
+// ---------------------------------------------------------------------------
 
-export interface AuthSession {
-  message?: string;
-  user: AuthUserSummary;
+export interface AuthSessionTokens {
   access_token: string;
   refresh_token: string;
-  session_id?: string;
-  session_expires_at?: string;
-  routing_target?: string;
-  access_level?: string;
-  verification_status?: string | null;
+  session_id: string;
+  session_expires_at: string;
 }
+
+/** `/login/verify` resolves to either a session or an MFA challenge. */
+export type LoginVerifyResult =
+  | { kind: "session"; session: AuthSessionTokens }
+  | { kind: "mfa"; mfa: MfaChallenge };
 
 export interface AuthUser {
   id: string;
