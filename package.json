@@ -23,6 +23,7 @@
     "test:lab:ui": "tsx --test scripts/tests/laboratory-ui.test.tsx",
     "test:auth-intents": "tsx --test scripts/tests/signup-intent-selector.test.tsx",
     "test:auth-challenge": "tsx --test scripts/tests/challenge-errors.test.ts scripts/tests/challenge-code-form.test.tsx",
+    "test:browser-session": "tsx --test scripts/tests/browser-session.test.ts",
     "test:pharmacy": "tsx --test scripts/tests/pharmacy-dashboard.test.tsx",
     "build:hs": "cross-env VITE_ROUTE=hs react-router build",
     "dev:hs": "cross-env VITE_ROUTE=hs react-router dev -p 5103",

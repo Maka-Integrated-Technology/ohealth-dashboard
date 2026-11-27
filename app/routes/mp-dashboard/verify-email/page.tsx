@@ -9,7 +9,7 @@ export default function VerifyEmailPage() {
   const state = location.state as Partial<VerifyEmailState> | null;
 
   // No challenge handle (e.g. a direct visit or reload) — restart the flow.
-  if (!state?.challengeId || !state.email) {
+  if (!state?.challengeId) {
     return <Navigate to="/sign-up" replace />;
   }
 

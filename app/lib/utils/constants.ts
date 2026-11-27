@@ -1,6 +1,10 @@
+// `import.meta.env` is injected by Vite in dev/build; fall back to an empty
+// object so modules importing this remain usable under the node test runner.
+const env = (import.meta.env ?? {}) as Record<string, string | undefined>;
+
 export const ENV_CONFIG = {
-  apiBaseUrl: import.meta.env.VITE_API_BASE_URL,
-  googleClientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+  apiBaseUrl: env.VITE_API_BASE_URL,
+  googleClientId: env.VITE_GOOGLE_CLIENT_ID,
 };
 
 export const BREAKPOINT_1024 = 1024;
