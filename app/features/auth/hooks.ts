@@ -3,101 +3,117 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { saveSession, getSessionId, clearSession } from "~/lib/auth/session";
 import { QUERY_KEYS } from "~/lib/utils/query-keys";
-import { handleApiError } from "~/lib/utils/error-handler";
-import { authApi, deriveNameFromEmail } from "./api";
-import type { AuthSession, AuthUser, LoginPayload } from "./types";
+import { authApi } from "./api";
+import type { AuthSessionTokens } from "./types";
 
-function persistSession(session: AuthSession) {
+// Challenge mutations deliberately do NOT toast or swallow errors: the forms
+// read the stable error_code (via parseChallengeError) to drive cooldown,
+// restart and retry state. Only after a verified code is a session persisted.
+function persistSession(tokens: AuthSessionTokens) {
   saveSession({
-    accessToken: session.access_token,
-    refreshToken: session.refresh_token,
-    sessionId: session.session_id,
+    accessToken: tokens.access_token,
+    refreshToken: tokens.refresh_token,
+    sessionId: tokens.session_id,
   });
 }
 
-function toAuthUser(session: AuthSession): AuthUser {
-  return {
-    ...session.user,
-    middle_name: null,
-    gender: null,
-    dob: null,
-    phone: null,
-    country: null,
-    image: null,
-    is_active: true,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  };
+export function useRegistrationBootstrap() {
+  return useQuery({
+    queryKey: QUERY_KEYS.auth.registrationBootstrap(),
+    queryFn: authApi.registrationBootstrap,
+    staleTime: 5 * 60 * 1000,
+  });
 }
+
+// --- Signup ----------------------------------------------------------------
 
 export function useSignUp() {
+  return useMutation({ mutationFn: authApi.signUp });
+}
+
+export function useVerifySignup() {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (payload: { email: string; password: string }) => {
-      const { first_name, last_name } = deriveNameFromEmail(payload.email);
-      return authApi.signUp({ ...payload, first_name, last_name });
-    },
-    onSuccess: (session) => {
-      persistSession(session);
-    },
-    onError: (error) => {
-      handleApiError(error);
+    mutationFn: authApi.verifySignup,
+    onSuccess: (tokens) => {
+      persistSession(tokens);
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.auth.me() });
     },
   });
 }
 
+export function useResendSignup() {
+  return useMutation({ mutationFn: authApi.resendSignup });
+}
+
+// --- Login -----------------------------------------------------------------
+
 export function useLogin() {
+  return useMutation({ mutationFn: authApi.login });
+}
+
+export function useVerifyLogin() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
   return useMutation({
-    mutationFn: (payload: LoginPayload) => authApi.login(payload),
-    onSuccess: (session) => {
-      persistSession(session);
-      queryClient.setQueryData(QUERY_KEYS.auth.me(), toAuthUser(session));
+    mutationFn: authApi.verifyLogin,
+    onSuccess: (result) => {
+      if (result.kind === "session") {
+        persistSession(result.session);
+        void navigate("/", { replace: true });
+        void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.auth.me() });
+      }
+    },
+  });
+}
+
+export function useVerifyLoginMfa() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  return useMutation({
+    mutationFn: authApi.verifyLoginMfa,
+    onSuccess: (tokens) => {
+      persistSession(tokens);
       void navigate("/", { replace: true });
       void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.auth.me() });
     },
-    onError: (error) => {
-      handleApiError(error);
-    },
   });
 }
 
-export function useVerifyEmail() {
-  return useMutation({
-    mutationFn: authApi.verify,
-    onError: (error) => {
-      handleApiError(error);
-    },
-  });
+export function useResendLogin() {
+  return useMutation({ mutationFn: authApi.resendLogin });
 }
 
-export function useResendCode() {
-  return useMutation({
-    mutationFn: authApi.resendCode,
-    onError: (error) => {
-      handleApiError(error);
-    },
-  });
-}
-
+// Legacy Google entry point, kept working until #78 migrates it to the
+// canonical web OAuth transaction flow.
 export function useGoogleLogin() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
   return useMutation({
     mutationFn: authApi.googleLogin,
-    onSuccess: (session) => {
-      persistSession(session);
-      queryClient.setQueryData(QUERY_KEYS.auth.me(), toAuthUser(session));
+    onSuccess: (tokens) => {
+      persistSession(tokens);
       void navigate("/", { replace: true });
       void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.auth.me() });
     },
-    onError: (error) => {
-      handleApiError(error);
-    },
   });
 }
+
+// --- Password recovery -----------------------------------------------------
+
+export function useForgotPassword() {
+  return useMutation({ mutationFn: authApi.forgotPassword });
+}
+
+export function useResendForgotPassword() {
+  return useMutation({ mutationFn: authApi.resendForgotPassword });
+}
+
+export function useResetPassword() {
+  return useMutation({ mutationFn: authApi.resetPassword });
+}
+
+// --- Session ---------------------------------------------------------------
 
 export function useMe(enabled = true) {
   return useQuery({
