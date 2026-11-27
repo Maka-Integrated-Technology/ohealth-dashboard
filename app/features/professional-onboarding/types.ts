@@ -1,4 +1,8 @@
-export type AccountType = "healthcare_professional" | "facility";
+// The account-type selector is the canonical signup-intent selector (#74):
+// it exposes the closed backend intent set, so this is just that type.
+import type { SignupIntent } from "~/features/auth/intents";
+
+export type AccountType = SignupIntent;
 
 export type Specialization =
   "General Doctor" | "Nurse" | "Nutritionist" | "Counsellor";

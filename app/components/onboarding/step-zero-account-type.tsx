@@ -1,10 +1,13 @@
 import React from "react";
-import { UserCheck, Building2, Check } from "lucide-react";
-import type { AccountType } from "~/features/professional-onboarding/types.js";
+import { Check } from "lucide-react";
+import {
+  SIGNUP_INTENT_OPTIONS,
+  type SignupIntent,
+} from "~/features/auth/intents";
 
 interface StepZeroAccountTypeProps {
-  selectedType: AccountType;
-  onSelect: (type: AccountType) => void;
+  selectedType: SignupIntent;
+  onSelect: (type: SignupIntent) => void;
   onContinue: () => void;
 }
 
@@ -32,71 +35,44 @@ export const StepZeroAccountType: React.FC<StepZeroAccountTypeProps> = ({
         role="radiogroup"
         aria-label="Account type selection"
       >
-        {/* Healthcare Professional Card */}
-        <button
-          type="button"
-          id="account-type-professional"
-          role="radio"
-          aria-checked={selectedType === "healthcare_professional"}
-          onClick={() => onSelect("healthcare_professional")}
-          className={`group relative flex min-h-35 flex-col items-center justify-center rounded-2xl border p-5 text-center transition-all duration-150 focus:outline-none ${
-            selectedType === "healthcare_professional"
-              ? "border-blue-600 bg-blue-50/30 shadow-sm ring-2 ring-blue-500/20"
-              : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50"
-          }`}
-        >
-          {selectedType === "healthcare_professional" && (
-            <div className="absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-white">
-              <Check className="h-3 w-3 stroke-3" />
-            </div>
-          )}
+        {SIGNUP_INTENT_OPTIONS.map(({ intent, label, icon: Icon }) => {
+          const selected = selectedType === intent;
+          return (
+            <button
+              key={intent}
+              type="button"
+              id={`account-type-${intent}`}
+              data-intent={intent}
+              role="radio"
+              aria-checked={selected}
+              onClick={() => onSelect(intent)}
+              className={`group relative flex min-h-35 flex-col items-center justify-center rounded-2xl border p-5 text-center transition-all duration-150 focus:outline-none ${
+                selected
+                  ? "border-blue-600 bg-blue-50/30 shadow-sm ring-2 ring-blue-500/20"
+                  : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50"
+              }`}
+            >
+              {selected && (
+                <div className="absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-white">
+                  <Check className="h-3 w-3 stroke-3" />
+                </div>
+              )}
 
-          <div
-            className={`mb-3 flex h-12 w-12 items-center justify-center rounded-xl transition-colors ${
-              selectedType === "healthcare_professional"
-                ? "bg-blue-100/80 text-blue-700"
-                : "bg-slate-100 text-slate-600 group-hover:bg-slate-200/70"
-            }`}
-          >
-            <UserCheck className="h-6 w-6 stroke-[1.75]" />
-          </div>
-          <span className="text-sm leading-snug font-medium text-slate-900 sm:text-[15px]">
-            Healthcare Professional
-          </span>
-        </button>
-
-        {/* Hospital / Pharmacy / Laboratory Card */}
-        <button
-          type="button"
-          id="account-type-facility"
-          role="radio"
-          aria-checked={selectedType === "facility"}
-          onClick={() => onSelect("facility")}
-          className={`group relative flex min-h-35 flex-col items-center justify-center rounded-2xl border p-5 text-center transition-all duration-150 focus:outline-none ${
-            selectedType === "facility"
-              ? "border-blue-600 bg-blue-50/30 shadow-sm ring-2 ring-blue-500/20"
-              : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50"
-          }`}
-        >
-          {selectedType === "facility" && (
-            <div className="absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-white">
-              <Check className="h-3 w-3 stroke-3" />
-            </div>
-          )}
-
-          <div
-            className={`mb-3 flex h-12 w-12 items-center justify-center rounded-xl transition-colors ${
-              selectedType === "facility"
-                ? "bg-blue-100/80 text-blue-700"
-                : "bg-slate-100 text-slate-600 group-hover:bg-slate-200/70"
-            }`}
-          >
-            <Building2 className="h-6 w-6 stroke-[1.75]" />
-          </div>
-          <span className="text-sm leading-snug font-medium text-slate-900 sm:text-[15px]">
-            Hospital / Pharmacy/ Laboratory
-          </span>
-        </button>
+              <div
+                className={`mb-3 flex h-12 w-12 items-center justify-center rounded-xl transition-colors ${
+                  selected
+                    ? "bg-blue-100/80 text-blue-700"
+                    : "bg-slate-100 text-slate-600 group-hover:bg-slate-200/70"
+                }`}
+              >
+                <Icon className="h-6 w-6 stroke-[1.75]" />
+              </div>
+              <span className="text-sm leading-snug font-medium text-slate-900 sm:text-[15px]">
+                {label}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       <button
