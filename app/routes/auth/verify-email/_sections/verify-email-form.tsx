@@ -21,7 +21,7 @@ export function VerifyEmailForm({ state }: { state: VerifyEmailState }) {
   const [error, setError] = useState<ParsedChallengeError | null>(null);
   const { secondsLeft, start } = useCountdown(state.resendAfterSeconds);
 
-  const target = state.deliveryTarget ?? state.email;
+  const target = state.deliveryTarget ?? state.email ?? "your email";
 
   function handleVerify(code: string) {
     setError(null);
@@ -41,7 +41,9 @@ export function VerifyEmailForm({ state }: { state: VerifyEmailState }) {
         setChallengeId(challenge.challenge_id);
         start(challenge.resend_after_seconds);
         notifySuccess({
-          message: `Verification code resent to ${state.email}`,
+          message: state.email
+            ? `Verification code resent to ${state.email}`
+            : "Verification code resent.",
         });
       },
       onError: (e) => {

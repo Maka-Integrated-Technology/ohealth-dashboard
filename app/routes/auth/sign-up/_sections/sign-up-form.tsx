@@ -101,7 +101,7 @@ export function SignUpForm() {
       </form>
 
       <div className="mt-3 flex justify-center">
-        <GoogleSignInButton />
+        <GoogleSignInButton operation="signup" />
       </div>
 
       <p className="mt-4 text-center text-xs text-gray-500">

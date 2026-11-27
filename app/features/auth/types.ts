@@ -76,26 +76,62 @@ export interface ResetPasswordPayload {
   newPassword: string;
 }
 
-export interface GoogleLoginPayload {
-  token: string;
-}
-
 // ---------------------------------------------------------------------------
-// Session (token transport stays cookie-based here; #78 migrates it to the
-// backend-managed HttpOnly browser session)
+// Browser session (#78). The refresh credential is a backend-managed HttpOnly
+// cookie and is NEVER present in the response body; only the short-lived
+// access token reaches JavaScript, held in memory.
 // ---------------------------------------------------------------------------
 
-export interface AuthSessionTokens {
+export interface BrowserSession {
   access_token: string;
-  refresh_token: string;
   session_id: string;
   session_expires_at: string;
 }
 
-/** `/login/verify` resolves to either a session or an MFA challenge. */
+/** `/browser/login/verify` resolves to either a session or an MFA challenge. */
 export type LoginVerifyResult =
-  | { kind: "session"; session: AuthSessionTokens }
+  | { kind: "session"; session: BrowserSession }
   | { kind: "mfa"; mfa: MfaChallenge };
+
+// ---------------------------------------------------------------------------
+// Google web OAuth (nonce-bound transaction, completed over the browser
+// transport). consumer is always "web" from the dashboard.
+// ---------------------------------------------------------------------------
+
+export type GoogleTransactionPayload =
+  | { operation: "signin"; consumer: "web"; audience: string }
+  | {
+      operation: "signup";
+      consumer: "web";
+      audience: string;
+      intent: SignupIntent;
+      accepted_terms_version: string;
+      accepted_privacy_version: string;
+    };
+
+export interface GoogleTransaction {
+  transaction_id: string;
+  transaction_token: string;
+  nonce: string;
+  audience: string;
+  expires_in_seconds: number;
+}
+
+export interface CompleteGoogleOAuthPayload {
+  id_token: string;
+  transaction_id: string;
+  transaction_token: string;
+}
+
+/**
+ * `/browser/oauth/google/complete` resolves to a session, an MFA challenge, or
+ * (202) a contact-verification challenge that must be continued WITHOUT a
+ * session being issued.
+ */
+export type GoogleCompleteResult =
+  | { kind: "session"; session: BrowserSession }
+  | { kind: "mfa"; mfa: MfaChallenge }
+  | { kind: "contact-verification"; challenge: AuthChallenge };
 
 export interface AuthUser {
   id: string;

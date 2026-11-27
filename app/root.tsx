@@ -43,7 +43,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <GoogleOAuthProvider clientId={ENV_CONFIG.googleClientId}>
+    <GoogleOAuthProvider clientId={ENV_CONFIG.googleClientId ?? ""}>
       <TanstackQueryProvider>
         <TooltipProvider>
           <Outlet />

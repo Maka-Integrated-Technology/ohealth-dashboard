@@ -7,7 +7,8 @@
 
 export interface VerifyEmailState {
   challengeId: string;
-  email: string;
+  /** Known for password signup; absent for Google contact verification. */
+  email?: string;
   resendAfterSeconds: number;
   deliveryTarget?: string;
 }
